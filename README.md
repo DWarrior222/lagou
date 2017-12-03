@@ -11,7 +11,8 @@ git init
 github上拿到拉钩的数据
 爬虫地址：https://github.com/GuozhuHe/webspider
 ```
-本系统是一个主要使用python3, celery和requests来爬取职位数据的爬虫，实现了定时任务，出错重试，日志记录，自动更改Cookies等的功能，并使用ECharts + Bootstrap 来构建前端页面，来展示爬取到的数据
+本系统是一个主要使用python3, celery和requests来爬取职位数据的爬虫，实现了定时任务，出错重试，日志记录，
+自动更改Cookies等的功能，并使用ECharts + Bootstrap 来构建前端页面，来展示爬取到的数据
 ```
 
 导入mongodb数据库
@@ -23,14 +24,23 @@ $ mongoimport --db lagoutest --collection citys --type csv --headerline --ignore
 需要csv文件中编码为utf-8
 需要csv文件中的数据规范符合mongodb的数据规范，容易出现错误的地方是数据当中的双引号"" 最好不要用英文状态下的，否则导入数据会出错
 
-集合名称：
+集合                 路由
+```
 city                /city
+
 company             /company
+
 company_industry    /companyInd
+
 industry            /industry
+
 job                 /job
+
 job_keyword         /jobKey
+
 keyword             /keyword
+
+```
 ### api初始化
 生成包管理配置文件package.json
 ```
@@ -85,3 +95,7 @@ src目录新建pages目录 store目录 util目录 Public.js文件并修改代码
 ```
 在组件文件中请求数据并显示在浏览器中
 ```
+## 项目开发
+git和github进行协同开发流程了解
+
+https://www.cnblogs.com/wawahaha/p/5171187.html
