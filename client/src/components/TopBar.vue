@@ -54,12 +54,12 @@
         <h2>注册账号</h2>
         <div class="form">
           <input type="text" name="" value="" v-model="username" placeholder="请输入用户名">
-          <!-- <span v-show="true">请输入有效的用户名</span> -->
+          <span v-show="regisErr1">{{ err1Mes }}</span>
           <input type="password" name="" value="" v-model="password" placeholder="请输入密码">
-          <!-- <span v-show="true">账号密码不匹配</span> -->
+          <span v-show="regisErr2">{{ err2Mes }}</span>
         </div>
         <div class="btn-login" @click="Register">
-          <button type="button" name="button">注册</button>
+          <button type="button" name="button" @click="Register">注册</button>
         </div>
       </div>
     </div>
@@ -75,8 +75,12 @@
         regisModalFlag: false,
         dropMenuFlag: false,
         nickname: '',
-        username: 'asdfghjkl',
-        password: 'shuai2121'
+        username: '',
+        password: '',
+        regisErr1: false,
+        regisErr2: false,
+        err1Mes: '',
+        err2Mes: ''
       }
     },
     methods: {
@@ -85,7 +89,6 @@
           username: this.username,
           password: this.password
         }
-        console.log(params)
         this.$http.post('/users/login', params)
         .then(res => {
           console.log(res)
@@ -94,6 +97,25 @@
         })
       },
       Register () {
+        let params = {
+          username: this.username,
+          password: this.password
+        }
+        this.$http.post('/users/register', params)
+        .then(res => {
+          switch (res.data.state) {
+            case '00002':
+              this.err1Mes = '用户名已被注册'
+              this.regisErr1 = true
+              break
+            case '00000':
+              this.regisErr1 = false
+              this.regisModalFlag = false
+              break
+            default:
+              break
+          }
+        })
       },
       Logout () {
         this.$http.post('/users/logout')
@@ -232,5 +254,8 @@
   }
   .msg-number {
     padding-left: 10px;
+  }
+  .city-select .area {
+    font-size: 20px;
   }
 </style>
