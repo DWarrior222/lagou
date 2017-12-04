@@ -24,8 +24,8 @@
           {{ nickname }}
         </a>
         <div v-show="dropMenuFlag" class="user-drop-menu">
-          <span>消息</span>
-          <span>退出</span>
+          <span class="iconfont icon-interactive">消息 <b class="msg-number">1</b></span>
+          <span class="iconfont icon-undo" @click="Logout">退出</span>
         </div>
       </div>
     </div>
@@ -33,6 +33,7 @@
 
     <div class="model" v-show="loginModalFlag">
       <div class="">
+        <span class="close-model iconfont icon-close" @click="loginModalFlag=false"></span>
         <h2>密码登录</h2>
         <div class="form">
           <input type="text" name="" value="" v-model="username" placeholder="请输入用户名">
@@ -49,6 +50,7 @@
 
     <div v-show="regisModalFlag" class="model">
       <div class="">
+        <span class="close-model iconfont icon-close" @click="regisModalFlag=false"></span>
         <h2>注册账号</h2>
         <div class="form">
           <input type="text" name="" value="" v-model="username" placeholder="请输入用户名">
@@ -92,6 +94,15 @@
         })
       },
       Register () {
+      },
+      Logout () {
+        this.$http.post('/users/logout')
+        .then(res => {
+          console.log(res)
+          if (res.data.state === '00000') {
+            this.nickname = ''
+          }
+        })
       }
     }
   }
@@ -191,7 +202,7 @@
   }
   .user-drop-menu span {
     cursor: pointer;
-    padding-left: 15px;
+    padding-left: 5px;
     height: 30px;
     line-height: 30px;
   }
@@ -203,5 +214,15 @@
     position: absolute;
     right: 0px;
     top: 0px;
+  }
+  .close-model {
+    position: absolute;
+    right: 30px;
+    top: 20px;
+    font-size: 30px;
+    cursor: pointer;
+  }
+  .msg-number {
+    padding-left: 10px;
   }
 </style>

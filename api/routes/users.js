@@ -16,8 +16,8 @@ router.post('/register', (req, res) => {
   User.findOne({username: params.username}, (err, docs) => {
     if (err) {
       return res.json({
-        status: '1',
-        msg: err.message
+        state: '1',
+        message: err.message
       })
     }
     console.log(docs)
@@ -25,20 +25,20 @@ router.post('/register', (req, res) => {
       return User.create(params, (error, doc) => {
         if (error) {
           return res.json({
-            status: '00001',
-            msg: err.message
+            state: '00001',
+            message: err.message
           })
         }
         return res.json({
-          status: '00000',
-          msg: '注册成功',
+          state: '00000',
+          message: '注册成功',
           result: doc
         })
       })
     } else {
       return res.json({
-        status: '00002',
-        msg: '该用户名已被注册'
+        state: '00002',
+        message: '该用户名已被注册'
       })
     }
   })
@@ -51,36 +51,47 @@ router.post("/login", (req, res, next) => {
   }
   console.log(param);
   //查找用户
-  User.findOne(param, (err, doc) => {
+  User.findOne(param, (err, docs) => {
     if (err) {
       return res.json({
-        status: "1",
-        msg: err.message
+        state: "1",
+        message: err.message
       });
     }
-    if (!doc) {
+    if (!docs) {
       return res.json({
-        status: "1",
-        msg: "用户名或密码错误"
+        state: "1",
+        message: "用户名或密码错误"
       });
     }
     //给客户端设置cookie, user_id改改，值为用户的ID，cookie的作用域是/,过期时间是1个小时
-    res.cookie("user_id", doc.user_id, {
-      maxAge: 1000*60*60
+    res.cookie("user_id", docs.user_id, {
+      maxAge: 1000 * 60 * 60
     });
     //给客户端设置用户名，值为用户的名称，cookie的作用域是/，过期时间为1小时
-    res.cookie("username", doc.username, {
-      maxAge: 1000*60*60
+    res.cookie("username", docs.username, {
+      maxAge: 1000 * 60 * 60
     });
-    //req.session.user = doc;
+    //req.session.user = docs;
     return res.json({
-      status:'0',
-      msg:'',
-      result:{
-        username: doc.username
+      state:'0',
+      message: '',
+      result: {
+        username: docs.username
       }
     });
   });
 });
 
+// logout
+router.post("/logout", (req,res,next) => {
+  //清空cookie的用户ID,设置过期时间为上一秒
+  res.cookie("user_id", "", {
+    maxAge: -1
+  });
+  return res.json({
+    state: "00000",
+    message: '退出成功'
+  });
+});
 module.exports = router;
