@@ -16,7 +16,7 @@ router.post('/register', (req, res) => {
   User.findOne({username: params.username}, (err, docs) => {
     if (err) {
       return res.json({
-        state: '1',
+        state: '00001',
         message: err.message
       })
     }
@@ -32,7 +32,7 @@ router.post('/register', (req, res) => {
         return res.json({
           state: '00000',
           message: '注册成功',
-          result: doc
+          data: doc
         })
       })
     } else {
@@ -44,7 +44,7 @@ router.post('/register', (req, res) => {
   })
 })
 
-router.post("/login", (req, res, next) => {
+router.post('/login', (req, res, next) => {
   let param = {
     username: req.body.username,//获取用户名
     password: md5(req.body.password)//获取密码
@@ -54,29 +54,29 @@ router.post("/login", (req, res, next) => {
   User.findOne(param, (err, docs) => {
     if (err) {
       return res.json({
-        state: "1",
+        state: '00001',
         message: err.message
       });
     }
     if (!docs) {
       return res.json({
-        state: "1",
-        message: "用户名或密码错误"
+        state: '00002',
+        message: '用户名或密码错误'
       });
     }
     //给客户端设置cookie, user_id改改，值为用户的ID，cookie的作用域是/,过期时间是1个小时
-    res.cookie("user_id", docs.user_id, {
+    res.cookie('user_id', docs.user_id, {
       maxAge: 1000 * 60 * 60
     });
     //给客户端设置用户名，值为用户的名称，cookie的作用域是/，过期时间为1小时
-    res.cookie("username", docs.username, {
+    res.cookie('username', docs.username, {
       maxAge: 1000 * 60 * 60
     });
     //req.session.user = docs;
     return res.json({
-      state:'0',
+      state: '00000',
       message: '',
-      result: {
+      data: {
         username: docs.username
       }
     });
@@ -84,14 +84,29 @@ router.post("/login", (req, res, next) => {
 });
 
 // logout
-router.post("/logout", (req,res,next) => {
+router.post('/logout', (req, res, next) => {
   //清空cookie的用户ID,设置过期时间为上一秒
-  res.cookie("user_id", "", {
+  res.cookie('user_id', '', {
     maxAge: -1
   });
   return res.json({
-    state: "00000",
+    state: '00000',
     message: '退出成功'
   });
 });
+
+// 检查登陆
+router.get('/checkLogin', (req, res) => {
+  if (req.cookies.user_id) {
+    return res.json({
+      state: '00000',
+      message: '已登陆',
+      data: req.cookies.username || ''
+    })
+  }
+  res.json({
+    state: '00002',
+    message: '未登录'
+  })
+})
 module.exports = router;

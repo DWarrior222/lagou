@@ -90,7 +90,7 @@
         .then(res => {
           console.log(res)
           this.loginModalFlag = false
-          this.nickname = res.data.result.username
+          this.nickname = res.data.data.username
         })
       },
       Register () {
@@ -104,6 +104,14 @@
           }
         })
       }
+    },
+    mounted () {
+      this.$http.get('/users/checkLogin')
+      .then(res => {
+        if (res.data.state === '00000') {
+          this.nickname = res.data.data
+        }
+      })
     }
   }
 </script>
