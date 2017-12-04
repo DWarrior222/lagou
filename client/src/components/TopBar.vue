@@ -4,7 +4,7 @@
       <a href="javascript:;"><img src="../assets/images/logo_1c5763c.png" alt="logo"></a>
     </div>
     <div class="city-select tbar-left">
-      <a href="javascript:;">
+      <a href="javascript:;" @click="switchCity">
         <span class="area">全国</span>
         <i>[切换城市]</i><i class="iconfont icon-coordinates"></i>
       </a>
@@ -64,6 +64,39 @@
       </div>
     </div>
     <div v-show="regisModalFlag" @click.self="regisModalFlag=false" class="login-model"></div>
+
+    <div v-show="areaModalFlag" class="model area-model">
+      <div class="">
+        <span class="close-model iconfont icon-close" @click="areaModalFlag=false"></span>
+        <div id="cboxLoadedContent" style="width: 502px; overflow: hidden; height: 439px;">
+          <h2>切换城市</h2>
+          <div id="changeCityBox" class="popup changeCityBox">
+            <div class="changeCity_header">
+              <strong>亲爱的用户您好：</strong>
+              <p class="tips">切换城市分站，让我们为您提供更准确的职位信息。</p>
+            </div>
+            <p class="checkTips">点击进入
+              <a class="tab focus" :data-cityId="nowCityId" href="javascript:void(0);">{{ nowCity }}</a>
+              or 切换到以下城市
+            </p>
+            <ul class="clearfix">
+              <!-- <li>
+                <a class="tab" href="javascript:void(0);">
+                  全国站
+                </a>
+              </li> -->
+              <li v-for="(item, index) in cityList" @click="switchCityComfirm(item)">
+                <a class="tab" :data-cityId="item.id" href="javascript:void(0);">
+                  {{ item.name }}
+                </a>
+              </li>
+            </ul>
+            <p class="changeCity_footer">其他城市正在开通中，敬请期待～</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div v-show="areaModalFlag" @click.self="areaModalFlag=false" class="login-model"></div>
   </div>
 </template>
 
@@ -73,14 +106,18 @@
       return {
         loginModalFlag: false,
         regisModalFlag: false,
+        areaModalFlag: true,
         dropMenuFlag: false,
+        cityList: [],
         nickname: '',
-        username: '',
-        password: '',
+        username: 'luyuan',
+        password: 'shuai2121',
         regisErr1: false,
         regisErr2: false,
         err1Mes: '',
-        err2Mes: ''
+        err2Mes: '',
+        nowCity: '全国',
+        nowCityId: 1
       }
     },
     methods: {
@@ -125,6 +162,22 @@
             this.nickname = ''
           }
         })
+      },
+      switchCity () {
+        this.areaModalFlag = true
+      },
+      switchCityComfirm (item) {
+        let nowCityName = item.name
+        let nowCityId = item.id
+        this.cityList.forEach(value => {
+          if (value.name === item.name) {
+            value.name = this.nowCity
+            value.id = this.nowCityId
+            return value
+          }
+        })
+        this.nowCity = nowCityName
+        this.nowCityId = nowCityId
       }
     },
     mounted () {
@@ -133,6 +186,11 @@
         if (res.data.state === '00000') {
           this.nickname = res.data.data
         }
+      })
+      this.$http.get('/city/getcity')
+      .then(res => {
+        this.cityList = (res.data.data).slice(0, 6)
+        console.log(this.cityList)
       })
     }
   }
@@ -225,19 +283,19 @@
     width: 100px;
     position: absolute;
     top:50px;
-    right: 0px;
+    right: -10px;
     display: flex;
     flex-direction: column;
-    background: black;
+    background: #666;
   }
   .user-drop-menu span {
     cursor: pointer;
-    padding-left: 5px;
+    padding-left: 20px;
     height: 30px;
     line-height: 30px;
   }
   .user-drop-menu span:hover {
-    background: #333;
+    background: #999;
     color: white;
   }
   .icon-unfold:before {
@@ -247,8 +305,9 @@
   }
   .close-model {
     position: absolute;
+    z-index: 10;
     right: 30px;
-    top: 20px;
+    top: 16px;
     font-size: 30px;
     cursor: pointer;
   }
@@ -257,5 +316,101 @@
   }
   .city-select .area {
     font-size: 20px;
+  }
+
+  .area-model {
+    padding: 0px;
+    width: 500px;
+    height: 460px;
+  }
+  .area-model h2 {
+    font-size: 18px;
+    color: #fff;
+    background: #00b38a;
+    height: 44px;
+    width: 100%;
+    text-indent: 1em;
+    position: absolute;
+    top: 0;
+    left: 0;
+    line-height: 44px;
+  }
+  #changeCityBox {
+    margin-top: 30px;
+    width: 100%;
+    padding: 30px 40px;
+  }
+  .popup {
+    font: 14px/22px "Hiragino Sans GB","Microsoft Yahei",SimSun,Arial;
+    color: #555;
+    padding: 36px 30px;
+    width: 440px;
+    overflow: hidden;
+  }
+  .changeCity_header {
+    border-bottom: 1px dotted #e5e5e5;
+    height: 92px;
+  }
+  .checkTips {
+    margin: 26px 0 14px;
+  }
+  .clearfix {
+    list-style: none;
+    padding-left: 24px;
+    margin: 0;
+    /*display: flex;*/
+  }
+  .clearfix li {
+    float: left;
+    width: 102px;
+    margin: 11px 12px
+  }
+  .changeCity_header strong {
+    font-size: 20px;
+    margin-bottom: 10px;
+    color: #333;
+    font-weight: 400;
+  }
+  .changeCity_header .tips {
+    font-size: 16px;
+    color: #555;
+    line-height: 42px;
+  }
+  .changeCityBox .tab:hover, .changeCityBox .tab.focus {
+    border: 1px solid #00b38a;
+    color: #555;
+    width: 100px;
+    height: 50px;
+    line-height: 50px;
+  }
+  .changeCityBox .checkTips .tab {
+    margin: 0 12px;
+  }
+  .changeCityBox .tab {
+    font-size: 16px;
+    display: inline-block;
+    width: 100px;
+    height: 50px;
+    color: #999;
+    text-align: center;
+    line-height: 50px;
+    border: 1px solid #dce4e6;
+    border-radius: 1px;
+    box-sizing: border-box;
+  }
+  .changeCityBox li {
+    float: left;
+    width: 102px;
+    margin: 11px 12px;
+  }
+  .changeCityBox .changeCity_footer {
+    color: #777;
+    font-size: 14px;
+    margin: 14px 0 0;
+  }
+  .icon-interactive:before, .icon-undo:before {
+    position: absolute;
+    left: 3px;
+    line-height: 30px;
   }
 </style>
