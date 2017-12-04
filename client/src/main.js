@@ -22,6 +22,8 @@ import App from '@/App'
 import apiConfig from '../config/api.config'
 // 引入基础的CSS样式
 import '@/assets/css/base.css'
+// iconfont css
+import '@/assets/iconfont/iconfont.css'
 // 使用Axios库，实际上就是给vue的实例原型上面添加一个$http和axios属性
 Vue.use(VueAxios, axios)
 

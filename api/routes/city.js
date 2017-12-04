@@ -5,7 +5,10 @@ let sd = require('silly-datetime');
 
 
 router.get('/getcity', (req, res) => {
-  City.find({}, (err, docs) => {
+  let sort = 1
+  City.find({})
+  .sort({'id': sort})
+  .exec((err, docs) => {
     if (err) {
       return res.json({
         // unknown error, please contact technical customer service
