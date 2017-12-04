@@ -6,10 +6,10 @@
     <div class="city-select tbar-left">
       <a href="javascript:;">
         <span class="area">全国</span>
-        <i>[切换城市]</i>
+        <i>[切换城市]</i><i class="iconfont icon-coordinates"></i>
       </a>
     </div>
-    <div v-show="!nickname" class="tbar-user tbar-right">
+    <div v-show="!nickname" class="tbar-user">
       <a class="login tbar-a" @click="loginModalFlag=true">登录</a>
       <i></i>
       <a class="regis tbar-a" @click="regisModalFlag=true">注册</a>
@@ -19,8 +19,17 @@
       <i></i>
       <a class="delivery-box tbar-a">投递箱</a>
       <i></i>
-      <a class="username tbar-a">{{ nickname }}</a>
+      <div class="drop-box" @mouseenter="dropMenuFlag=true" @mouseleave="dropMenuFlag=false">
+        <a class="username tbar-a iconfont icon-unfold">
+          {{ nickname }}
+        </a>
+        <div v-show="dropMenuFlag" class="user-drop-menu">
+          <span>消息</span>
+          <span>退出</span>
+        </div>
+      </div>
     </div>
+
 
     <div class="model" v-show="loginModalFlag">
       <div class="">
@@ -62,6 +71,7 @@
       return {
         loginModalFlag: false,
         regisModalFlag: false,
+        dropMenuFlag: false,
         nickname: '',
         username: 'asdfghjkl',
         password: 'shuai2121'
@@ -99,7 +109,7 @@
     float: left;
   }
   .tbar-right {
-    float: right
+    position: relative;
   }
   .tbar-logo {
     margin: 8px 20px 0 0;
@@ -108,10 +118,11 @@
     color: white;
   }
   .tbar-user {
+    float: right;
     display: flex;
   }
   .tbar-user .tbar-a {
-    margin: 0 10px;
+    margin: 0 20px;
     cursor: pointer;
   }
   .tbar-user .tbar-a:hover {
@@ -167,5 +178,30 @@
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.6);
+  }
+  .user-drop-menu {
+    padding: 10px 0;
+    width: 100px;
+    position: absolute;
+    top:50px;
+    right: 0px;
+    display: flex;
+    flex-direction: column;
+    background: black;
+  }
+  .user-drop-menu span {
+    cursor: pointer;
+    padding-left: 15px;
+    height: 30px;
+    line-height: 30px;
+  }
+  .user-drop-menu span:hover {
+    background: #333;
+    color: white;
+  }
+  .icon-unfold:before {
+    position: absolute;
+    right: 0px;
+    top: 0px;
   }
 </style>

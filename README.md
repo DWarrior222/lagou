@@ -31,6 +31,18 @@ industry            /industry
 job                 /job
 job_keyword         /jobKey
 keyword             /keyword
+
+增加集合：
+users
+
+resume
+字段
+resume_id           Number
+user_id             Number
+job_id              Array
+
+
+
 ### api初始化
 生成包管理配置文件package.json
 ```
