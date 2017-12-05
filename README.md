@@ -120,9 +120,13 @@ src目录新建pages目录 store目录 util目录 Public.js文件并修改代码
 ```
 加载城市功能
 ```
-钩子加载城市数据，并初始化data变量
+获取保存在localStorage中的选择过的城市数据.(再次刷新页面的情况下不需要再次选择城市)默认为全国
+钩子加载城市数据，并初始化data变量cityList
+
 ```
 切换城市功能
 ```
-该功能在之后实现 切换城市，主页加载该城市的工作
+vuex中维护当前选择城市的id(nowCityId) 和 name(nowCityName) 值
+切换城市会改变vuex中nowCityId 和 nowCityName，并且会将这组值保存在localStorage中
+刷新页面会获取保存在localStorage中的这组值，并处理数据，使之正确显示在页面中
 ```
