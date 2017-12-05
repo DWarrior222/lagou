@@ -5,7 +5,7 @@
     </div>
     <div class="city-select tbar-left">
       <a href="javascript:;" @click="switchCity">
-        <span class="area">{{ nowCity }}</span>
+        <span class="area">{{ nowCityName }}</span>
         <i>[切换城市]</i><i class="iconfont icon-coordinates"></i>
       </a>
     </div>
@@ -76,7 +76,7 @@
               <p class="tips">切换城市分站，让我们为您提供更准确的职位信息。</p>
             </div>
             <p class="checkTips">点击进入
-              <a class="tab focus" :data-cityId="nowCityId" href="javascript:void(0);">{{ nowCity }}</a>
+              <a class="tab focus" :data-cityId="nowCityId" href="javascript:void(0);">{{ nowCityName }}</a>
               or 切换到以下城市
             </p>
             <ul class="clearfix">
@@ -101,12 +101,15 @@
 </template>
 
 <script type="text/javascript">
+  import nowCityStorage from '../store/localStorage'
+  import { mapState } from 'vuex'
+  // import { mapState, mapMutations, mapActions } from 'vuex'
   export default {
     data () {
       return {
         loginModalFlag: false,
         regisModalFlag: false,
-        areaModalFlag: true,
+        areaModalFlag: false,
         dropMenuFlag: false,
         cityList: [],
         nickname: '',
@@ -115,10 +118,11 @@
         regisErr1: false,
         regisErr2: false,
         err1Mes: '',
-        err2Mes: '',
-        nowCity: '全国',
-        nowCityId: 1
+        err2Mes: ''
       }
+    },
+    computed: {
+      ...mapState(['nowCityName', 'nowCityId'])
     },
     methods: {
       Login () {
@@ -169,29 +173,43 @@
       switchCityComfirm (item) {
         let nowCityName = item.name
         let nowCityId = item.id
-        this.cityList.forEach(value => {
-          if (value.name === item.name) {
-            value.name = this.nowCity
-            value.id = this.nowCityId
-            return value
+        this.$store.dispatch('switchCity', {nowCityName, nowCityId})
+        nowCityStorage.save({nowCityName, nowCityId})
+        this.cityInitAgain()
+      },
+      cityInitAgain () {
+        this.$http.get('/city/getcity')
+        .then(res => {
+          this.cityList = (res.data.data).slice(0, 6)
+          if (this.nowCityId === 1) return
+          this.cityList.forEach((value, index) => {
+            if (value.id === this.nowCityId) {
+              this.cityList.splice(index, 1)
+            }
+          })
+          let list1 = {'id': 1, 'name': '全国'}
+          this.$set(list1, 'id', 1)
+          this.$set(list1, 'name', '全国')
+          this.cityList.unshift(list1)
+        })
+      },
+      checkLogin () {
+        this.$http.get('/users/checkLogin')
+        .then(res => {
+          if (res.data.state === '00000') {
+            this.nickname = res.data.data
           }
         })
-        this.nowCity = nowCityName
-        this.nowCityId = nowCityId
+      },
+      cityInit () {
+        let {nowCityName, nowCityId} = nowCityStorage.fetch()
+        this.$store.dispatch('switchCity', {nowCityName, nowCityId})
+        this.cityInitAgain()
       }
     },
     mounted () {
-      this.$http.get('/users/checkLogin')
-      .then(res => {
-        if (res.data.state === '00000') {
-          this.nickname = res.data.data
-        }
-      })
-      this.$http.get('/city/getcity')
-      .then(res => {
-        this.cityList = (res.data.data).slice(0, 6)
-        console.log(this.cityList)
-      })
+      this.checkLogin()
+      this.cityInit()
     }
   }
 </script>
