@@ -5,7 +5,7 @@
     </div>
     <div class="city-select tbar-left">
       <a href="javascript:;" @click="switchCity">
-        <span class="area">全国</span>
+        <span class="area">{{ nowCity }}</span>
         <i>[切换城市]</i><i class="iconfont icon-coordinates"></i>
       </a>
     </div>
@@ -306,8 +306,8 @@
   .close-model {
     position: absolute;
     z-index: 10;
-    right: 30px;
-    top: 16px;
+    right: 20px;
+    top: 10px;
     font-size: 30px;
     cursor: pointer;
   }
