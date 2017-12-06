@@ -3,19 +3,14 @@
     <div class="search-container">
       <form class="form">
         <div class="search-box">
-          <input type="text" @click="searchPromptFlag=true" @blur="hideSearchPrompt" name="keyword" value="" autocomplete="off" placeholder="输入职位关键词">
+          <input type="text" @click="searchPromptFlag=true" v-model="search_text" @keyup="getKeys" @blur="hideSearchPrompt" name="keyword" value="" autocomplete="off" placeholder="输入职位关键词">
           <input type="submit" name="submit" value="搜索">
           <input type="hidden" name="" value="" v-model="search_text">
         </div>
         <div class="search-drop-box" v-show="searchPromptFlag">
           <ul class="drop-list">
-            <p style="padding: 5px 10px; color: #999">猜你要搜</p>
-            <li class="drop-list-item" @mousedown="test">1</li>
-            <li class="drop-list-item">2</li>
-            <li class="drop-list-item">3</li>
-            <li class="drop-list-item">4</li>
-            <li class="drop-list-item">5</li>
-            <li class="drop-list-item">6</li>
+            <p v-show="keyList.length!==0" style="padding: 5px 10px; color: #999">猜你要搜</p>
+            <li v-for="(item, index) in keyList" :key="'key' + index" :key-id="item.id" class="drop-list-item" @mousedown="test">{{ item.name }}</li>
           </ul>
         </div>
         <div class="hot-search-box">
@@ -38,7 +33,8 @@
     data () {
       return {
         search_text: '',
-        searchPromptFlag: false
+        searchPromptFlag: false,
+        keyList: []
       }
     },
     methods: {
@@ -47,15 +43,34 @@
       },
       test () {
         console.log(1)
-      }
-    },
-    directives: {
-      focus: {
-        update (el) {
-          el.focus()
-        }
+      },
+      getKeys () {
+        let searchText = this.search_text
+        let keyDefault = 'java'
+        // var timer = null
+        // // debugger
+        // if (timer) clearTimeout(timer)
+        // // debugger
+        // timer = setTimeout(() => {
+        //   console.log(1111)
+        //   // debugger
+        //   clearInterval(timer)
+        // }, 2000)
+        this.$http.post('/key/get_keys', {searchText, keyDefault})
+        .then(res => {
+          this.keyList = res.data.data.slice(0, 10)
+          console.log(res)
+        })
       }
     }
+    // ,
+    // directives: {
+    //   focus: {
+    //     update (el) {
+    //       el.focus()
+    //     }
+    //   }
+    // }
   }
 </script>
 
