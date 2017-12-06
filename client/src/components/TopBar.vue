@@ -311,6 +311,7 @@
     padding-left: 20px;
     height: 30px;
     line-height: 30px;
+    font-size: 14px;
   }
   .user-drop-menu span:hover {
     background: #999;

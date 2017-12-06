@@ -130,3 +130,16 @@ vuex中维护当前选择城市的id(nowCityId) 和 name(nowCityName) 值
 切换城市会改变vuex中nowCityId 和 nowCityName，并且会将这组值保存在localStorage中
 刷新页面会获取保存在localStorage中的这组值，并处理数据，使之正确显示在页面中
 ```
+### 首页搜索框组件
+自定义指令
+directives: {
+  focus: {
+    update (el) {
+      el.focus()
+    }
+  }
+}
+
+点击事件，失去焦点事件，按下鼠标事件
+
+click事件触发条件，鼠标按下，鼠标松开触发一次点击事件，但在按下之后，触发了input的blur事件，所以这个click事件并没有完成，就出现了冲突的情况。
