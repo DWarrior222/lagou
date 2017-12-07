@@ -3,6 +3,8 @@ import Vue from 'vue'
 import Router from 'vue-router'
 // 引入主页
 import Home from '@/pages/Home'
+// 工作列表页
+import Job from '@/pages/Job'
 // 使用VueRouter组件
 Vue.use(Router)
 // 导出VueRouter的实例
@@ -13,6 +15,11 @@ export default new Router({
       path: '/',
       name: 'Index',
       component: Home
+    },
+    {
+      path: '/jobs',
+      name: 'jobs',
+      component: Job
     }
   ]
 })

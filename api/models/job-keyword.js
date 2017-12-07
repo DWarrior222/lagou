@@ -15,7 +15,8 @@ let jobKeywordSchema = new mongoose.Schema({
   "id": {type: Number},
   "job_id": {type: String},
   "keyword_id": {type: Number},
-  "city_id": {type: Number}
+  "city_id": {type: Number},
+  "jobid": {type: mongoose.Schema.Types.ObjectId, ref: 'Job'}
 }, {collection: "job_keyword"});
 
 module.exports = mongoose.model("JobKeyword", jobKeywordSchema);

@@ -1,7 +1,7 @@
 <template>
   <div class="search-content">
     <div class="search-container">
-      <form class="form">
+      <form class="form" method="post" action="/jobs">
         <div class="search-box">
           <input type="text" @click="searchPromptFlag=true" v-model="search_text" @keyup="getKeys" @blur="hideSearchPrompt" name="keyword" value="" autocomplete="off" placeholder="输入职位关键词">
           <input type="submit" name="submit" value="搜索">
@@ -10,17 +10,20 @@
         <div class="search-drop-box" v-show="searchPromptFlag">
           <ul class="drop-list">
             <p v-show="keyList.length!==0" style="padding: 5px 10px; color: #999">猜你要搜</p>
-            <li v-for="(item, index) in keyList" :key="'key' + index" :key-id="item.id" class="drop-list-item" @mousedown="test">{{ item.name }}</li>
+            <li v-for="(item, index) in keyList" :key="'key' + index" :key-id="item.id" class="drop-list-item" @mousedown="searchJob(item)">{{ item.name }}</li>
           </ul>
         </div>
         <div class="hot-search-box">
           <dl class="hot-search">
             <dt>热门搜索</dt>
             <dd>用户运营</dd>
-            <dd>用户运营</dd>
-            <dd>用户运营</dd>
-            <dd>用户运营</dd>
-            <dd>用户运营</dd>
+            <dd>Java</dd>
+            <dd>UI设计师</dd>
+            <dd>招聘风暴</dd>
+            <dd>周销售经理</dd>
+            <dd>产品经理</dd>
+            <dd>C++</dd>
+            <dd>内容运营</dd>
           </dl>
         </div>
       </form>
@@ -34,15 +37,22 @@
       return {
         search_text: '',
         searchPromptFlag: false,
-        keyList: []
+        keyList: [],
+        keyJobList: []
       }
     },
     methods: {
       hideSearchPrompt () {
         this.searchPromptFlag = false
       },
-      test () {
-        console.log(1)
+      searchJob (item) {
+        let keyId = item.id
+        let cityId = this.$store.state.nowCityId
+        this.$http.post('/job/key_job', {keyId, cityId})
+        .then(res => {
+          console.log(res)
+          this.keyJobList = res.data.data
+        })
       },
       getKeys () {
         let searchText = this.search_text
@@ -59,7 +69,7 @@
         this.$http.post('/key/get_keys', {searchText, keyDefault})
         .then(res => {
           this.keyList = res.data.data.slice(0, 10)
-          console.log(res)
+          // console.log(res)
         })
       }
     }

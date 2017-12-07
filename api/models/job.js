@@ -34,7 +34,8 @@ let jobSchema = new mongoose.Schema({
   "advantage": {type: String},
   "job_nature": {type: Number},
   "created_at": {type: Number},
-  "update_at": {type: Number}
+  "update_at": {type: Number},
+  "keyjob": [{ type: mongoose.Schema.Types.ObjectId, ref: 'JobKeyword' }]
 }, {collection: "job"});
 
 module.exports = mongoose.model("Job", jobSchema);

@@ -143,3 +143,6 @@ directives: {
 点击事件，失去焦点事件，按下鼠标事件
 
 click事件触发条件，鼠标按下，鼠标松开触发一次点击事件，但在按下之后，触发了input的blur事件，所以这个click事件并没有完成，就出现了冲突的情况。
+
+
+其实在MongoDB里面，find()和findOne()的用法是一样的，举个例子：findOne({name:”mongo”})和find({name:”mongo”}).limit(1)其实是等效的。它们的参数也是一样的，只不过find()和findOne()返回的不同而已。
