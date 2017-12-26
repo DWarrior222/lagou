@@ -172,7 +172,6 @@ router.post('/keys_job', (req, res) => {
                 })
               }
               jobList.push(jobdoc)
-              console.log('test1')
               // 不能通过index值判断是否遍历完成，因为index值是混乱的
               if (minixsLength === jobList.length) {
                 // 根据上面获得的jobList，遍历其中工作信息中的company_id获取公司信息
@@ -185,7 +184,6 @@ router.post('/keys_job', (req, res) => {
                         message: err.message
                       })
                     }
-                    console.log('test2')
                     companyList.push(comdoc)
                     jobList[job_index].push(comdoc[0])
                     if (jobList.length === companyList.length) {
