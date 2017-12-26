@@ -3,6 +3,7 @@ let router = express.Router();
 let Job = require('./../models/job');
 let JobKey = require('./../models/job-keyword');
 let Company = require('./../models/company')
+let Keyword = require('./../models/keyword')
 let sd = require('silly-datetime');
 
 router.get('/get_job', (req, res) => {
@@ -88,6 +89,112 @@ router.post('/key_job', (req, res) => {
                 res.json({
                   state: '00000',
                   data: jobList
+                })
+              }
+            })
+          })
+        }
+      })
+    })
+  })
+})
+
+router.post('/keys_job', (req, res) => {
+  let searchText = req.body.searchText
+  let keyList = []
+  let keyJob = []
+  let minixsKeyJob = []
+  let sort = 1
+  let city_id = req.body.cityId
+  let page        = parseInt(req.param("page", 1));
+  let pageSize    = parseInt(req.param("pageSize", 10));
+  let skip        = (page-1)*pageSize;
+  let jobList = []
+  let companyList = []
+
+  console.log('keys_job')
+  Keyword.find()
+  .sort({"id": sort})
+  .limit(100)
+  .exec((err, keys_docs) => {
+    if (err) {
+      return res.json({
+        state: '00001',
+        message: err.message
+      })
+    }
+    keys_docs.forEach(item => {
+      if (item.name.indexOf(searchText) !== -1) {
+        keyList.push(item)
+      }
+    })
+    keyList.forEach(item => {
+
+      let params = {
+        city_id,
+        keyword_id: item.id
+      }
+      JobKey.find(params)
+      .skip(skip)
+      .limit(pageSize)
+      .exec((err, docs) => {
+        if (err) {
+          return res.json({
+            // unknown error, please contact technical customer service
+            state: '00001',
+            message: err.message
+          })
+        }
+        // docs是符合条件的工作id的数组
+        // 通过遍历docs，查询到工作表中具体的工作信息，并添加到jobList
+        keyJob.push(docs)
+        var keyJobLength = keyJob.length
+        console.log("keyList:  " + keyList.length)
+        console.log("keyJobLength:  " + keyJobLength)
+        if(keyList.length === keyJob.length) {
+          console.log('next')
+          // console.log(keyJob)
+          keyJob.forEach(keyJobItem => {
+            keyJobItem.forEach(jobItem => {
+              minixsKeyJob.push(jobItem)
+            })
+          })
+          // console.log(minixsKeyJob)
+          let minixsLength = minixsKeyJob.length
+          minixsKeyJob.forEach((item, index) => {
+            let job_id = parseInt(item.job_id)
+            Job.find({id: job_id})
+            .exec((error, jobdoc) => {
+              if (error) {
+                return res.json({
+                  state: 00001,
+                  message: err.message
+                })
+              }
+              jobList.push(jobdoc)
+              console.log('test1')
+              // 不能通过index值判断是否遍历完成，因为index值是混乱的
+              if (minixsLength === jobList.length) {
+                // 根据上面获得的jobList，遍历其中工作信息中的company_id获取公司信息
+                jobList.forEach((job_item, job_index) => {
+                  let company_id = parseInt(job_item[0].company_id)
+                  Company.find({id: company_id}, (comerr, comdoc) => {
+                    if (comerr) {
+                      return res.json({
+                        state: 00001,
+                        message: err.message
+                      })
+                    }
+                    console.log('test2')
+                    companyList.push(comdoc)
+                    jobList[job_index].push(comdoc[0])
+                    if (jobList.length === companyList.length) {
+                      res.json({
+                        state: '00000',
+                        data: jobList
+                      })
+                    }
+                  })
                 })
               }
             })

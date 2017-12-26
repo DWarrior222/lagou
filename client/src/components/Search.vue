@@ -1,7 +1,7 @@
 <template>
   <div class="search-content">
     <div class="search-container">
-      <form class="form" method="post" action="/jobs">
+      <form class="form" method="post" @submit.prevent="submit">
         <div class="search-box">
           <input type="text" @click="searchPromptFlag=true" v-model="search_text" @keyup="getKeys" @blur="hideSearchPrompt" name="keyword" value="" autocomplete="off" placeholder="输入职位关键词">
           <input type="submit" name="submit" value="搜索">
@@ -32,14 +32,18 @@
 </template>
 
 <script type="text/javascript">
+  import {mapState} from 'vuex'
   export default {
     data () {
       return {
         search_text: '',
         searchPromptFlag: false,
-        keyList: [],
-        keyJobList: []
+        keyList: []
+        // keyJobList: []
       }
+    },
+    computed: {
+      ...mapState(['jobList'])
     },
     methods: {
       hideSearchPrompt () {
@@ -51,7 +55,9 @@
         this.$http.post('/job/key_job', {keyId, cityId})
         .then(res => {
           console.log(res)
-          this.keyJobList = res.data.data
+          let jobList = res.data.data
+          this.$store.dispatch('getJobList', jobList)
+          this.$router.push('jobs')
         })
       },
       getKeys () {
@@ -69,18 +75,19 @@
         this.$http.post('/key/get_keys', {searchText, keyDefault})
         .then(res => {
           this.keyList = res.data.data.slice(0, 10)
-          // console.log(res)
+        })
+      },
+      submit () {
+        let searchText = this.search_text
+        let cityId = this.$store.state.nowCityId
+        console.log(1)
+        this.$http.post('/job/keys_job', {searchText, cityId})
+        .then(res => {
+          console.log(res)
+          this.$router.push('jobs')
         })
       }
     }
-    // ,
-    // directives: {
-    //   focus: {
-    //     update (el) {
-    //       el.focus()
-    //     }
-    //   }
-    // }
   }
 </script>
 
