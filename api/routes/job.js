@@ -212,6 +212,7 @@ router.post('/key_job', (req, res) => {
   let searchText = req.body.searchText;
   console.log(searchText)
   Keyword.findOne({"name": searchText}, (err, keyDoc) => {
+    console.log('keyDoc' + keyDoc)
     if (err) {
       return res.json({
         // unknown error, please contact technical customer service
@@ -226,7 +227,6 @@ router.post('/key_job', (req, res) => {
         message: '没有该关键字'
       })
     }
-    console.log("keyDoc" + keyDoc)
     let keyword_id = keyDoc.id
     let params = {
       city_id: req.body.cityId,
@@ -236,6 +236,7 @@ router.post('/key_job', (req, res) => {
     .skip(skip)
     .limit(pageSize)
     .exec((err, docs) => {
+      console.log(docs)
       if (err) {
         return res.json({
           // unknown error, please contact technical customer service
@@ -243,20 +244,30 @@ router.post('/key_job', (req, res) => {
           message: err.message
         })
       }
+      if (docs.length === 0) {
+        console.log('test1')
+        return res.json({
+          // unknown error, please contact technical customer service
+          state: '00002',
+          message: '没有对应的工作'
+        })
+      }
+      console.log('test2')
       // docs是符合条件的工作id的数组
       // 通过遍历docs，查询到工作表中具体的工作信息，并添加到jobList
-      console.log("docs:  " + docs.length)
+      // console.log("docs:  " + docs.length)
       var docsLength = docs.length
       docs.forEach((item, index) => {
         let job_id = parseInt(item.job_id)
-        Job.find({id: job_id}, (error, jobdoc) => {
+        Job.find({id: job_id}, (error, jobDoc) => {
+          console.log('jobDoc' + jobDoc)
           if (error) {
             return res.json({
               state: 00001,
               message: err.message
             })
           }
-          jobList.push(jobdoc)
+          jobList.push(jobDoc)
           // 不能通过index值判断是否遍历完成，因为index值是混乱的
           if (docsLength === jobList.length) {
             // 根据上面获得的jobList，遍历其中工作信息中的company_id获取公司信息
