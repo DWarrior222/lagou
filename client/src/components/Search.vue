@@ -3,7 +3,7 @@
     <div class="search-container">
       <form class="form" method="post" @submit.prevent="submit">
         <div class="search-box">
-          <input type="text" @click="searchPromptFlag=true" v-model="search_text" @keyup="getKeys" @blur="hideSearchPrompt" name="keyword" value="" autocomplete="off" placeholder="输入职位关键词">
+          <input type="text" @click="getKeys" v-model="search_text" @keyup="getKeys" @blur="hideSearchPrompt" name="keyword" value="" autocomplete="off" placeholder="输入职位关键词">
           <input type="submit" name="submit" value="搜索">
           <input type="hidden" name="" value="" v-model="search_text">
         </div>
@@ -45,33 +45,36 @@
     computed: {
       ...mapState(['jobList'])
     },
+    mounted () {
+      console.log(this.$route.params.searchText)
+      let searchText = this.$route.params.searchText
+      this.search_text = searchText || ''
+    },
     methods: {
       hideSearchPrompt () {
         this.searchPromptFlag = false
       },
       searchJob (item) {
-        let keyId = item.id
+        let searchText = item.name
+        this.searchText = searchText
+        this.search(searchText)
+      },
+      search (searchText) {
         let cityId = this.$store.state.nowCityId
-        this.$http.post('/job/key_job', {keyId, cityId})
+        this.$http.post('/job/key_job', {searchText, cityId})
         .then(res => {
           console.log(res)
           let jobList = res.data.data
           this.$store.dispatch('getJobList', jobList)
-          this.$router.push('jobs')
+          if (this.$route.path !== '/jobs') {
+            this.$router.push({name: 'jobs', params: {searchText: searchText}})
+          }
         })
       },
       getKeys () {
-        let searchText = this.search_text
+        this.searchPromptFlag = true
+        let searchText = this.search_text.trim()
         let keyDefault = 'java'
-        // var timer = null
-        // // debugger
-        // if (timer) clearTimeout(timer)
-        // // debugger
-        // timer = setTimeout(() => {
-        //   console.log(1111)
-        //   // debugger
-        //   clearInterval(timer)
-        // }, 2000)
         this.$http.post('/key/get_keys', {searchText, keyDefault})
         .then(res => {
           this.keyList = res.data.data.slice(0, 10)
@@ -79,13 +82,7 @@
       },
       submit () {
         let searchText = this.search_text
-        let cityId = this.$store.state.nowCityId
-        console.log(1)
-        this.$http.post('/job/keys_job', {searchText, cityId})
-        .then(res => {
-          console.log(res)
-          this.$router.push('jobs')
-        })
+        this.search(searchText)
       }
     }
   }

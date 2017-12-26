@@ -1,6 +1,7 @@
 let express = require('express');
 let router = express.Router();
 let City = require('./../models/city');
+let convertPinyin = require('./../convertPinyin');
 let sd = require('silly-datetime');
 
 
@@ -16,10 +17,13 @@ router.get('/getcity', (req, res) => {
         message: err.message
       })
     }
+    docs.forEach(value => {
+      value.pinyin = convertPinyin(value.name)
+    })
     res.json({
       // success
       state: '00000',
-        data: docs
+      data: docs
     })
   })
 })

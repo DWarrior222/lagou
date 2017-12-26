@@ -11,7 +11,8 @@ let mongoose = require('../db');
 
 let citySchema = new mongoose.Schema({
   "id": {type: Number},
-  "name": {type: String}
+  "name": {type: String},
+  "pinyin": {type: String}
 }, { collection: "city" });
 
 module.exports = mongoose.model("", citySchema);

@@ -1,7 +1,7 @@
 <template id="">
   <div class="top-bar">
     <div class="tbar-logo tbar-left">
-      <a href="javascript:;"><img src="../assets/images/logo_1c5763c.png" alt="logo"></a>
+      <a href="/"><img src="../assets/images/logo_1c5763c.png" alt="logo"></a>
     </div>
     <div class="city-select tbar-left">
       <a href="javascript:;" @click="switchCity">

@@ -9,7 +9,7 @@
       </div>
     </div>
     <ul>
-      <li v-for="(item, index) in cityList">{{ item.name }}</li>
+      <li v-for="(item, index) in cityList">{{ item.name }} {{ item.pinyin }}</li>
     </ul>
     <div class="footer-wrap">
       <v-footer></v-footer>

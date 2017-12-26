@@ -9,7 +9,8 @@ export default new Vuex.Store({
   state: {
     nowCityName: '全国',
     nowCityId: 1,
-    jobList: []
+    jobList: [],
+    search_text: ''
   },
   // 更改
   mutations: {
@@ -21,11 +22,15 @@ export default new Vuex.Store({
     },
     getJobList (state, jobList) {
       state.jobList = jobList
+    },
+    getSearchText (state, searchText) {
+      state.search_text = searchText
     }
   },
   // 行为
   actions: {
     switchCity: ({commit}, nowCity) => commit('switchCity', nowCity),
-    getJobList: ({commit}, jobList) => commit('getJobList', jobList)
+    getJobList: ({commit}, jobList) => commit('getJobList', jobList),
+    getSearchText: ({commit}, searchText) => commit('getSearchText', searchText)
   }
 })
