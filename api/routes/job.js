@@ -236,7 +236,6 @@ router.post('/key_job', (req, res) => {
     .skip(skip)
     .limit(pageSize)
     .exec((err, docs) => {
-      console.log(docs)
       if (err) {
         return res.json({
           // unknown error, please contact technical customer service
@@ -245,14 +244,12 @@ router.post('/key_job', (req, res) => {
         })
       }
       if (docs.length === 0) {
-        console.log('test1')
         return res.json({
           // unknown error, please contact technical customer service
           state: '00002',
           message: '没有对应的工作'
         })
       }
-      console.log('test2')
       // docs是符合条件的工作id的数组
       // 通过遍历docs，查询到工作表中具体的工作信息，并添加到jobList
       // console.log("docs:  " + docs.length)
@@ -260,7 +257,7 @@ router.post('/key_job', (req, res) => {
       docs.forEach((item, index) => {
         let job_id = parseInt(item.job_id)
         Job.find({id: job_id}, (error, jobDoc) => {
-          console.log('jobDoc' + jobDoc)
+          // console.log('jobDoc' + jobDoc)
           if (error) {
             return res.json({
               state: 00001,
@@ -296,4 +293,133 @@ router.post('/key_job', (req, res) => {
     })
   })
 })
+
+// router.post('/filter_job', (req, res) => {
+//   let page        = parseInt(req.param("page", 1));
+//   let pageSize    = parseInt(req.param("pageSize", 20));
+//   let skip        = (page-1)*pageSize;
+//   let work_year   = 1;
+//   let jobList = []
+//   let companyList = []
+//   let searchText = req.body.searchText;
+//   Keyword.findOne({"name": searchText}, (err, keyDoc) => {
+//     // console.log('keyDoc' + keyDoc)
+//     if (err) {
+//       return res.json({
+//         // unknown error, please contact technical customer service
+//         state: '00001',
+//         message: err.message
+//       })
+//     }
+//     if (!keyDoc) {
+//       return res.json({
+//         // unknown error, please contact technical customer service
+//         state: '00002',
+//         message: '没有该关键字'
+//       })
+//     }
+//     let keyword_id = keyDoc.id
+//     let params = {
+//       city_id: req.body.cityId,
+//       keyword_id
+//     }
+//     JobKey.find(params)
+//     .skip(skip)
+//     .limit(pageSize)
+//     .exec((err, docs) => {
+//       if (err) {
+//         return res.json({
+//           // unknown error, please contact technical customer service
+//           state: '00001',
+//           message: err.message
+//         })
+//       }
+//       if (docs.length === 0) {
+//         return res.json({
+//           // unknown error, please contact technical customer service
+//           state: '00002',
+//           message: '没有对应的工作'
+//         })
+//       }
+//       // docs是符合条件的工作id的数组
+//       // 通过遍历docs，查询到工作表中具体的工作信息，并添加到jobList
+//       // console.log("docs:  " + docs.length)
+//       var docsLength = docs.length
+//       docs.forEach((item, index) => {
+//         let job_id = parseInt(item.job_id)
+//         Job.find({id: job_id, work_year: 3}, (error, jobDoc) => {
+//           if (error) {
+//             return res.json({
+//               state: 00001,
+//               message: err.message
+//             })
+//           }
+//           if (jobDoc.length !== 0) {
+//             // console.log(jobDoc)
+//             jobList.push(jobDoc)
+//           } else {
+//             docsLength--
+//           }
+//           // 不能通过index值判断是否遍历完成，因为index值是混乱的
+//           if (docsLength === jobList.length) {
+//             // 根据上面获得的jobList，遍历其中工作信息中的company_id获取公司信息
+//             jobList.forEach((job_item, job_index) => {
+//               let company_id = parseInt(job_item[0].company_id)
+//               Company.find({id: company_id}, (comerr, comdoc) => {
+//                 if (comerr) {
+//                   return res.json({
+//                     state: 00001,
+//                     message: err.message
+//                   })
+//                 }
+//                 companyList.push(comdoc)
+//                 jobList[job_index].push(comdoc[0])
+//                 if (jobList.length === companyList.length) {
+//                   res.json({
+//                     state: '00000',
+//                     data: jobList
+//                   })
+//                 }
+//               })
+//             })
+//           }
+//         })
+//       })
+//     })
+//   })
+// })
+
+router.get('/test', (req, res) => {
+  JobKey.find({})
+  .skip(0)
+  .limit(10)
+  .exec((err, docs) => {
+    if (err) {
+      return res.json({
+        state: 00001,
+        message: err.message
+      })
+    }
+    docs.forEach((item, index) => {
+      let job_id = parseInt(item.job_id)
+      Job.find({id: job_id}, (error, jobDoc) => {
+        if (error) {
+          return res.json({
+            state: 00001,
+            message: err.message
+          })
+        }
+        item.jobid = jobDoc[0]._id
+      })
+    })
+    // console.log(docs)
+    res.json({
+      state: 00000,
+      data: docs,
+      message: 'success'
+    })
+  })
+})
+
+
 module.exports = router;

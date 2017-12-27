@@ -6,6 +6,7 @@ import Home from '@/pages/Home'
 // 工作列表页
 import Job from '@/pages/Job'
 // 使用VueRouter组件
+import City from '@/pages/City'
 Vue.use(Router)
 // 导出VueRouter的实例
 export default new Router({
@@ -20,6 +21,11 @@ export default new Router({
       path: '/jobs',
       name: 'jobs',
       component: Job
+    },
+    {
+      path: '/citys',
+      name: 'citys',
+      component: City
     }
   ]
 })

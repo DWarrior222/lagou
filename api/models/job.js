@@ -13,7 +13,7 @@ let mongoose = require('../db');
  * education      教育经历
  * description    职位介绍
  * advantage      职位优势
- * job_nature
+ * job_nature     工作类型
  * created_at
  * update_at
  *

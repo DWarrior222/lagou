@@ -7,6 +7,41 @@
       <div class="search-wrap">
         <search></search>
       </div>
+      <div class="filter-wrap">
+        <div class="work-place">
+          <dl class="">
+            <dt>工作地点：</dt>
+            <dd>全国</dd>
+            <dd>北京</dd>
+            <dd>上海</dd>
+            <dd>深圳</dd>
+            <dd>成都</dd>
+            <dd>杭州</dd>
+            <dd>西安</dd>
+          </dl>
+        </div>
+        <div class="work-experience">
+          <dl class="">
+            <dt>工作经验</dt>
+            <dd>不限</dd>
+            <dd>应届毕业生</dd>
+            <dd>3年及以下</dd>
+            <dd>3-5年</dd>
+            <dd>5-10年</dd>
+            <dd>10年以上</dd>
+            <dd>不要求</dd>
+          </dl>
+        </div>
+        <div class="education">
+
+        </div>
+        <div class="fund-profile">
+
+        </div>
+        <div class="industry">
+
+        </div>
+      </div>
       <div class="job-wrap">
         <ul>
           <li v-for="(item, index) in jobList">

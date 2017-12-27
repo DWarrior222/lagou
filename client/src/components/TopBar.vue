@@ -68,7 +68,7 @@
     <div v-show="areaModalFlag" class="model area-model">
       <div class="">
         <span class="close-model iconfont icon-close" @click="areaModalFlag=false"></span>
-        <div id="cboxLoadedContent" style="width: 502px; overflow: hidden; height: 439px;">
+        <div id="cboxLoadedContent" style="width: 502px; overflow: hidden; height: 450px;">
           <h2>切换城市</h2>
           <div id="changeCityBox" class="popup changeCityBox">
             <div class="changeCity_header">
@@ -86,12 +86,12 @@
                 </a>
               </li> -->
               <li v-for="(item, index) in cityList" @click="switchCityComfirm(item)">
-                <a class="tab" :data-cityId="item.id" href="javascript:void(0);">
+                <a class="tab" @click="areaModalFlag=false" :data-cityId="item.id" href="javascript:void(0);">
                   {{ item.name }}
                 </a>
               </li>
             </ul>
-            <p class="changeCity_footer">其他城市正在开通中，敬请期待～</p>
+            <router-link class="tab other-city" to="/citys">其他城市</router-link>
           </div>
         </div>
       </div>
@@ -215,6 +215,10 @@
 </script>
 
 <style scoped>
+  .other-city {
+    margin: 10px 35px;
+    text-decoration: underline;
+  }
   .top-bar {
     width: 980px;
     height: 50px;

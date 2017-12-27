@@ -33,6 +33,7 @@
 
 <script type="text/javascript">
   import {mapState} from 'vuex'
+  import storageSearchText from '../store/storageSearchText'
   export default {
     data () {
       return {
@@ -46,9 +47,15 @@
       ...mapState(['jobList'])
     },
     mounted () {
-      console.log(this.$route.params.searchText)
-      let searchText = this.$route.params.searchText
-      this.search_text = searchText || ''
+      if (this.$route.name === 'jobs') {
+        this.search_text = storageSearchText.fetch().searchText
+        let searchText = this.search_text
+        this.search(searchText)
+      }
+      // this.$http.get('/job/test')
+      // .then(res => {
+      //   console.log(res)
+      // })
     },
     methods: {
       hideSearchPrompt () {
@@ -56,10 +63,11 @@
       },
       searchJob (item) {
         let searchText = item.name
-        this.searchText = searchText
+        this.search_text = searchText
         this.search(searchText)
       },
       search (searchText) {
+        storageSearchText.save({searchText})
         let cityId = this.$store.state.nowCityId
         this.$http.post('/job/key_job', {searchText, cityId})
         .then(res => {
