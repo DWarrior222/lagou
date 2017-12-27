@@ -146,9 +146,15 @@ click事件触发条件，鼠标按下，鼠标松开触发一次点击事件，
 
 其实在MongoDB里面，find()和findOne()的用法是一样的，举个例子：findOne({name:”mongo”})和find({name:”mongo”}).limit(1)其实是等效的。它们的参数也是一样的，只不过find()和findOne()返回的不同而已。
 
+### 搜索的api
+关联查询尝试失败，手动关联
+有两个参数是，地区和关键字
+
 ### 工作列表页
-把最后一次搜索记录存在本地
-路由改变时传递参数
-1.通过router-link的to传递参数
-2.通过this.#router.push传递参数
-3.通过locaStorage存储
+关键字搜索时，从主页跳转到jobs页面，保留搜索的关键字
+
+1.路由改变时传递参数
+router-link组件的to属性传递参数 或者 this.#router.push传递参数
+在目标页面通过this.$route.params接收参数
+
+2.locaStorage本地存储
