@@ -44,7 +44,7 @@
       }
     },
     computed: {
-      ...mapState(['jobList'])
+      ...mapState(['jobList', 'nowCityId'])
     },
     mounted () {
       if (this.$route.name === 'jobs') {
@@ -52,10 +52,6 @@
         let searchText = this.search_text
         this.search(searchText)
       }
-      // this.$http.get('/job/test')
-      // .then(res => {
-      //   console.log(res)
-      // })
     },
     methods: {
       hideSearchPrompt () {
@@ -66,18 +62,40 @@
         this.search_text = searchText
         this.search(searchText)
       },
+      searchCallback (res, searchText) {
+        let jobList = res.data.data
+        this.$store.dispatch('getJobList', jobList)
+        if (this.$route.path !== '/jobs') {
+          this.$router.push({name: 'jobs', params: {searchText: searchText}})
+        }
+      },
       search (searchText) {
         storageSearchText.save({searchText})
         let cityId = this.$store.state.nowCityId
-        this.$http.post('/job/key_job', {searchText, cityId})
-        .then(res => {
-          console.log(res)
-          let jobList = res.data.data
-          this.$store.dispatch('getJobList', jobList)
-          if (this.$route.path !== '/jobs') {
-            this.$router.push({name: 'jobs', params: {searchText: searchText}})
-          }
-        })
+        if (cityId === 1) {
+          console.log('---------------------')
+          this.$http.post('/job/key_alljob', {searchText})
+          .then(res => {
+            console.log(res)
+            this.searchCallback(res, searchText)
+            // let jobList = res.data.data
+            // this.$store.dispatch('getJobList', jobList)
+            // if (this.$route.path !== '/jobs') {
+            //   this.$router.push({name: 'jobs', params: {searchText: searchText}})
+            // }
+          })
+        } else {
+          this.$http.post('/job/key_job', {searchText, cityId})
+          .then(res => {
+            console.log(res)
+            this.searchCallback(res, searchText)
+            // let jobList = res.data.data
+            // this.$store.dispatch('getJobList', jobList)
+            // if (this.$route.path !== '/jobs') {
+            //   this.$router.push({name: 'jobs', params: {searchText: searchText}})
+            // }
+          })
+        }
       },
       getKeys () {
         this.searchPromptFlag = true
@@ -91,6 +109,16 @@
       submit () {
         let searchText = this.search_text
         this.search(searchText)
+      }
+    },
+    watch: {
+      nowCityId: {
+        handler (value1, value2) {
+          if (this.$route.path === '/jobs') {
+            let searchText = this.search_text
+            this.search(searchText)
+          }
+        }
       }
     }
   }

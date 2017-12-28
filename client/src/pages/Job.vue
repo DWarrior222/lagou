@@ -51,6 +51,9 @@
         </ul>
       </div>
     </div>
+    <div class="footer-wrap">
+      <v-footer></v-footer>
+    </div>
   </div>
 </template>
 <script type="text/javascript">
@@ -65,7 +68,7 @@ export default {
     Search
   },
   computed: {
-    ...mapState(['jobList'])
+    ...mapState(['jobList', 'nowCityId'])
   },
   data () {
     return {

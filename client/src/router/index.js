@@ -23,7 +23,7 @@ export default new Router({
       component: Job
     },
     {
-      path: '/citys',
+      path: '/citylist',
       name: 'citys',
       component: City
     }

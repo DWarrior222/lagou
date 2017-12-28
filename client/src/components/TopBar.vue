@@ -91,7 +91,7 @@
                 </a>
               </li>
             </ul>
-            <router-link class="tab other-city" to="/citys">其他城市</router-link>
+            <router-link class="tab other-city" to="/citylist">其他城市</router-link>
           </div>
         </div>
       </div>
@@ -111,6 +111,7 @@
         regisModalFlag: false,
         areaModalFlag: false,
         dropMenuFlag: false,
+        judgeCityList: [],
         cityList: [],
         nickname: '',
         username: 'luyuan',
@@ -168,7 +169,19 @@
         })
       },
       switchCity () {
-        this.areaModalFlag = true
+        let nowCityId = this.nowCityId
+        // debugger
+        let flag = true
+        this.judgeCityList.forEach(item => {
+          if (item.id === nowCityId) {
+            console.log(item)
+            flag = false
+            this.areaModalFlag = true
+          }
+        })
+        if (flag) {
+          this.$router.push('citylist')
+        }
       },
       switchCityComfirm (item) {
         let nowCityName = item.name
@@ -181,15 +194,17 @@
         this.$http.get('/city/getcity')
         .then(res => {
           this.cityList = (res.data.data).slice(0, 6)
+          let list1 = {'id': 1, 'name': '全国'}
+          this.$set(list1, 'id', 1)
+          this.$set(list1, 'name', '全国')
+          this.judgeCityList = (res.data.data).slice(0, 6)
+          this.judgeCityList.unshift(list1)
           if (this.nowCityId === 1) return
           this.cityList.forEach((value, index) => {
             if (value.id === this.nowCityId) {
               this.cityList.splice(index, 1)
             }
           })
-          let list1 = {'id': 1, 'name': '全国'}
-          this.$set(list1, 'id', 1)
-          this.$set(list1, 'name', '全国')
           this.cityList.unshift(list1)
         })
       },
