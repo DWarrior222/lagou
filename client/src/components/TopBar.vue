@@ -176,7 +176,9 @@
           if (item.id === nowCityId) {
             console.log(item)
             flag = false
-            this.areaModalFlag = true
+            if (this.$route.path !== '/citylist') {
+              this.areaModalFlag = true
+            }
           }
         })
         if (flag) {
