@@ -1,5 +1,5 @@
 <template id="">
-  <div>
+  <div class="home-body">
     <div class="top-bar-wrap">
       <top-bar></top-bar>
     </div>
@@ -41,6 +41,9 @@
   }
 </script>
 <style scoped>
+  .home-body {
+    background: #fff;
+  }
   .top-bar-wrap {
     width: 100%;
     height: 50px;
