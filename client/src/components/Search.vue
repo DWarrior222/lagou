@@ -73,7 +73,6 @@
         storageSearchText.save({searchText})
         let cityId = this.$store.state.nowCityId
         if (cityId === 1) {
-          console.log('---------------------')
           this.$http.post('/job/key_alljob', {searchText})
           .then(res => {
             console.log(res)

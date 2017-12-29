@@ -227,6 +227,13 @@
     mounted () {
       this.checkLogin()
       this.cityInit()
+    },
+    watch: {
+      nowCityId: {
+        handler (value1, value2) {
+          this.cityInit()
+        }
+      }
     }
   }
 </script>

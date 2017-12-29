@@ -12,7 +12,7 @@
           <dl class="">
             <dt>工作地点：</dt>
             <dd :class="{'now-select': !nowCity}" @click="deselectCity()">全国</dd>
-            <dd v-for="(item, index) in commonCityList" :class="{'now-select': nowCity===item}" @click="switchCityComfirm(item)">{{ item.name }}</dd>
+            <dd v-for="(item, index) in commonCityList" :class="{'now-select': nowCityId===item.id}" @click="switchCityComfirm(item)">{{ item.name }}</dd>
             <router-link class="iconfont icon-enter" to="/citylist">全部城市</router-link>
           </dl>
         </div>
@@ -47,7 +47,10 @@
         <div class="select-ing">
           <dl>
             <dt v-show="selecting.length">已选条件：</dt>
-            <dd v-for="item in selecting" class="now-select">{{ item.name }}</dd>
+            <dd v-for="item in selecting" class="now-select">
+              {{ item.name }}
+              <span class="iconfont icon-delete" @click="deselectAnyone(item)"></span>
+            </dd>
           </dl>
         </div>
       </div>
@@ -79,7 +82,7 @@ export default {
     Search
   },
   computed: {
-    ...mapState(['jobList', 'nowCityId'])
+    ...mapState(['jobList', 'nowCityId', 'nowCityName'])
   },
   data () {
     return {
@@ -99,6 +102,29 @@ export default {
     }
   },
   methods: {
+    deselectAnyone (item) {
+      this.selecting.forEach((value, index) => {
+        if (value === item) {
+          this.selecting.splice(index, 1)
+        }
+      })
+      if (item === this.nowCity) {
+        this.nowCity = ''
+        this.deselectCity()
+      }
+      if (item === this.nowEducation) {
+        this.nowEducation = ''
+      }
+      if (item === this.nowWorkExperience) {
+        this.nowWorkExperience = ''
+      }
+      if (item === this.nowFundProfile) {
+        this.nowFundProfile = ''
+      }
+      if (item === this.nowIndustry) {
+        this.nowIndustry = ''
+      }
+    },
     deselectWork () {
       this.selecting.forEach((value, index) => {
         if (value === this.nowWorkExperience) {
@@ -155,7 +181,6 @@ export default {
       nowCityStorage.save({nowCityName, nowCityId})
       this.selecting.forEach((value, index) => {
         if (value === this.nowCity) {
-          console.log(item, index)
           this.selecting.splice(index, 1)
         }
       })
@@ -166,7 +191,6 @@ export default {
       // console.log(item)
       this.selecting.forEach((value, index) => {
         if (value === this.nowIndustry) {
-          console.log(item, index)
           this.selecting.splice(index, 1)
         }
       })
@@ -176,7 +200,6 @@ export default {
     selectWork (item) {
       this.selecting.forEach((value, index) => {
         if (value === this.nowWorkExperience) {
-          console.log(item, index)
           this.selecting.splice(index, 1)
         }
       })
@@ -186,7 +209,6 @@ export default {
     selectEducation (item) {
       this.selecting.forEach((value, index) => {
         if (value === this.nowEducation) {
-          console.log(item, index)
           this.selecting.splice(index, 1)
         }
       })
@@ -196,7 +218,6 @@ export default {
     selectFund (item) {
       this.selecting.forEach((value, index) => {
         if (value === this.nowFundProfile) {
-          console.log(item, index)
           this.selecting.splice(index, 1)
         }
       })
@@ -209,17 +230,51 @@ export default {
       this.workExperience = workExperience
       this.fundProfile = fundProfile
       this.industry = industry
+    },
+    nowCityInit () {
+      this.selecting.forEach((value, index) => {
+        if (value === this.nowCity) {
+          this.selecting.splice(index, 1)
+        }
+      })
+      let id = this.nowCityId
+      let name = this.nowCityName
+      this.nowCity = {'id': id, 'name': name}
+      this.$set(this.nowCity, 'id', id)
+      this.$set(this.nowCity, 'name', name)
+      this.selecting.push(this.nowCity)
+      console.log(this.nowCity)
     }
   },
   mounted () {
     this.analogDateinit()
+    // console.log(this.nowCityId, this.nowCityName)
+    if (this.nowCityId === 1) {
+      this.nowCity = ''
+    } else {
+      this.nowCityInit()
+    }
     this.$http.get('/city/getcity')
     .then(res => {
       this.cityList = res.data.data
       this.commonCityList = (this.cityList).slice(0, 12)
     })
+  },
+  watch: {
+    nowCityId: {
+      handler (value1, value2) {
+        console.log(value1)
+        if (value1 === 1) {
+          this.nowCity = ''
+        } else {
+          this.nowCityInit()
+        }
+      }
+    }
   }
 }
+// ^([0-9]+)(,[0-9]+)*,([0-9]+)$
+// ^([0-9]+)(,[0-9]+)*,?([0-9]+)?$
 </script>
 
 <style scoped>
@@ -296,5 +351,8 @@ export default {
     height: 30px;
     position: absolute;
     bottom: 5px;
+  }
+  .select-ing .icon-delete:before {
+    font-size: 16px;
   }
 </style>
