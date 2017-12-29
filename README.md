@@ -174,6 +174,8 @@ router-link组件的to属性传递参数 或者 this.#router.push传递参数
 通过v-for遍历一个包含26个英文字母数组，每一个字母代表一组城市，
 在内部通过v-for遍历所有的城市列表，就是cityList(包含pinyin字段)，通过判断外层v-for的项和内层v-for的项中的pinyin字段的首字母  是否相同， 相同则插入这一项，否则不插入
 ```
+在city页面选择完城市后，通过router.go(-1)返回上一个路由
+使用了vue-router的话，使用router.go(-1)可以实现。history.go操作的是浏览器的路由，在单页应用中这样操作肯定是返回不到上一页的。
 
 左上角的城市选择：
 
@@ -220,3 +222,6 @@ router-link组件的to属性传递参数 或者 this.#router.push传递参数
 本来地，再选择城市后，需要再次请求数据，但是我这里没有做还是实现了，我在search组件中，通过watch监听，只要vuex中的城市信息改变就会重新获取数据。
 ```
 通过watch 和 vuex配合，实在方便了不少。
+
+
+其中<router-view>可以传递props，支持v-ref,同时也可以使用v-transition和transition-mode来获得场景切换效果，被渲染的组件将注册到父级组件的this.$对象上。

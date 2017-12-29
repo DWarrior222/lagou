@@ -65,7 +65,7 @@
       searchCallback (res, searchText) {
         let jobList = res.data.data
         this.$store.dispatch('getJobList', jobList)
-        if (this.$route.path !== '/jobs') {
+        if (this.$route.path === '/') {
           this.$router.push({name: 'jobs', params: {searchText: searchText}})
         }
       },

@@ -68,10 +68,16 @@ export default {
     switchCityComfirm (item) {
       let nowCityName = item.name
       let nowCityId = item.id
-      console.log(item)
       this.$store.dispatch('switchCity', {nowCityName, nowCityId})
       nowCityStorage.save({nowCityName, nowCityId})
-      this.$router.push('jobs')
+      // this.$router.push('jobs')
+      debugger
+      this.$router.go(-1)
+      // console.log(history)
+      // if (this. === '') {
+      //   this.$router.push('/')
+      // } else {
+      // }
     }
   },
   mounted () {

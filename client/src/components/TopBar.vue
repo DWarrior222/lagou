@@ -90,8 +90,10 @@
                   {{ item.name }}
                 </a>
               </li>
+              <li>
+                <router-link class="tab other-city" to="/citylist">其他城市</router-link>
+              </li>
             </ul>
-            <router-link class="tab other-city" to="/citylist">其他城市</router-link>
           </div>
         </div>
       </div>
@@ -195,11 +197,11 @@
       cityInitAgain () {
         this.$http.get('/city/getcity')
         .then(res => {
-          this.cityList = (res.data.data).slice(0, 6)
+          this.cityList = (res.data.data).slice(0, 5)
           let list1 = {'id': 1, 'name': '全国'}
           this.$set(list1, 'id', 1)
           this.$set(list1, 'name', '全国')
-          this.judgeCityList = (res.data.data).slice(0, 6)
+          this.judgeCityList = (res.data.data).slice(0, 5)
           this.judgeCityList.unshift(list1)
           if (this.nowCityId === 1) return
           this.cityList.forEach((value, index) => {
@@ -240,7 +242,7 @@
 
 <style scoped>
   .other-city {
-    margin: 10px 35px;
+    /* margin: 10px 35px; */
     text-decoration: underline;
   }
   .top-bar {
@@ -368,7 +370,7 @@
   .area-model {
     padding: 0px;
     width: 500px;
-    height: 460px;
+    height: 430px;
   }
   .area-model h2 {
     font-size: 18px;
