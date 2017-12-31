@@ -55,13 +55,38 @@
         </div>
       </div>
       <div class="job-wrap">
-        <ul>
-          <li v-for="(item, index) in jobList">
-            <span>{{ item[0].title }}</span>
-            <span>{{ item[1].fullname }}</span>
-          </li>
-        </ul>
+        <div class="job-container">
+          <ul class="job-list">
+            <li v-for="(item, index) in jobList">
+              <div class="job-content">
+                <div class="job-infor">
+                  <router-link tag="h3" to="/job_details">{{ item[0].title }}</router-link>
+                  <p><i>{{ item[0].salary }}</i>|<i>{{ item[0].city_id }}</i>|<i>{{ item[0].education }}</i>|<i>{{ item[0].work_year }}年工作经验</i></p>
+                </div>
+                <div class="job-tag">
+                  <span>{{ item[0].advantage }}</span>
+                </div>
+              </div>
+              <div class="layout-line"></div>
+              <div class="company-content">
+                <div class="company-infor">
+                  <router-link tag="h3" to="/comp_details">{{ item[1].fullname }}</router-link>
+                  <p>
+                    <i v-for="(value, idx) in item[2]">{{ value.name }}</i>
+                  </p>
+                </div>
+                <div class="company-tag">
+                  <span>{{ item[1].features }}</span>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div class="side">
+
+        </div>
       </div>
+
     </div>
     <div class="footer-wrap">
       <v-footer></v-footer>
@@ -248,7 +273,6 @@ export default {
   },
   mounted () {
     this.analogDateinit()
-    // console.log(this.nowCityId, this.nowCityName)
     if (this.nowCityId === 1) {
       this.nowCity = ''
     } else {
@@ -273,8 +297,6 @@ export default {
     }
   }
 }
-// ^([0-9]+)(,[0-9]+)*,([0-9]+)$
-// ^([0-9]+)(,[0-9]+)*,?([0-9]+)?$
 </script>
 
 <style scoped>
@@ -354,5 +376,69 @@ export default {
   }
   .select-ing .icon-delete:before {
     font-size: 16px;
+  }
+
+  .job-wrap {
+    width: 980px;
+    margin: 0 auto;
+    overflow: hidden;
+  }
+  .job-wrap .job-list li {
+    height: 122px;
+    color: #555;
+    border: 1px solid #ededed;
+    margin-top: 18px;
+    display: flex;
+  }
+  .job-wrap .job-container {
+    float: left;
+    width: 720px;
+  }
+  .job-wrap .side {
+    float: right;
+    width: 260px;
+  }
+  .job-wrap .job-content {
+    width: 410px;
+    padding: 15px;
+    line-height: 27px;
+  }
+  .job-wrap .company-content {
+    padding: 15px;
+    width: 300px;
+    line-height: 27px;
+  }
+  .job-content h3,.company-content h3 {
+    color: #00b38a;
+    cursor: pointer;
+  }
+  .job-content .job-tag, .company-content .company-tag {
+    margin-top: 10px;
+    background: #f1f1f1;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    word-wrap: normal;
+  }
+  .job-content .job-infor p i {
+    padding: 0 10px;
+  }
+  .job-content .job-infor p i:first-child {
+    padding-left: 0px;
+    color: #fd5f39;
+    font-size: 16px;
+  }
+  .layout-line {
+    height: 94px;
+    margin-top: 14px;
+    border: 1px dotted #ccc;
+  }
+  .company-infor p i {
+    border: 1px solid #e1f2fa;
+    margin-right: 6px;
+    margin-bottom: 10px;
+    font-size: 12px;
+    background-color: #ebf8ea;
+    color: #3d9ccc;
   }
 </style>
