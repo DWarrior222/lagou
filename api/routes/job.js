@@ -209,6 +209,7 @@ router.post('/key_job', (req, res) => {
                 jobList[job_index].push(comdoc[0])
                 // ---------------------
                 let company_id = comdoc[0].id
+                // let city_id = city_id || comdoc[0].city_id
                 CompanyInd.find({company_id}, (compIndErr, compIndDoc) => {
                   if (compIndErr) {
                     return res.json({
@@ -264,6 +265,7 @@ router.post('/key_alljob', (req, res) => {
   let skip        = (page-1)*pageSize;
   let jobList = []
   let companyList = []
+  let result = []
   let searchText = req.body.searchText;
   console.log(searchText)
   Keyword.findOne({"name": searchText}, (err, keyDoc) => {
@@ -333,12 +335,44 @@ router.post('/key_alljob', (req, res) => {
                 }
                 companyList.push(comdoc)
                 jobList[job_index].push(comdoc[0])
-                if (jobList.length === companyList.length) {
-                  res.json({
-                    state: '00000',
-                    data: jobList
+                let company_id = comdoc[0].id
+                // let city_id = city_id || comdoc[0].city_id
+                CompanyInd.find({company_id}, (compIndErr, compIndDoc) => {
+                  if (compIndErr) {
+                    return res.json({
+                      // unknown error, please contact technical customer service
+                      status: '00001',
+                      message: compIndErr.message
+                    })
+                  }
+                  // 这是一个公司所有的行业数据
+                  let singleArray = []
+                  let compIndDocLength = compIndDoc.length
+                  compIndDoc.forEach((compIndValue) => {
+                    let id = compIndValue.industry_id
+                    Industry.find({id}, (indErr, indDoc) => {
+                      if (indErr) {
+                        return res.json({
+                          // unknown error, please contact technical customer service
+                          status: '00001',
+                          message: indErr.message
+                        })
+                      }
+                      singleArray.push(indDoc[0])
+                      if (singleArray.length === compIndDocLength) {
+                        result.push(singleArray)
+                        jobList[job_index].push(singleArray)
+                        if (result.length === jobList.length) {
+                          res.json({
+                            // success
+                            state: '00000',
+                            data: jobList
+                          })
+                        }
+                      }
+                    })
                   })
-                }
+                })
               })
             })
           }
