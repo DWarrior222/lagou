@@ -39,12 +39,12 @@
       return {
         search_text: '',
         searchPromptFlag: false,
-        keyList: []
-        // keyJobList: []
+        keyList: [],
+        promptMessage: ''
       }
     },
     computed: {
-      ...mapState(['jobList', 'nowCityId'])
+      ...mapState(['jobList', 'nowCityId', 'nowPage'])
     },
     mounted () {
       if (this.$route.name === 'jobs') {
@@ -64,22 +64,27 @@
       },
       searchCallback (res, searchText) {
         let jobList = res.data.data
+        console.log(jobList)
         this.$store.dispatch('getJobList', jobList)
         if (this.$route.path === '/') {
           this.$router.push({name: 'jobs', params: {searchText: searchText}})
+        }
+        if (res.data.state === '00002') {
+          this.promptMessage = '没有更多的信息'
         }
       },
       search (searchText) {
         storageSearchText.save({searchText})
         let cityId = this.$store.state.nowCityId
+        let page = this.nowPage
         if (cityId === 1) {
-          this.$http.post('/job/key_alljob', {searchText})
+          this.$http.post('/job/key_alljob?page=' + page, {searchText})
           .then(res => {
             console.log(res)
             this.searchCallback(res, searchText)
           })
         } else {
-          this.$http.post('/job/key_job', {searchText, cityId})
+          this.$http.post('/job/key_job?page=' + page, {searchText, cityId})
           .then(res => {
             console.log(res)
             this.searchCallback(res, searchText)
@@ -107,6 +112,12 @@
             let searchText = this.search_text
             this.search(searchText)
           }
+        }
+      },
+      nowPage: {
+        handler (value1, value2) {
+          let searchText = this.search_text
+          this.search(searchText)
         }
       }
     }

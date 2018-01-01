@@ -83,10 +83,15 @@
           </ul>
         </div>
         <div class="side">
-
+          <ul class="side-nav">
+            <li><a href="https://www.lagou.com/app/download.html?source=search_app?labelWords=hot"><img src="https://static.lagou.com/i/image/M00/70/F8/CgpFT1o5zBKAHJfyAABQqeBLRaU691.JPG" alt=""></a></li>
+            <li><a href="https://pro.lagou.com/"><img src="https://static.lagou.com/i/image/M00/41/7E/CgpEMllUxC2AOU7wAABZXy04ZTg283.JPG" alt=""></a></li>
+          </ul>
         </div>
       </div>
-
+    </div>
+    <div class="pagination-wrap">
+      <pagination></pagination>
     </div>
     <div class="footer-wrap">
       <v-footer></v-footer>
@@ -95,6 +100,7 @@
 </template>
 <script type="text/javascript">
 import nowCityStorage from '../store/localStorage'
+import Pagination from '../components/Pagination'
 import Public from '../Public'
 import Model from '../components/Model'
 import Search from '../components/Search'
@@ -104,7 +110,8 @@ export default {
   mixins: [Public],
   components: {
     Model,
-    Search
+    Search,
+    Pagination
   },
   computed: {
     ...mapState(['jobList', 'nowCityId', 'nowCityName'])
@@ -440,5 +447,16 @@ export default {
     font-size: 12px;
     background-color: #ebf8ea;
     color: #3d9ccc;
+  }
+  .pagination-wrap {
+    width: 100%;
+    margin: 20px 0;
+    height: 50px;
+  }
+  .side .side-nav {
+    margin: 20px;
+  }
+  .side .side-nav li {
+    margin-bottom: 10px;
   }
 </style>
