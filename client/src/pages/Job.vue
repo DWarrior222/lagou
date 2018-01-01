@@ -61,7 +61,7 @@
               <div class="job-content">
                 <div class="job-infor">
                   <router-link tag="h3" to="/job_details">{{ item[0].title }}</router-link>
-                  <p><i>{{ item[0].salary }}</i>|<i>{{ item[0].city_id }}</i>|<i>{{ item[0].education }}</i>|<i>{{ item[0].work_year }}年工作经验</i></p>
+                  <p><i>{{ item[0].salary }}</i>|<i>{{ getCity(item[0].city_id) }}</i>|<i>{{ item[0].work_year }}年工作经验</i></p>
                 </div>
                 <div class="job-tag">
                   <span>{{ item[0].advantage }}</span>
@@ -114,12 +114,18 @@ export default {
     Pagination
   },
   computed: {
-    ...mapState(['jobList', 'nowCityId', 'nowCityName'])
+    ...mapState(['jobList', 'nowCityId', 'nowCityName', 'cityList'])
+    // getCity: {
+    //   get () {
+    //     console.log(this.jobList)
+    //     return 1
+    //   }
+    // }
   },
   data () {
     return {
       commonCityList: [],
-      cityList: [],
+      // cityList: [],
       selecting: [],
       nowCity: '',
       nowEducation: '',
@@ -133,7 +139,35 @@ export default {
       isShowModel: false
     }
   },
+  // filters: {
+  //   getCity (value) {
+  //     // return '----'
+  //     // this.cityList.forEach(item => {
+  //     //   if (item.id === value) {
+  //     //     return item.name
+  //     //   }
+  //     // })
+  //     this.$http.get('/city/get_city?city_id=' + value).
+  //     then(res => {
+  //       return res.data.name
+  //     })
+  //   }
+  // },
+  // directives: {
+  //   inserted (el, bind, vNode){
+  //     console.log('.....')
+  //   }
+  // },
   methods: {
+    getCity (item) {
+      let name = ''
+      this.cityList.forEach(value => {
+        if (value.id === item) {
+          name = value.name
+        }
+      })
+      return name
+    },
     deselectAnyone (item) {
       this.selecting.forEach((value, index) => {
         if (value === item) {
@@ -287,8 +321,9 @@ export default {
     }
     this.$http.get('/city/getcity')
     .then(res => {
-      this.cityList = res.data.data
-      this.commonCityList = (this.cityList).slice(0, 12)
+      let cityList = res.data.data
+      this.$store.dispatch('getCity', cityList)
+      this.commonCityList = (cityList).slice(0, 12)
     })
   },
   watch: {

@@ -27,4 +27,26 @@ router.get('/getcity', (req, res) => {
     })
   })
 })
+
+router.get('/get_city', (req, res) => {
+  let id = parseInt(req.param.city_id) 
+  City.findOne({id})
+  .exec((err, docs) => {
+    if (err) {
+      return res.json({
+        // unknown error, please contact technical customer service
+        status: '00001',
+        message: err.message
+      })
+    }
+    docs.forEach(value => {
+      value.pinyin = convertPinyin(value.name)
+    })
+    res.json({
+      // success
+      state: '00000',
+      data: docs
+    })
+  })
+})
 module.exports = router;

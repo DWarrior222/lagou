@@ -20,22 +20,28 @@
   import Public from '../Public'
   import Model from '../components/Model'
   import Search from '../components/Search'
+  import {mapState} from 'vuex'
   export default {
     mixins: [Public],
     components: {
       Model,
       Search
     },
+    computed: {
+      ...mapState(['cityList'])
+    },
     data () {
       return {
-        cityList: [],
+        // cityList: [],
         isShowModel: false
       }
     },
     mounted () {
       this.$http.get('/city/getcity')
       .then(res => {
-        this.cityList = res.data.data
+        // this.cityList = res.data.data
+        let cityList = res.data.data
+        this.$store.dispatch('getCity', cityList)
       })
     }
   }
