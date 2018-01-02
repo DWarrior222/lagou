@@ -10,8 +10,17 @@ export default {
 
     }
   },
+  methods: {
+
+  },
   mounted () {
-    console.log(this.$route.params)
+    // console.log(this.$route.params)
+    let jobid = this.$route.params.jobid
+    console.log(jobid)
+    this.$http.get('/job/details?jobid=' + jobid)
+    .then(res => {
+      console.log(res)
+    })
   }
 }
 </script>

@@ -33,6 +33,23 @@ router.get('/get_company', (req, res) => {
   })
 })
 
+router.get('/details', (req, res) => {
+  let id = parseInt(req.query.compid)
+  Company.findOne({id}, (err, docs) => {
+    if (err) {
+      return res.json({
+        // unknown error, please contact technical customer service
+        state: '00001',
+        message: err.message
+      })
+    }
+    res.json({
+      // success
+      state: '00000',
+      data: docs
+    })
+  })
+})
 
 router.get('/job_companyInd', (req, res) => {
   // let city_id     = req.param.cityId

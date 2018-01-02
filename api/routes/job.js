@@ -35,6 +35,25 @@ router.get('/get_job', (req, res) => {
 })
 
 
+
+router.get('/details', (req, res) => {
+  let id = parseInt(req.query.jobid)
+  Job.findOne({id}, (err, docs) => {
+    if (err) {
+      return res.json({
+        // unknown error, please contact technical customer service
+        state: '00001',
+        message: err.message
+      })
+    }
+    res.json({
+      // success
+      state: '00000',
+      data: docs
+    })
+  })
+})
+
 // http://www.jianshu.com/p/554a5bf67b31
 // http://www.jianshu.com/p/135c7f843666
 // https://github.com/hy20090501/gulp-express-browser-sync/blob/master/myapp/models/employee.js

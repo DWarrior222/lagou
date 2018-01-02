@@ -9,6 +9,15 @@ export default {
     return {
 
     }
+  },
+  mounted () {
+    console.log(this.$route.params)
+    let compid = this.$route.params.compid
+    console.log(compid)
+    this.$http.get('/comp/details?compid=' + compid)
+    .then(res => {
+      console.log(res)
+    })
   }
 }
 </script>

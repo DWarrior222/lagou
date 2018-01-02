@@ -76,7 +76,7 @@
               <div class="layout-line"></div>
               <div class="company-content">
                 <div class="company-infor">
-                  <router-link tag="h3" to="/comp_details">{{ item[1].fullname }}</router-link>
+                  <router-link tag="h3" :to="{name: 'companyDetails', params: {compid: item[1].id}}">{{ item[1].fullname }}</router-link>
                   <p>
                     <i v-for="(value, idx) in item[2]">{{ value.name }}</i>
                   </p>

@@ -23,14 +23,14 @@
             <li v-for="(item, index) in jobList">
               <div class="job-content">
                 <div class="job-infor">
-                  <router-link tag="h3" to="/job_details">{{ item[0].title }}</router-link>
+                  <router-link tag="h3" :to="{name: 'jobDetails', params: {jobid: item[0].id}}">{{ item[0].title }}</router-link>
                   <p><i>{{ item[0].salary }}</i></p>
                 </div>
               </div>
               <div class="layout-line"></div>
               <div class="company-content">
                 <div class="company-infor">
-                  <router-link tag="h3" to="/comp_details">{{ item[1].shortname }}</router-link>
+                  <router-link tag="h3" :to="{name: 'companyDetails', params: {compid: item[1].id}}">{{ item[1].shortname }}</router-link>
                   <p class="address">{{item[1].address}}</p>
                   <p>
                     <i v-for="(value, idx) in item[2]">{{ value.name }}</i>
