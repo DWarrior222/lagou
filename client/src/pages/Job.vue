@@ -66,7 +66,7 @@
             <li v-for="(item, index) in jobList">
               <div class="job-content">
                 <div class="job-infor">
-                  <router-link tag="h3" to="/job_details">{{ item[0].title }}</router-link>
+                  <router-link tag="h3" :to="{name: 'jobDetails', params: {jobid: item[0].id}}">{{ item[0].title }}</router-link>
                   <p><i>{{ item[0].salary }}</i>|<i>{{ getCity(item[0].city_id) }}</i>|<i>{{ item[0].work_year }}年工作经验</i></p>
                 </div>
                 <div class="job-tag">
