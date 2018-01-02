@@ -146,6 +146,9 @@
   .job-content h3,.company-content h3 {
     color: #00b38a;
     cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .job-content .job-infor p i {
     padding: 0 10px;

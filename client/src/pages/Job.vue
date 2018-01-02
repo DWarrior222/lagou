@@ -466,7 +466,7 @@ export default {
     width: 300px;
     line-height: 27px;
   }
-  .job-content h3,.company-content h3 {
+  .job-content h3, .company-content h3 {
     color: #00b38a;
     cursor: pointer;
   }

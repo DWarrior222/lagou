@@ -38,6 +38,7 @@ router.get('/get_job', (req, res) => {
 
 router.get('/details', (req, res) => {
   let id = parseInt(req.query.jobid)
+  let result = []
   Job.findOne({id}, (err, docs) => {
     if (err) {
       return res.json({
@@ -46,10 +47,23 @@ router.get('/details', (req, res) => {
         message: err.message
       })
     }
-    res.json({
-      // success
-      state: '00000',
-      data: docs
+    result.push(docs)
+    let company_id = docs.company_id
+    Company.findOne({id: company_id}, (comErr, comDoc) => {
+      if (comErr) {
+        return res.json({
+          // unknown error, please contact technical customer service
+          state: '00001',
+          message: comErr.message
+        })
+      }
+      console.log(comDoc)
+      result.push(comDoc)
+      res.json({
+        // success
+        state: '00000',
+        data: result
+      })
     })
   })
 })

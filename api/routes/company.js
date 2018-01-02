@@ -1,5 +1,6 @@
 let express = require('express');
 let router = express.Router();
+let Job = require('./../models/job');
 let Company = require('./../models/company');
 let Industry = require('./../models/industry');
 let CompanyInd = require('./../models/company-industry');
@@ -35,6 +36,8 @@ router.get('/get_company', (req, res) => {
 
 router.get('/details', (req, res) => {
   let id = parseInt(req.query.compid)
+  let result = []
+  let jobList = []
   Company.findOne({id}, (err, docs) => {
     if (err) {
       return res.json({
@@ -43,10 +46,21 @@ router.get('/details', (req, res) => {
         message: err.message
       })
     }
-    res.json({
-      // success
-      state: '00000',
-      data: docs
+    result.push(docs)
+    Job.find({company_id: id}, (jobErr, jobDoc) => {
+      if (jobErr) {
+        return res.json({
+          // unknown error, please contact technical customer service
+          state: '00001',
+          message: jobErr.message
+        })
+      }
+      result.push(jobDoc)
+      res.json({
+        // success
+        state: '00000',
+        data: result
+      })
     })
   })
 })
