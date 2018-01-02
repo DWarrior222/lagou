@@ -10,10 +10,13 @@
       <div class="carousel-wrap">
         <carousel></carousel>
       </div>
+      <div class="job_container">
+        <h2 class="title">推荐职位</h2>
+        <div class="job_content">
+
+        </div>
+      </div>
     </div>
-    <ul>
-      <li v-for="(item, index) in cityList">{{ item.name }} {{ item.pinyin }}</li>
-    </ul>
     <div class="footer-wrap">
       <v-footer></v-footer>
     </div>
@@ -48,6 +51,10 @@
         let cityList = res.data.data
         this.$store.dispatch('getCity', cityList)
       })
+      this.$http.get('/job/rec_job?page=' + 1)
+      .then(res => {
+        console.log(res)
+      })
     }
   }
 </script>
@@ -75,5 +82,11 @@
     min-width: 980px;
     background-color: white;
   }
-
+  .job_container {
+    width: 980px;
+    margin: 0 auto;
+  }
+  .job_container .title {
+    text-align: center;
+  }
 </style>

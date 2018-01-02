@@ -256,6 +256,88 @@ router.post('/key_job', (req, res) => {
 })
 
 
+// rec_job
+
+router.get('/rec_job', (req, res) => {
+  let page        = parseInt(req.param("page", 1));
+  let pageSize    = parseInt(req.param("pageSize", 20));
+  let skip        = (page-1)*pageSize;
+  let jobList = []
+  let companyList = []
+  let result = []
+  Job.find({})
+  .skip(skip)
+  .limit(pageSize)
+  .exec((error, jobDoc) => {
+    // console.log('jobDoc' + jobDoc)
+    if (error) {
+      return res.json({
+        state: 00001,
+        message: err.message
+      })
+    }
+    // jobDoc有20个工作数据的数组
+    jobDoc.forEach(item => {
+      let arr = []
+      arr.push(item)
+      jobList.push(arr)
+    })
+    // 根据上面获得的jobList，遍历其中工作信息中的company_id获取公司信息
+    jobList.forEach((job_item, job_index) => {
+      let company_id = parseInt(job_item[0].company_id)
+      Company.find({id: company_id}, (comerr, comdoc) => {
+        if (comerr) {
+          return res.json({
+            state: 00001,
+            message: err.message
+          })
+        }
+        companyList.push(comdoc)
+        jobList[job_index].push(comdoc[0])
+
+        let company_id = comdoc[0].id
+        CompanyInd.find({company_id}, (compIndErr, compIndDoc) => {
+          if (compIndErr) {
+            return res.json({
+              // unknown error, please contact technical customer service
+              status: '00001',
+              message: compIndErr.message
+            })
+          }
+          // 这是一个公司所有的行业数据
+          let singleArray = []
+          let compIndDocLength = compIndDoc.length
+          compIndDoc.forEach((compIndValue) => {
+            let id = compIndValue.industry_id
+            Industry.find({id}, (indErr, indDoc) => {
+              if (indErr) {
+                return res.json({
+                  // unknown error, please contact technical customer service
+                  status: '00001',
+                  message: indErr.message
+                })
+              }
+              singleArray.push(indDoc[0])
+              if (singleArray.length === compIndDocLength) {
+                result.push(singleArray)
+                jobList[job_index].push(singleArray)
+                if (result.length === jobList.length) {
+                  res.json({
+                    // success
+                    state: '00000',
+                    data: jobList
+                  })
+                }
+              }
+            })
+          })
+        })
+      })
+    })
+  })
+})
+
+
 
 
 // 不限城市

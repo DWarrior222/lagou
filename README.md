@@ -238,4 +238,6 @@ router-link组件的to属性传递参数 或者 this.#router.push传递参数
 ### 主页轮播
 
 
+### 主页的工作信息展示
+
 <router-view>可以传递props，支持v-ref,同时也可以使用v-transition和transition-mode来获得场景切换效果，被渲染的组件将注册到父级组件的this.$对象上。
