@@ -3,10 +3,10 @@
     <div class="top-bar-wrap">
       <top-bar></top-bar>
     </div>
+    <div class="search-wrap">
+      <search></search>
+    </div>
     <div class="main">
-      <div class="search-wrap">
-        <search></search>
-      </div>
       <div class="filter-wrap">
         <div class="work-place">
           <dl class="">
@@ -56,6 +56,12 @@
       </div>
       <div class="job-wrap">
         <div class="job-container">
+          <div v-show="waiting" class="wait-img">
+            <figure>
+              <img src="../assets/images/wait.gif" alt="">
+              <figcaption>正在加载数据，请等待...</figcaption>
+            </figure>
+          </div>
           <ul class="job-list">
             <li v-for="(item, index) in jobList">
               <div class="job-content">
@@ -136,7 +142,8 @@ export default {
       workExperience: [],
       fundProfile: [],
       industry: [],
-      isShowModel: false
+      isShowModel: false,
+      waiting: true
     }
   },
   // filters: {
@@ -336,6 +343,15 @@ export default {
           this.nowCityInit()
         }
       }
+    },
+    jobList: {
+      handler (value1, value2) {
+        if (value1.length !== 0) {
+          this.waiting = false
+        } else {
+          this.waiting = true
+        }
+      }
     }
   }
 }
@@ -493,5 +509,9 @@ export default {
   }
   .side .side-nav li {
     margin-bottom: 10px;
+  }
+  .wait-img {
+    width: 720px;
+    text-align: center;
   }
 </style>

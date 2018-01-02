@@ -33,12 +33,16 @@ export default new Vuex.Store({
     },
     getCity (state, cityList) {
       state.cityList = cityList
+    },
+    clearJobList (state, jobList) {
+      state.jobList = jobList
     }
   },
   // 行为
   actions: {
     switchCity: ({commit}, nowCity) => commit('switchCity', nowCity),
     getJobList: ({commit}, jobList) => commit('getJobList', jobList),
+    clearJobList: ({commit}, jobList) => commit('clearJobList', jobList),
     getSearchText: ({commit}, searchText) => commit('getSearchText', searchText),
     decreasePage: ({commit}, page) => commit('skip', page),
     increasePage: ({commit}, page) => commit('skip', page),

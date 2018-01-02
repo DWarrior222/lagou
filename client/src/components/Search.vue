@@ -7,7 +7,7 @@
           <input type="submit" name="submit" value="搜索">
           <input type="hidden" name="" value="" v-model="search_text">
         </div>
-        <div class="search-drop-box" v-show="searchPromptFlag">
+        <div class="search-drop-box" :style="{'z-index': zIndex}" v-show="searchPromptFlag">
           <ul class="drop-list">
             <p v-show="keyList.length!==0" style="padding: 5px 10px; color: #999">猜你要搜</p>
             <li v-for="(item, index) in keyList" :key="'key' + index" :key-id="item.id" class="drop-list-item" @mousedown="searchJob(item)">{{ item.name }}</li>
@@ -40,7 +40,8 @@
         search_text: '',
         searchPromptFlag: false,
         keyList: [],
-        promptMessage: ''
+        promptMessage: '',
+        zIndex: 9999
       }
     },
     computed: {
@@ -74,6 +75,8 @@
         }
       },
       search (searchText) {
+        let jobList = []
+        this.$store.dispatch('clearJobList', jobList)
         storageSearchText.save({searchText})
         let cityId = this.$store.state.nowCityId
         let page = this.nowPage
@@ -92,6 +95,7 @@
         }
       },
       getKeys () {
+        // const zIndex = 1111
         this.searchPromptFlag = true
         let searchText = this.search_text.trim()
         let keyDefault = 'java'
@@ -128,6 +132,8 @@
   .search-content {
     width: 980px;
     margin: 0 auto;
+    position: relative;
+    z-index: 90
   }
   .search-container {
     width: 700px;
@@ -165,6 +171,7 @@
     width: 559px;
     position: absolute;
     top: 50px;
+    z-index: 999;
     left: 1px;
     background-color: white;
   }

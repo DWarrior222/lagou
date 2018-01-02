@@ -31,73 +31,74 @@
     </div>
 
 
-    <div class="model" v-show="loginModalFlag">
-      <div class="">
-        <span class="close-model iconfont icon-close" @click="loginModalFlag=false"></span>
-        <h2>密码登录</h2>
-        <div class="form">
-          <input type="text" name="" value="" v-model="username" placeholder="请输入用户名">
-          <!-- <span v-show="true">请输入有效的用户名</span> -->
-          <input type="password" name="" value="" v-model="password" placeholder="请输入密码">
-          <!-- <span v-show="true">账号密码不匹配</span> -->
-        </div>
-        <div class="btn-login" @click="Login">
-          <button type="button" name="button">登录</button>
-        </div>
-      </div>
-    </div>
-    <div v-show="loginModalFlag" @click.self="loginModalFlag=false" class="login-model"></div>
-
-    <div v-show="regisModalFlag" class="model">
-      <div class="">
-        <span class="close-model iconfont icon-close" @click="regisModalFlag=false"></span>
-        <h2>注册账号</h2>
-        <div class="form">
-          <input type="text" name="" value="" v-model="username" placeholder="请输入用户名">
-          <span v-show="regisErr1">{{ err1Mes }}</span>
-          <input type="password" name="" value="" v-model="password" placeholder="请输入密码">
-          <span v-show="regisErr2">{{ err2Mes }}</span>
-        </div>
-        <div class="btn-login" @click="Register">
-          <button type="button" name="button" @click="Register">注册</button>
-        </div>
-      </div>
-    </div>
-    <div v-show="regisModalFlag" @click.self="regisModalFlag=false" class="login-model"></div>
-
-    <div v-show="areaModalFlag" class="model area-model">
-      <div class="">
-        <span class="close-model iconfont icon-close" @click="areaModalFlag=false"></span>
-        <div id="cboxLoadedContent" style="width: 502px; overflow: hidden; height: 450px;">
-          <h2>切换城市</h2>
-          <div id="changeCityBox" class="popup changeCityBox">
-            <div class="changeCity_header">
-              <strong>亲爱的用户您好：</strong>
-              <p class="tips">切换城市分站，让我们为您提供更准确的职位信息。</p>
-            </div>
-            <p class="checkTips">点击进入
-              <a class="tab focus" :data-cityId="nowCityId" href="javascript:void(0);">{{ nowCityName }}</a>
-              or 切换到以下城市
-            </p>
-            <ul class="clearfix">
-              <!-- <li>
-                <a class="tab" href="javascript:void(0);">
-                  全国站
-                </a>
-              </li> -->
-              <li v-for="(item, index) in cityList" @click="switchCityComfirm(item)">
-                <a class="tab" @click="areaModalFlag=false" :data-cityId="item.id" href="javascript:void(0);">
-                  {{ item.name }}
-                </a>
-              </li>
-              <li>
-                <router-link class="tab other-city" to="/citylist">其他城市</router-link>
-              </li>
-            </ul>
+    <transition name="fade">
+      <div class="model" v-show="loginModalFlag">
+        <div class="">
+          <span class="close-model iconfont icon-close" @click="loginModalFlag=false"></span>
+          <h2>密码登录</h2>
+          <div class="form">
+            <input type="text" name="" value="" v-model="username" placeholder="请输入用户名">
+            <!-- <span v-show="true">请输入有效的用户名</span> -->
+            <input type="password" name="" value="" v-model="password" placeholder="请输入密码">
+            <!-- <span v-show="true">账号密码不匹配</span> -->
+          </div>
+          <div class="btn-login" @click="Login">
+            <button type="button" name="button">登录</button>
           </div>
         </div>
       </div>
-    </div>
+    </transition>
+    <div v-show="loginModalFlag" @click.self="loginModalFlag=false" class="login-model"></div>
+
+    <transition name="fade">
+      <div v-show="regisModalFlag" class="model">
+        <div class="">
+          <span class="close-model iconfont icon-close" @click="regisModalFlag=false"></span>
+          <h2>注册账号</h2>
+          <div class="form">
+            <input type="text" name="" value="" v-model="username" placeholder="请输入用户名">
+            <span v-show="regisErr1">{{ err1Mes }}</span>
+            <input type="password" name="" value="" v-model="password" placeholder="请输入密码">
+            <span v-show="regisErr2">{{ err2Mes }}</span>
+          </div>
+          <div class="btn-login" @click="Register">
+            <button type="button" name="button" @click="Register">注册</button>
+          </div>
+        </div>
+      </div>
+    </transition>
+    <div v-show="regisModalFlag" @click.self="regisModalFlag=false" class="login-model"></div>
+
+    <transition name="fade">
+      <div v-show="areaModalFlag" class="model area-model" transition="modal-scale">
+        <div class="">
+          <span class="close-model iconfont icon-close" @click="areaModalFlag=false"></span>
+          <div id="cboxLoadedContent" style="width: 502px; overflow: hidden; height: 450px;">
+            <h2>切换城市</h2>
+            <div id="changeCityBox" class="popup changeCityBox">
+              <div class="changeCity_header">
+                <strong>亲爱的用户您好：</strong>
+                <p class="tips">切换城市分站，让我们为您提供更准确的职位信息。</p>
+              </div>
+              <p class="checkTips">点击进入
+                <a class="tab focus" :data-cityId="nowCityId" href="javascript:void(0);">{{ nowCityName }}</a>
+                or 切换到以下城市
+              </p>
+              <ul class="clearfix">
+                <li v-for="(item, index) in cityList" @click="switchCityComfirm(item)">
+                  <a class="tab" @click="areaModalFlag=false" :data-cityId="item.id" href="javascript:void(0);">
+                    {{ item.name }}
+                  </a>
+                </li>
+                <li>
+                  <router-link class="tab other-city" to="/citylist">其他城市</router-link>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </transition>
     <div v-show="areaModalFlag" @click.self="areaModalFlag=false" class="login-model"></div>
   </div>
 </template>
@@ -461,5 +462,11 @@
     position: absolute;
     left: 3px;
     line-height: 30px;
+  }
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity .5s
+  }
+  .fade-enter, .fade-leave-to /* .fade-leave-active in below version 2.1.8 */ {
+    opacity: 0
   }
 </style>

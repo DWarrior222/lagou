@@ -10,11 +10,37 @@
       <div class="carousel-wrap">
         <carousel></carousel>
       </div>
-      <div class="job_container">
+      <div class="job-container">
         <h2 class="title">推荐职位</h2>
-        <div class="job_content">
-
+        <div class="job-content">
+          <div v-show="waiting" class="wait-img">
+            <figure>
+              <img src="../assets/images/wait.gif" alt="">
+              <figcaption>正在加载数据，请等待...</figcaption>
+            </figure>
+          </div>
+          <ul class="job-list">
+            <li v-for="(item, index) in jobList">
+              <div class="job-content">
+                <div class="job-infor">
+                  <router-link tag="h3" to="/job_details">{{ item[0].title }}</router-link>
+                  <p><i>{{ item[0].salary }}</i></p>
+                </div>
+              </div>
+              <div class="layout-line"></div>
+              <div class="company-content">
+                <div class="company-infor">
+                  <router-link tag="h3" to="/comp_details">{{ item[1].shortname }}</router-link>
+                  <p class="address">{{item[1].address}}</p>
+                  <p>
+                    <i v-for="(value, idx) in item[2]">{{ value.name }}</i>
+                  </p>
+                </div>
+              </div>
+            </li>
+          </ul>
         </div>
+        <button type="button" class="nextpage" name="button" @click="nextPage">换一组</button>
       </div>
     </div>
     <div class="footer-wrap">
@@ -41,7 +67,28 @@
     data () {
       return {
         // cityList: [],
-        isShowModel: false
+        isShowModel: false,
+        jobList: [],
+        nowPage: 1,
+        waiting: true
+      }
+    },
+    methods: {
+      nextPage () {
+        let page = this.nowPage
+        page++
+        this.nowPage = page
+        this.recJob()
+      },
+      recJob () {
+        this.jobList = []
+        this.waiting = true
+        this.$http.get('/job/rec_job?page=' + this.nowPage)
+        .then(res => {
+          console.log(res)
+          this.waiting = false
+          this.jobList = res.data.data
+        })
       }
     },
     mounted () {
@@ -51,10 +98,7 @@
         let cityList = res.data.data
         this.$store.dispatch('getCity', cityList)
       })
-      this.$http.get('/job/rec_job?page=' + 1)
-      .then(res => {
-        console.log(res)
-      })
+      this.recJob()
     }
   }
 </script>
@@ -82,11 +126,76 @@
     min-width: 980px;
     background-color: white;
   }
-  .job_container {
+  .job-container {
     width: 980px;
-    margin: 0 auto;
+    margin: 20px auto;
+    overflow: hidden;
   }
-  .job_container .title {
+  .job-container .title {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .job-content .job-list li {
+    border: 1px solid #EAEEED;
+    width: 225px;
+    height: 180px;
+    margin: 10px;
+    padding: 10px;
+    float: left;
+  }
+  .job-content h3,.company-content h3 {
+    color: #00b38a;
+    cursor: pointer;
+  }
+  .job-content .job-infor p i {
+    padding: 0 10px;
+  }
+  .job-content .job-infor p i:first-child {
+    padding-left: 0px;
+    color: #fd5f39;
+    font-size: 16px;
+  }
+  .layout-line {
+    width: 100%;
+    border: 1px dotted #ccc;
+    margin: 10px 0;
+  }
+  .company-infor p i {
+    border: 1px solid #e1f2fa;
+    margin-right: 6px;
+    margin-bottom: 10px;
+    font-size: 12px;
+    background-color: #ebf8ea;
+    color: #3d9ccc;
+  }
+  .job-content .job-infor p {
+    line-height: 35px;
+  }
+  .company-infor .address {
+    margin: 10px 0 5px 0;
+    font-size: 12px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .nextpage {
+    margin: 20px 0;
+    border: 1px solid #00B38A;
+    font-size: 16px;
+    color: #00b38a;
+    width: 200px;
+    height: 40px;
+    border-radius: 5px;
+    margin-left: 50%;
+    transform: translateX(-50%)
+  }
+  .nextpage:hover {
+    color: #fff;
+    background: #00b38a;
+  }
+
+  .wait-img {
+    width: 980px;
     text-align: center;
   }
 </style>
