@@ -7,6 +7,9 @@
       <div class="search-wrap">
         <search></search>
       </div>
+      <div class="carousel-wrap">
+        <carousel></carousel>
+      </div>
     </div>
     <ul>
       <li v-for="(item, index) in cityList">{{ item.name }} {{ item.pinyin }}</li>
@@ -20,12 +23,14 @@
   import Public from '../Public'
   import Model from '../components/Model'
   import Search from '../components/Search'
+  import Carousel from '../components/Carousel'
   import {mapState} from 'vuex'
   export default {
     mixins: [Public],
     components: {
       Model,
-      Search
+      Search,
+      Carousel
     },
     computed: {
       ...mapState(['cityList'])

@@ -25,6 +25,9 @@ import '@/assets/css/base.css'
 // iconfont css
 import '@/assets/iconfont/iconfont.css'
 // 使用Axios库，实际上就是给vue的实例原型上面添加一个$http和axios属性
+import VueAwesomeSwiper from 'vue-awesome-swiper'
+
+Vue.use(VueAwesomeSwiper)
 Vue.use(VueAxios, axios)
 
 Vue.use(VueInfiniteScroll)
