@@ -250,5 +250,11 @@ transition进入或离开的过度效果
 https://cn.vuejs.org/v2/guide/transitions.html
 
 
+### mongoose关联查询
+实现了关联查询：
+需要在model中添加字段（已经实现）
+在数据库中的每条数据中，在对应的字段里设置对应数据集合中数据的_id值
+
+
 > 盒子定位被覆盖时z-index没有效果
 解决： 因为咋不同组件中，所以要将整个组件的z-index值提高。
