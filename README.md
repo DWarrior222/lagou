@@ -248,3 +248,7 @@ router-link组件的to属性传递参数 或者 this.#router.push传递参数
 ### 模态框过渡效果
 transition进入或离开的过度效果
 https://cn.vuejs.org/v2/guide/transitions.html
+
+
+> 盒子定位被覆盖时z-index没有效果
+解决： 因为咋不同组件中，所以要将整个组件的z-index值提高。
