@@ -3,7 +3,7 @@
     <div class="tbar-logo tbar-left">
       <a href="/"><img src="../assets/images/logo_1c5763c.png" alt="logo"></a>
     </div>
-    <div class="city-select tbar-left">
+    <div v-show="areaShow" class="city-select tbar-left">
       <a href="javascript:;" @click="switchCity">
         <span class="area">{{ nowCityName }}</span>
         <i>[切换城市]</i><i class="iconfont icon-coordinates"></i>
@@ -122,9 +122,13 @@
         regisErr1: false,
         regisErr2: false,
         err1Mes: '',
-        err2Mes: ''
+        err2Mes: '',
+        areaShow: true
       }
     },
+    props: [
+      'areaflag'
+    ],
     computed: {
       ...mapState(['nowCityName', 'nowCityId'])
     },
@@ -230,6 +234,10 @@
     mounted () {
       this.checkLogin()
       this.cityInit()
+      console.log(this.areaflag)
+      if (this.areaflag === 'false') {
+        this.areaShow = false
+      }
     },
     watch: {
       nowCityId: {
