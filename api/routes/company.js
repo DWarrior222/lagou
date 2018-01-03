@@ -46,7 +46,9 @@ router.get('/details', (req, res) => {
         message: err.message
       })
     }
-    result.push(docs)
+    let arr = []
+    arr.push(docs)
+    result.push(arr)
     Job.find({company_id: id}, (jobErr, jobDoc) => {
       if (jobErr) {
         return res.json({
@@ -55,11 +57,39 @@ router.get('/details', (req, res) => {
           message: jobErr.message
         })
       }
-      result.push(jobDoc)
-      res.json({
-        // success
-        state: '00000',
-        data: result
+      result[0].push(jobDoc)
+      CompanyInd.find({company_id: id}, (compIndErr, compIndDoc) => {
+        if (compIndErr) {
+          return res.json({
+            // unknown error, please contact technical customer service
+            state: '00001',
+            message: compIndErr.message
+          })
+        }
+        console.log(compIndDoc)
+        let singleArray = []
+        let compIndDocLength = compIndDoc.length
+        compIndDoc.forEach((compIndValue) => {
+          let id = compIndValue.industry_id
+          Industry.find({id}, (indErr, indDoc) => {
+            if (indErr) {
+              return res.json({
+                // unknown error, please contact technical customer service
+                status: '00001',
+                message: indErr.message
+              })
+            }
+            singleArray.push(indDoc[0])
+            if (singleArray.length === compIndDocLength) {
+              result[0].push(singleArray)
+              res.json({
+                // success
+                state: '00000',
+                data: result
+              })
+            }
+          })
+        })
       })
     })
   })

@@ -3,6 +3,12 @@
     <div class="top-bar-wrap">
       <top-bar areaflag="false"></top-bar>
     </div>
+    <div v-show="waiting" class="wait-img">
+      <figure>
+        <img src="../assets/images/wait.gif" alt="">
+        <figcaption>正在加载数据，请等待...</figcaption>
+      </figure>
+    </div>
     <div class="details-head-wrap" v-for="item in jobDetails">
       <div class="details-head">
         <div class="details-head-l">
@@ -32,8 +38,8 @@
       </div>
       <div class="company-infor">
         <h3> <router-link :to="{name: 'companyDetails', params: {compid: item[1].id}}">{{ item[1].shortname }}</router-link> </h3>
-        <p>行业： <span v-for="value in item[2]">{{ value.name }}</span></p>
-        <p>公司地址：<span>{{ item[1].address }}</span></p>
+        <p class="iconfont icon-label_fill"> 行业： <span v-for="value in item[2]">{{ value.name }}</span></p>
+        <p class="iconfont icon-coordinates_fill"> 公司地址：<span>{{ item[1].address }}</span></p>
       </div>
     </div>
   </div>
@@ -48,7 +54,8 @@ export default {
       description: [],
       isCollect: false,
       collectMessage: '收藏',
-      jobid: ''
+      jobid: '',
+      waiting: true
     }
   },
   methods: {
@@ -88,13 +95,14 @@ export default {
     }
   },
   mounted () {
-    // console.log(this.$route.params)
+    this.waiting = true
     let jobid = this.$route.params.jobid
     this.jobStorage(jobid)
     this.$http.get('/job/details?jobid=' + this.jobid)
     .then(res => {
       console.log(res)
       this.jobDetails = res.data.data
+      this.waiting = false
       this.handDescription()
     })
   }
@@ -134,6 +142,9 @@ export default {
   }
   .company-infor {
     width: 240px;
+  }
+  .company-infor h3 a {
+    color: #00b38a;
   }
   .details-head h1 {
     font-size: 36px;
@@ -198,6 +209,12 @@ export default {
     border-color: #00a57f;
   }
   .details-head-r .collect i {
+    font-size: 22px;
+  }
+  .wait-img figure {
+    text-align: center;
+    line-height: 300px;
+    display: flex;
     font-size: 22px;
   }
 </style>
