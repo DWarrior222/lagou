@@ -3,6 +3,12 @@
     <div class="top-bar-wrap">
       <top-bar areaflag="false"></top-bar>
     </div>
+    <div v-show="waiting" class="wait-img">
+      <figure>
+        <img src="../assets/images/wait.gif" alt="">
+        <figcaption>正在加载数据，请等待...</figcaption>
+      </figure>
+    </div>
     <div class="details-head-wrap" v-for="item in compDetails">
       <div class="details-head">
         <div class="details-head-l">
@@ -14,12 +20,13 @@
         </div>
       </div>
     </div>
-    <div class="option-wrap">
+    <div class="option-wrap" v-show="compDetails.length">
       <div class="option">
         <span :class="{'current': option===1}" @click="option=1">公司主页</span>
         <span :class="{'current': option===2}" @click="option=2">招聘职位({{jobLength}})</span>
       </div>
     </div>
+
     <div class="main" v-for="item in compDetails">
       <div v-show="option===1" style="display: flex">
         <div class="company-details-content">
@@ -49,12 +56,6 @@
           <p class="iconfont icon-coordinates_fill"> 公司地址：<span>{{ item[0].address }}</span></p>
         </div>
       </div>
-    </div>
-    <div v-show="waiting" class="wait-img">
-      <figure>
-        <img src="../assets/images/wait.gif" alt="">
-        <figcaption>正在加载数据，请等待...</figcaption>
-      </figure>
     </div>
   </div>
 </template>
