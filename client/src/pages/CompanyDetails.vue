@@ -57,6 +57,9 @@
         </div>
       </div>
     </div>
+    <div class="footer-wrap">
+      <v-footer></v-footer>
+    </div>
   </div>
 </template>
 <script type="text/javascript">
@@ -221,5 +224,11 @@ export default {
     line-height: 300px;
     display: flex;
     font-size: 22px;
+  }
+  .footer-wrap {
+    border-top: 1px solid #ebebeb;
+    width: 100%;
+    min-width: 980px;
+    background-color: white;
   }
 </style>

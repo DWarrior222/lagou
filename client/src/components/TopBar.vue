@@ -260,6 +260,8 @@
     margin: 0 auto;
     line-height: 50px;
     color: #ccc;
+    position: relative;
+    z-index: 93
   }
   .tbar-left {
     float: left;
