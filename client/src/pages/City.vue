@@ -71,7 +71,6 @@ export default {
       this.$store.dispatch('switchCity', {nowCityName, nowCityId})
       nowCityStorage.save({nowCityName, nowCityId})
       // this.$router.push('jobs')
-      debugger
       this.$router.go(-1)
       // console.log(history)
       // if (this. === '') {
