@@ -353,6 +353,7 @@ export default {
           this.findFail = true
           return
         }
+        this.findFail = false
         if (value1.length !== 0) {
           this.waiting = false
         } else {

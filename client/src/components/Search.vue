@@ -37,7 +37,7 @@
         zIndex: 9999,
         hotList: [
           {name: '运营'},
-          {name: 'Java'},
+          {name: 'java'},
           {name: '算法'},
           {name: '产品经理'},
           {name: 'web前端'},

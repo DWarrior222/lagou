@@ -3,8 +3,8 @@
     <div class="carousel">
       <swiper :options="swiperOption" :autoPlay='true' :showIndicator='true' interval="2500" duration="500" ref="mySwiper">
         <!-- slides -->
-        <swiper-slide><a href="javascript:;"><img src="https://www.lgstatic.com/i/image2/M00/18/CA/CgotOVn79oOAeLIqAAN8kyryYMw710.JPG"></a></swiper-slide>
-        <swiper-slide><a href="javascript:;"><img src="https://www.lgstatic.com/i/image2/M00/35/3D/CgoB5lpEYnaAQZTPABAJd8HftRo467.PNG"></a></swiper-slide>
+        <swiper-slide><a href="https://pro.lagou.com/"><img src="https://www.lgstatic.com/i/image2/M00/18/CA/CgotOVn79oOAeLIqAAN8kyryYMw710.JPG"></a></swiper-slide>
+        <swiper-slide><a href="https://activity.lagou.com/topic/travelmeaning.html"><img src="https://www.lgstatic.com/i/image2/M00/35/3D/CgoB5lpEYnaAQZTPABAJd8HftRo467.PNG"></a></swiper-slide>
         <!-- Optional controls -->
         <div class="swiper-pagination" slot="pagination"></div>
         <!-- <div class="swiper-button-prev" slot="button-prev"></div>
