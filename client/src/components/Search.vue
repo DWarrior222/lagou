@@ -16,14 +16,7 @@
         <div class="hot-search-box">
           <dl class="hot-search">
             <dt>热门搜索</dt>
-            <dd>用户运营</dd>
-            <dd>Java</dd>
-            <dd>UI设计师</dd>
-            <dd>招聘风暴</dd>
-            <dd>周销售经理</dd>
-            <dd>产品经理</dd>
-            <dd>C++</dd>
-            <dd>内容运营</dd>
+            <dd v-for="item in hotList" @click="searchJob(item)">{{ item.name }}</dd>
           </dl>
         </div>
       </form>
@@ -41,7 +34,17 @@
         searchPromptFlag: false,
         keyList: [],
         promptMessage: '',
-        zIndex: 9999
+        zIndex: 9999,
+        hotList: [
+          {name: '运营'},
+          {name: 'Java'},
+          {name: '算法'},
+          {name: '产品经理'},
+          {name: 'web前端'},
+          {name: 'php'},
+          {name: 'Android'},
+          {name: 'ios'}
+        ]
       }
     },
     computed: {
@@ -197,6 +200,7 @@
   }
   .hot-search dd {
     color: #00b38a;
-    margin: 0 5px;
+    margin: 0 10px;
+    cursor: pointer;
   }
 </style>
