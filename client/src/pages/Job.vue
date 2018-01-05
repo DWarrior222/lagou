@@ -62,7 +62,8 @@
               <figcaption>正在加载数据，请等待...</figcaption>
             </figure>
           </div>
-          <ul class="job-list">
+          <div class="find-fail" v-show="findFail">没找到数据</div>
+          <ul v-show="jobList" class="job-list">
             <li v-for="(item, index) in jobList">
               <div class="job-content">
                 <div class="job-infor">
@@ -143,7 +144,8 @@ export default {
       fundProfile: [],
       industry: [],
       isShowModel: false,
-      waiting: true
+      waiting: true,
+      findFail: false
     }
   },
   // filters: {
@@ -346,6 +348,11 @@ export default {
     },
     jobList: {
       handler (value1, value2) {
+        if (!value1) {
+          this.waiting = false
+          this.findFail = true
+          return
+        }
         if (value1.length !== 0) {
           this.waiting = false
         } else {
@@ -513,5 +520,12 @@ export default {
   .wait-img {
     width: 720px;
     text-align: center;
+  }
+  .find-fail {
+    text-align: center;
+    line-height: 300px;
+    font-weight: bold;
+    color: #00b38a;
+    font-size: 25px;
   }
 </style>

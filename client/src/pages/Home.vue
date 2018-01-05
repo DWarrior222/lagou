@@ -19,6 +19,7 @@
               <figcaption>正在加载数据，请等待...</figcaption>
             </figure>
           </div>
+          <div class="find-fail" v-show="findFail">没找到数据</div>
           <ul class="job-list">
             <li v-for="(item, index) in jobList">
               <div class="job-content">
@@ -70,7 +71,8 @@
         isShowModel: false,
         jobList: [],
         nowPage: 1,
-        waiting: true
+        waiting: true,
+        findFail: false
       }
     },
     methods: {
@@ -88,6 +90,10 @@
           console.log(res)
           this.waiting = false
           this.jobList = res.data.data
+          if (!this.jobList) {
+            this.waiting = false
+            this.findFail = true
+          }
         })
       }
     },
@@ -200,5 +206,12 @@
   .wait-img {
     width: 980px;
     text-align: center;
+  }
+  .find-fail {
+    text-align: center;
+    line-height: 300px;
+    font-weight: bold;
+    color: #00b38a;
+    font-size: 25px;
   }
 </style>

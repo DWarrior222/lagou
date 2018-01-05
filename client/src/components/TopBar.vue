@@ -34,13 +34,13 @@
     <transition name="fade">
       <div class="model" v-show="loginModalFlag">
         <div class="">
-          <span class="close-model iconfont icon-close" @click="loginModalFlag=false"></span>
+          <span class="close-model iconfont icon-close" @click="closeModel"></span>
           <h2>密码登录</h2>
           <div class="form">
             <input type="text" name="" value="" v-model="username" placeholder="请输入用户名">
-            <!-- <span v-show="true">请输入有效的用户名</span> -->
+            <span v-show="Err1IsShow">{{ err1Mes }}</span>
             <input type="password" name="" value="" v-model="password" placeholder="请输入密码">
-            <!-- <span v-show="true">账号密码不匹配</span> -->
+            <span v-show="Err2IsShow">{{ err2Mes }}</span>
           </div>
           <div class="btn-login" @click="Login">
             <button type="button" name="button">登录</button>
@@ -53,13 +53,13 @@
     <transition name="fade">
       <div v-show="regisModalFlag" class="model">
         <div class="">
-          <span class="close-model iconfont icon-close" @click="regisModalFlag=false"></span>
+          <span class="close-model iconfont icon-close" @click="closeModel"></span>
           <h2>注册账号</h2>
           <div class="form">
-            <input type="text" name="" value="" v-model="username" placeholder="请输入用户名">
-            <span v-show="regisErr1">{{ err1Mes }}</span>
-            <input type="password" name="" value="" v-model="password" placeholder="请输入密码">
-            <span v-show="regisErr2">{{ err2Mes }}</span>
+            <input type="text" name="" value="" @blur="checkUsername" v-model="username" placeholder="请输入用户名">
+            <span v-show="Err1IsShow">{{ err1Mes }}</span>
+            <input type="password" name="" value="" @blur="checkPassword" v-model="password" placeholder="请输入密码">
+            <span v-show="Err2IsShow">{{ err2Mes }}</span>
           </div>
           <div class="btn-login" @click="Register">
             <button type="button" name="button" @click="Register">注册</button>
@@ -117,12 +117,14 @@
         judgeCityList: [],
         cityList: [],
         nickname: '',
-        username: 'luyuan',
-        password: 'shuai2121',
-        regisErr1: false,
-        regisErr2: false,
-        err1Mes: '',
-        err2Mes: '',
+        username: '',
+        password: '',
+        Err1IsShow: false,
+        Err2IsShow: false,
+        // Err1IsShow: false,
+        // Err2IsShow: false,
+        err1Mes: 'e1',
+        err2Mes: 'e2',
         areaShow: true
       }
     },
@@ -133,7 +135,32 @@
       ...mapState(['nowCityName', 'nowCityId'])
     },
     methods: {
+      checkUsername () {
+        if (this.username.trim() === '') {
+          this.Err1IsShow = true
+          this.err1Mes = '请输入用户名'
+          console.log(1)
+        } else {
+          this.Err1IsShow = false
+          this.err1Mes = ''
+        }
+      },
+      checkPassword () {
+        if (this.password === '') {
+          this.Err2IsShow = true
+          this.err2Mes = '请输入密码'
+        } else {
+          this.Err2IsShow = false
+          this.err2Mes = ''
+        }
+      },
       Login () {
+        if (this.username.trim() === '') {
+          return
+        }
+        if (this.password === '') {
+          return
+        }
         let params = {
           username: this.username,
           password: this.password
@@ -141,11 +168,35 @@
         this.$http.post('/users/login', params)
         .then(res => {
           console.log(res)
-          this.loginModalFlag = false
-          this.nickname = res.data.data.username
+          this.loginCollback(res)
         })
       },
+      loginCollback (res) {
+        if (res.data.state === '00002') {
+          this.Err2IsShow = true
+          this.err2Mes = res.data.message
+          return
+        }
+        this.loginModalFlag = false
+        this.nickname = res.data.data.username
+      },
+      closeModel () {
+        this.username = ''
+        this.password = ''
+        this.loginModalFlag = false
+        this.regisModalFlag = false
+        this.Err1IsShow = false
+        this.Err2IsShow = false
+        this.Err1IsShow = false
+        this.Err2IsShow = false
+      },
       Register () {
+        if (this.username.trim() === '') {
+          return
+        }
+        if (this.password === '') {
+          return
+        }
         let params = {
           username: this.username,
           password: this.password
@@ -155,11 +206,13 @@
           switch (res.data.state) {
             case '00002':
               this.err1Mes = '用户名已被注册'
-              this.regisErr1 = true
+              this.Err1IsShow = true
               break
             case '00000':
-              this.regisErr1 = false
+              this.Err1IsShow = false
               this.regisModalFlag = false
+              this.password = ''
+              this.username = ''
               break
             default:
               break
@@ -477,5 +530,8 @@
   }
   .fade-enter, .fade-leave-to /* .fade-leave-active in below version 2.1.8 */ {
     opacity: 0
+  }
+  .model .form span {
+    color: #c00;
   }
 </style>
