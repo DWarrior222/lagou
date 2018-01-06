@@ -290,3 +290,13 @@ https://cn.vuejs.org/v2/guide/transitions.html
 判断vuex中jobList，如果为undefined则提示没有数据
 
 ### 模拟热门搜索数据
+
+
+
+继续完善功能：
+用户登陆(借用微信或者是其他接口登陆)
+数据可视化
+在线简历
+收藏功能
+公司管理登陆(类似一个后台管理页面)
+等等..

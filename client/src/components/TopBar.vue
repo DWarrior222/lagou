@@ -37,9 +37,9 @@
           <span class="close-model iconfont icon-close" @click="closeModel"></span>
           <h2>密码登录</h2>
           <div class="form">
-            <input type="text" name="" value="" v-model="username" placeholder="请输入用户名">
+            <input type="text" name="" value="" @blur="checkUsername" v-model="username" placeholder="请输入用户名">
             <span v-show="Err1IsShow">{{ err1Mes }}</span>
-            <input type="password" name="" value="" v-model="password" placeholder="请输入密码">
+            <input type="password" name="" value="" @blur="checkPassword" v-model="password" placeholder="请输入密码">
             <span v-show="Err2IsShow">{{ err2Mes }}</span>
           </div>
           <div class="btn-login" @click="Login">
