@@ -15,10 +15,25 @@
       <a class="regis tbar-a" @click="regisModalFlag=true">注册</a>
     </div>
     <div v-show="nickname" class="tbar-user tbar-right">
-      <a class="resume tbar-a">简历</a>
+      <a class="news tbar-a">消息</a>
+      <i></i>
+      <a class="resume tbar-a">我的简历</a>
       <i></i>
       <a class="delivery-box tbar-a">投递箱</a>
       <i></i>
+      <a class="news tbar-a">收藏夹</a>
+      <i></i>
+      <Dropdown @on-click="select($event)" @on-visible-change="dropdownChange($event)">
+        <a class="tbar-a" href="javascript:void(0)">
+            {{ nickname }}
+            <Icon :type="dropDownIcon"></Icon>
+        </a>
+        <DropdownMenu slot="list">
+            <DropdownItem name="accountSetting">账号设置</DropdownItem>
+            <DropdownItem name="logout">退出</DropdownItem>
+        </DropdownMenu>
+    </Dropdown>
+    <!-- <i></i>
       <div class="drop-box" @mouseenter="dropMenuFlag=true" @mouseleave="dropMenuFlag=false">
         <a class="username tbar-a iconfont icon-unfold">
           {{ nickname }}
@@ -27,7 +42,7 @@
           <span class="iconfont icon-interactive">消息 <b class="msg-number">1</b></span>
           <span class="iconfont icon-undo" @click="Logout">退出</span>
         </div>
-      </div>
+      </div> -->
     </div>
 
 
@@ -119,6 +134,7 @@
         nickname: '',
         username: '',
         password: '',
+        dropDownIcon: 'arrow-down-b',
         Err1IsShow: false,
         Err2IsShow: false,
         // Err1IsShow: false,
@@ -135,6 +151,22 @@
       ...mapState(['nowCityName', 'nowCityId'])
     },
     methods: {
+      dropdownChange (param) {
+        console.log(param)
+        // this.dropDownIcon = param ? 'arrow-up-b' : 'arrow-down-b'
+      },
+      noticeSuccess (nodesc, titleTxt, contentTxt) {
+        this.$Notice.success({
+          title: titleTxt,
+          desc: nodesc ? '' : contentTxt
+        })
+      },
+      noticeFaild (nodesc, titleTxt, contentTxt) {
+        this.$Notice.error({
+          title: titleTxt,
+          desc: nodesc ? '' : contentTxt
+        })
+      },
       checkUsername () {
         if (this.username.trim() === '') {
           this.Err1IsShow = true
@@ -175,10 +207,12 @@
         if (res.data.state === '00002') {
           this.Err2IsShow = true
           this.err2Mes = res.data.message
+          this.noticeFaild(false, '登录提醒', '登录不成功')
           return
         }
         this.loginModalFlag = false
         this.nickname = res.data.data.username
+        this.noticeSuccess(false, '登录提醒', '已成功登录')
       },
       closeModel () {
         this.username = ''
@@ -207,26 +241,34 @@
             case '00002':
               this.err1Mes = '用户名已被注册'
               this.Err1IsShow = true
+              this.noticeFaild(false, '注册提醒', '注册不成功')
               break
             case '00000':
               this.Err1IsShow = false
               this.regisModalFlag = false
               this.password = ''
               this.username = ''
+              this.noticeSuccess(false, '注册提醒', '已成功注册')
               break
             default:
               break
           }
         })
       },
-      Logout () {
-        this.$http.post('/users/logout')
-        .then(res => {
-          console.log(res)
-          if (res.data.state === '00000') {
-            this.nickname = ''
-          }
-        })
+      select (param, type) {
+        console.log(param, type)
+        if (param === 'logout') {
+          this.$http.post('/users/logout')
+          .then(res => {
+            console.log(res)
+            if (res.data.state === '00000') {
+              this.nickname = ''
+              this.noticeSuccess(false, '退出提醒', '已成功退出')
+            }
+          })
+        } else {
+          console.log('accountSetting')
+        }
       },
       switchCity () {
         let nowCityId = this.nowCityId
@@ -323,6 +365,10 @@
   .tbar-logo {
     margin: 8px 20px 0 0;
   }
+  .city-select a, .tbar-user a {
+    color: inherit;
+    font-size: 13px;
+  }
   .city-select a:hover {
     color: white;
   }
@@ -337,7 +383,7 @@
   .tbar-user .tbar-a:hover {
     color: white;
   }
-  .tbar-user i {
+  .tbar-user>i {
     height: 16px;
     margin-top: 17px;
     width: 0px;
@@ -422,6 +468,11 @@
     top: 10px;
     font-size: 30px;
     cursor: pointer;
+    transform-origin: center;
+    transition: transform 0.8s ease-in-out;
+  }
+  .close-model:hover {
+    transform: rotate(180deg);
   }
   .msg-number {
     padding-left: 10px;
@@ -534,4 +585,20 @@
   .model .form span {
     color: #c00;
   }
+</style>
+
+<style lang="scss">
+.top-bar {
+  .tbar-user {
+    .ivu-dropdown {
+      .ivu-icon {
+        transition: transform 0.3s ease-in-out;
+      }
+      &:hover .ivu-icon {
+        transform: rotate(180deg);
+      }
+    }
+  }
+}
+
 </style>

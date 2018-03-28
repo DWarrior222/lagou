@@ -1,5 +1,8 @@
 <template>
   <div class="">
+    <BackTop :height="100" :bottom="100">
+        <div class="top">返回顶端</div>
+    </BackTop>
     <div class="footer">
       <div class="wrapper">
         <div class="inner_wrapper">
@@ -23,8 +26,13 @@
 </template>
 
 <script type="text/javascript">
-  // export default {
-  // }
+  export default {
+    data () {
+      return {
+
+      }
+    }
+  }
 </script>
 
 <style scoped>
@@ -77,5 +85,15 @@
     font-size: 12px;
     line-height: 12px;
     text-align: center;
+  }
+  .top{
+    padding: 10px;
+    background: rgba(0, 153, 229, .7);
+    color: #fff;
+    text-align: center;
+    border-radius: 2px;
+  }
+  .footer .copyright a {
+    color: inherit;
   }
 </style>
