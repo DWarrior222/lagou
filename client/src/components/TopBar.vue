@@ -10,9 +10,11 @@
       </a>
     </div>
     <div v-show="!nickname" class="tbar-user">
-      <a class="login tbar-a" @click="loginModalFlag=true">登录</a>
+      <!-- <a class="login tbar-a" @click="loginModalFlag=true">登录</a> -->
+      <router-link class="tbar-a" to="/signin">登录</router-link>
       <i></i>
-      <a class="regis tbar-a" @click="regisModalFlag=true">注册</a>
+      <router-link class="tbar-a" to="/signup">注册</router-link>
+      <!-- <a class="regis tbar-a" @click="regisModalFlag=true">注册</a> -->
     </div>
     <div v-show="nickname" class="tbar-user tbar-right">
       <a class="news tbar-a">消息</a>
@@ -145,33 +147,34 @@
       }
     },
     props: [
-      'areaflag'
+      'areaflag',
+      'nickNameValue'
     ],
     computed: {
       ...mapState(['nowCityName', 'nowCityId'])
     },
     methods: {
       dropdownChange (param) {
-        console.log(param)
+        // console.log(param)
         // this.dropDownIcon = param ? 'arrow-up-b' : 'arrow-down-b'
       },
-      noticeSuccess (nodesc, titleTxt, contentTxt) {
-        this.$Notice.success({
-          title: titleTxt,
-          desc: nodesc ? '' : contentTxt
-        })
-      },
-      noticeFaild (nodesc, titleTxt, contentTxt) {
-        this.$Notice.error({
-          title: titleTxt,
-          desc: nodesc ? '' : contentTxt
-        })
-      },
+      // noticeSuccess (nodesc, titleTxt, contentTxt) {
+      //   this.$Notice.success({
+      //     title: titleTxt,
+      //     desc: nodesc ? '' : contentTxt
+      //   })
+      // },
+      // noticeFaild (nodesc, titleTxt, contentTxt) {
+      //   this.$Notice.error({
+      //     title: titleTxt,
+      //     desc: nodesc ? '' : contentTxt
+      //   })
+      // },
       checkUsername () {
         if (this.username.trim() === '') {
           this.Err1IsShow = true
           this.err1Mes = '请输入用户名'
-          console.log(1)
+          // console.log(1)
         } else {
           this.Err1IsShow = false
           this.err1Mes = ''
@@ -199,7 +202,7 @@
         }
         this.$http.post('/users/login', params)
         .then(res => {
-          console.log(res)
+          // console.log(res)
           this.loginCollback(res)
         })
       },
@@ -207,12 +210,12 @@
         if (res.data.state === '00002') {
           this.Err2IsShow = true
           this.err2Mes = res.data.message
-          this.noticeFaild(false, '登录提醒', '登录不成功')
+          // this.noticeFaild(false, '登录提醒', '登录不成功')
           return
         }
         this.loginModalFlag = false
         this.nickname = res.data.data.username
-        this.noticeSuccess(false, '登录提醒', '已成功登录')
+        // this.noticeSuccess(false, '登录提醒', '已成功登录')
       },
       closeModel () {
         this.username = ''
@@ -241,14 +244,14 @@
             case '00002':
               this.err1Mes = '用户名已被注册'
               this.Err1IsShow = true
-              this.noticeFaild(false, '注册提醒', '注册不成功')
+              // this.noticeFaild(false, '注册提醒', '注册不成功')
               break
             case '00000':
               this.Err1IsShow = false
               this.regisModalFlag = false
               this.password = ''
               this.username = ''
-              this.noticeSuccess(false, '注册提醒', '已成功注册')
+              // this.noticeSuccess(false, '注册提醒', '已成功注册')
               break
             default:
               break
@@ -256,18 +259,18 @@
         })
       },
       select (param, type) {
-        console.log(param, type)
+        // console.log(param, type)
         if (param === 'logout') {
           this.$http.post('/users/logout')
           .then(res => {
-            console.log(res)
+            // console.log(res)
             if (res.data.state === '00000') {
               this.nickname = ''
-              this.noticeSuccess(false, '退出提醒', '已成功退出')
+              // this.noticeSuccess(false, '退出提醒', '已成功退出')
             }
           })
         } else {
-          console.log('accountSetting')
+           // console.log('accountSetting')
         }
       },
       switchCity () {
@@ -276,7 +279,7 @@
         let flag = true
         this.judgeCityList.forEach(item => {
           if (item.id === nowCityId) {
-            console.log(item)
+             // console.log(item)
             flag = false
             if (this.$route.path !== '/citylist') {
               this.areaModalFlag = true
@@ -329,7 +332,7 @@
     mounted () {
       this.checkLogin()
       this.cityInit()
-      console.log(this.areaflag)
+       // console.log(this.areaflag, 334)
       if (this.areaflag === 'false') {
         this.areaShow = false
       }

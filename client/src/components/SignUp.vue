@@ -16,14 +16,6 @@
           <FormItem prop="email" label="邮箱">
               <Input v-model="formSignup.email" name="email" placeholder="邮箱"></Input>
           </FormItem>
-          <FormItem v-if="needPhone" prop="phone" label="手机号">
-              <Input v-model="formSignup.phone" name="phone" placeholder="手机号"></Input>
-          </FormItem>
-          <FormItem v-if="needPhone" prop="phoneCode" class="phone-code" label="手机验证码">
-              <Input v-model="formSignup.phoneCode" name="phoneCode" placeholder="手机验证码">
-              <Button type="primary" :disabled="sendCodeStatus.disabled" :loading="sendCodeStatus.loading" class="get-phone-code" slot="append" @click="handleSendCode('formSignup')">{{sendCodeStatus.text}}</Button>
-              </Input>
-          </FormItem>
 
           <FormItem class="submit">
               <Button type="primary" @click="formSignupSubmit">注册</Button>
@@ -70,373 +62,373 @@
 
 import Public from '../Public'
 export default {
-    mixins: [Public],
-    data() {
-        return {
-            formSignup: {
-                username: '',
-                password: '',
-                email: '',
-                phone: '',
-                phoneCode: '',
-            },
-            ruleSignup: {
-                username: [
-                    { required: true, message: '用户名不能为空', trigger: 'blur' },
-                    { validator: this.usernameCheck, trigger: 'change' },
-                    { validator: this.usernameCheck, trigger: 'blur' },
-                    { validator: this.checkUserinfo, trigger: 'blur' },
-                ],
-                password: [
-                    { required: true, message: '密码不能为空', trigger: 'blur' },
-                    { validator: this.passwordCheck, trigger: 'change' },
-                    { validator: this.passwordCheck, trigger: 'blur' },
-                ],
-                email: [
-                    { required: true, message: '邮箱不能为空', trigger: 'blur' },
-                    // { type: 'email', message: '邮箱格式不正确', trigger: 'change' },
-                    { type: 'email', message: '邮箱格式不正确', trigger: 'blur' },
-                    { validator: this.checkUserinfo, trigger: 'blur' },
-                ],
-                phone: [
-                    { required: true, message: '手机号不能为空', trigger: 'blur' },
-                    // { validator: this.phoneCheck, trigger: 'change' },
-                    { validator: this.phoneCheck, trigger: 'blur' },
-                    { validator: this.checkUserinfo, trigger: 'blur' },
-                ],
-            },
-            formUpdate: {
-                realname: '',
-                company: '',
-                appname: '',
-                email: '',
-                phone: '',
-                phoneCode: '',
-            },
-            ruleUpdate: {
-                realname: [
-                    { required: true, message: '昵称', trigger: 'blur' },
-                ],
-                company: [
-                    { required: true, message: '公司名称', trigger: 'blur' }
-                ],
-                appname: [
-                    { required: true, message: '应用名称', trigger: 'blur' }
-                ],
-                email: [
-                    { required: true, message: '邮箱不能为空1', trigger: 'change' },
-                    { type: 'email', message: '邮箱格式不正确', trigger: 'change' },
-                    { type: 'email', message: '邮箱格式不正确', trigger: 'blur' },
-                    { validator: this.checkUserinfo, trigger: 'blur' },
-                ],
-                phone: [
-                    { required: true, message: '手机号不能为空', trigger: 'change' },
-                    { validator: this.phoneCheck, trigger: 'change' },
-                    { validator: this.phoneCheck, trigger: 'blur' },
-                    { validator: this.checkUserinfo, trigger: 'blur' },
-                ],
-            },
+  mixins: [Public],
+  data () {
+    return {
+      formSignup: {
+        username: '',
+        password: '',
+        email: '',
+        phone: '',
+        phoneCode: ''
+      },
+      ruleSignup: {
+        username: [
+          { required: true, message: '用户名不能为空', trigger: 'blur' },
+          { validator: this.usernameCheck, trigger: 'change' },
+          { validator: this.usernameCheck, trigger: 'blur' },
+          { validator: this.checkUserinfo, trigger: 'blur' }
+        ],
+        password: [
+          { required: true, message: '密码不能为空', trigger: 'blur' },
+          { validator: this.passwordCheck, trigger: 'change' },
+          { validator: this.passwordCheck, trigger: 'blur' }
+        ],
+        email: [
+          { required: true, message: '邮箱不能为空', trigger: 'blur' },
+          // { type: 'email', message: '邮箱格式不正确', trigger: 'change' },
+          { type: 'email', message: '邮箱格式不正确', trigger: 'blur' },
+          { validator: this.checkUserinfo, trigger: 'blur' }
+        ],
+        phone: [
+          { required: true, message: '手机号不能为空', trigger: 'blur' },
+          // { validator: this.phoneCheck, trigger: 'change' },
+          { validator: this.phoneCheck, trigger: 'blur' },
+          { validator: this.checkUserinfo, trigger: 'blur' }
+        ]
+      },
+      formUpdate: {
+        realname: '',
+        company: '',
+        appname: '',
+        email: '',
+        phone: '',
+        phoneCode: ''
+      },
+      ruleUpdate: {
+        realname: [
+          { required: true, message: '昵称', trigger: 'blur' }
+        ],
+        company: [
+          { required: true, message: '公司名称', trigger: 'blur' }
+        ],
+        appname: [
+          { required: true, message: '应用名称', trigger: 'blur' }
+        ],
+        email: [
+          { required: true, message: '邮箱不能为空1', trigger: 'change' },
+          { type: 'email', message: '邮箱格式不正确', trigger: 'change' },
+          { type: 'email', message: '邮箱格式不正确', trigger: 'blur' },
+          { validator: this.checkUserinfo, trigger: 'blur' }
+        ],
+        phone: [
+          { required: true, message: '手机号不能为空', trigger: 'change' },
+          { validator: this.phoneCheck, trigger: 'change' },
+          { validator: this.phoneCheck, trigger: 'blur' },
+          { validator: this.checkUserinfo, trigger: 'blur' }
+        ]
+      },
 
-            needPhone: true,
+      needPhone: true,
 
-            //手机号验证正则
-            phoneReg: /^1[3|4|5|7|8]\d{9}$/,
-            usernameReg: /^[A-Za-z0-9]{4,16}$/,
-            passwdReg: /^.{6,16}$/,
+      // 手机号验证正则
+      phoneReg: /^1[3|4|5|7|8]\d{9}$/,
+      usernameReg: /^[A-Za-z0-9]{4,16}$/,
+      passwdReg: /^.{6,16}$/,
 
-            // 发送手机验证码 状态
-            sendCodeStatus: {
-                text: '加载中...',
-                loading: true,
-                disabled: true,
-            },
-            // 极验
-            geetest: null,
+      // 发送手机验证码 状态
+      sendCodeStatus: {
+        text: '加载中...',
+        loading: true,
+        disabled: true
+      },
+      // 极验
+      geetest: null,
 
-            interval: null,
-            timeout: 60,
+      interval: null,
+      timeout: 60,
 
-            updateUserInfo: {
-                update: false,
-                realname: true,
-                company: false,
-                appname: false,
-                email: false,
-                phone: false,
-            },
+      updateUserInfo: {
+        update: false,
+        realname: true,
+        company: false,
+        appname: false,
+        email: false,
+        phone: false
+      },
 
-            showWechatQrcode: false,
+      showWechatQrcode: false,
 
-            geetestType: 'formSignup',
+      geetestType: 'formSignup'
 
-        }
-    },
-    // beforeRouteEnter(to, from, next) {
+    }
+  },
+  // beforeRouteEnter(to, from, next) {
+  //
+  //     // 进入路由前 登录检测
+  //     const apiUrl = '/account/pageCheck/type/signup'
+  //     axios.get(apiUrl).then((res)=>{
+  //         let data = res.data
+  //         next(vm => {
+  //
+  //             vm.phoneReg = new RegExp(data.reg_p)
+  //             vm.usernameReg = new RegExp(data.reg_u)
+  //             vm.passwdReg = new RegExp(data.reg_pa)
+  //
+  //             vm.updateUserInfo = Object.assign(vm.updateUserInfo, data.update)
+  //
+  //             vm.needPhone = data.need_p
+  //
+  //             if(data.code != 10000) return false
+  //
+  //             if (data.l && !data.update.update) vm.reffrrer()
+  //         })
+  //     }).catch((error)=>{
+  //         next()
+  //     })
+  // },
+  computed: {
+      // vipShow(){
+      //     return this.moment(new Date()).isAfter('2018-02-14') && this.moment(new Date()).isBefore('2018-02-22')
+      // }
+  },
+  // mounted() {
+  //     if (this.needPhone || (!this.updateUserInfo.update && !this.updateUserInfo.phone)) {
+  //         // 初始化极验
+  //         this.loadGeetest()
+  //     }
+  //
+  // },
+  methods: {
+    formSignupSubmit () {},
+    // formSignupSubmit() {        // 提交注册信息
     //
-    //     // 进入路由前 登录检测
-    //     const apiUrl = '/account/pageCheck/type/signup';
-    //     axios.get(apiUrl).then((res)=>{
-    //         let data = res.data;
-    //         next(vm => {
+    //     // 解决QQ浏览器 获取不到自动填充密码的数据
+    //     [].forEach.call(this.$refs.formSignup.$el.querySelectorAll('input'), (item) => {
+    //         this.formSignup[item.name] = item.value
+    //     })
     //
-    //             vm.phoneReg = new RegExp(data.reg_p);
-    //             vm.usernameReg = new RegExp(data.reg_u);
-    //             vm.passwdReg = new RegExp(data.reg_pa);
+    //     this.$refs.formSignup.validate((valid) => {
+    //         if (!valid) {
+    //             this.$Message.error('用户数据验证失败!')
+    //             return false
+    //         }
+    //         const apiUrl = '/account/signupForm'
+    //         this.$http.post(apiUrl, this.formSignup).then((res) => {
     //
-    //             vm.updateUserInfo = Object.assign(vm.updateUserInfo, data.update);
+    //             const data = res.data
     //
-    //             vm.needPhone = data.need_p;
+    //             // 登录失败
+    //             if(data.code != 10000){
     //
-    //             if(data.code != 10000) return false;
+    //                 this.$Message.error({
+    //                     content: data.msg,
+    //                     duration: 3
+    //                 })
+    //                 return false
+    //             }
     //
-    //             if (data.l && !data.update.update) vm.reffrrer();
+    //             // 第二步，完善用户信息
+    //             // this.updateUserInfo.update = true
+    //             asynSignin()
+    //             if (res.data.userinfo){
+    //                 this.$store.commit('updateUserInfo', res.data.userinfo)
+    //             }
+    //
+    //             if (data.type && data.type=='signin') {
+    //                 this.reffrrer()
+    //             } else {
+    //                 this.showWechatQrcode = true
+    //             }
+    //
+    //         }).catch((error)=>{
+    //             this.$Message.error('网络错误，请稍后重试')
     //         })
-    //     }).catch((error)=>{
-    //         next()
     //     })
     // },
-    computed: {
-        // vipShow(){
-        //     return this.moment(new Date()).isAfter('2018-02-14') && this.moment(new Date()).isBefore('2018-02-22');
-        // }
-    },
-    // mounted() {
-    //     if (this.needPhone || (!this.updateUserInfo.update && !this.updateUserInfo.phone)) {
-    //         // 初始化极验
-    //         this.loadGeetest();
-    //     }
-    //
+    // formUpdateSubmit() {        // 提交完善信息
+
+    //     this.$refs.formUpdate.validate((valid) => {
+    //         if (!valid) {
+    //             this.$Message.error('用户数据验证失败!')
+    //             return false
+    //         }
+    //         const apiUrl = '/account/signupModifyUserInfo'
+    //         this.$http.post(apiUrl, this.formUpdate).then((res) => {
+
+    //             const data = res.data
+    //             // 登录失败
+    //             if(data.code != 10000){
+
+    //                 this.$Message.error({
+    //                     content: data.msg,
+    //                     duration: 3
+    //                 })
+    //                 return false
+    //             }
+
+    //             asynSignin()
+    //             if (res.data.userinfo){
+    //                 this.$store.commit('updateUserInfo', res.data.userinfo)
+    //             }
+
+    //             if (data.type && data.type=='signin') {
+    //                 this.reffrrer()
+    //             } else {
+    //                 this.showWechatQrcode = true
+    //             }
+
+    //         }).catch((error)=>{
+    //             this.$Message.error('网络错误，请稍后重试')
+    //         })
+    //     })
     // },
-    methods: {
-        formSignupSubmit() {}
-        // formSignupSubmit() {        // 提交注册信息
-        //
-        //     // 解决QQ浏览器 获取不到自动填充密码的数据
-        //     [].forEach.call(this.$refs.formSignup.$el.querySelectorAll('input'), (item) => {
-        //         this.formSignup[item.name] = item.value
-        //     })
-        //
-        //     this.$refs.formSignup.validate((valid) => {
-        //         if (!valid) {
-        //             this.$Message.error('用户数据验证失败!');
-        //             return false
-        //         }
-        //         const apiUrl = '/account/signupForm';
-        //         this.$http.post(apiUrl, this.formSignup).then((res) => {
-        //
-        //             const data = res.data;
-        //
-        //             // 登录失败
-        //             if(data.code != 10000){
-        //
-        //                 this.$Message.error({
-        //                     content: data.msg,
-        //                     duration: 3
-        //                 });
-        //                 return false;
-        //             }
-        //
-        //             // 第二步，完善用户信息
-        //             // this.updateUserInfo.update = true;
-        //             asynSignin();
-        //             if (res.data.userinfo){
-        //                 this.$store.commit('updateUserInfo', res.data.userinfo);
-        //             }
-        //
-        //             if (data.type && data.type=='signin') {
-        //                 this.reffrrer();
-        //             } else {
-        //                 this.showWechatQrcode = true;
-        //             }
-        //
-        //         }).catch((error)=>{
-        //             this.$Message.error('网络错误，请稍后重试');
-        //         });
-        //     })
-        // },
-        // formUpdateSubmit() {        // 提交完善信息
-
-        //     this.$refs.formUpdate.validate((valid) => {
-        //         if (!valid) {
-        //             this.$Message.error('用户数据验证失败!');
-        //             return false
-        //         }
-        //         const apiUrl = '/account/signupModifyUserInfo';
-        //         this.$http.post(apiUrl, this.formUpdate).then((res) => {
-
-        //             const data = res.data;
-        //             // 登录失败
-        //             if(data.code != 10000){
-
-        //                 this.$Message.error({
-        //                     content: data.msg,
-        //                     duration: 3
-        //                 });
-        //                 return false;
-        //             }
-
-        //             asynSignin();
-        //             if (res.data.userinfo){
-        //                 this.$store.commit('updateUserInfo', res.data.userinfo);
-        //             }
-
-        //             if (data.type && data.type=='signin') {
-        //                 this.reffrrer();
-        //             } else {
-        //                 this.showWechatQrcode = true;
-        //             }
-
-        //         }).catch((error)=>{
-        //             this.$Message.error('网络错误，请稍后重试');
-        //         });
-        //     })
-        // },
-        // loadGeetest() {             // 初始化极验
-        //
-        //     let geetestInfoUri = '/error/geetestInfo?rand='+Math.round(Math.random()*100) // 加随机数防止缓存
-        //     this.$http.get(geetestInfoUri).then((res)=>{
-        //         let config = res.data;
-        //
-        //         initGeetest({
-        //             gt: config.gt,
-        //             challenge: config.challenge,
-        //             offline: !config.success,
-        //             new_captcha: config.new_captcha,
-        //             product: 'bind',
-        //             // width: "300px"
-        //         }, this.handlerPopup);
-        //
-        //     }).catch((error)=>{
-        //          // console.log(error);
-        //         this.$Message.error('网络错误，请稍后重试');
-        //     })
-        // },
-        // handlerPopup(captchaObj) {  // 初始化极验回调
-        //
-        //     this.geetest = captchaObj;
-        //     this.geetest.onReady(() => {
-        //         this.sendCodeStatus.loading = false;
-        //         this.sendCodeStatus.text = '获取验证码';
-        //     }).onSuccess(() => {
-        //         this.sendCode();
-        //     });
-        // },
-        // handleSendCode(name) {      // 点击发送验证码
-        //
-        //     if (name) this.geetestType = name;
-        //     // 极验验证
-        //     this.geetest.verify();
-        // },
-        // sendCode() {                // 发送验证码
-        //
-        //     let validate = this.geetest.getValidate()
-        //     if (!validate) return ;
-        //
-        //     let apiUrl = '/account/sendPhoneCodeBySignup';
-        //     let params = {}
-        //     params.validate = validate;
-        //     params.phone = this[this.geetestType].phone;
-        //
-        //     this.$http.post(apiUrl, params).then((res) => {
-        //
-        //         this.geetest.reset();
-        //
-        //         const data = res.data;
-        //         // 登录失败
-        //         if(data.code != 10000){
-        //             this.$Message.error({
-        //                 content: data.msg,
-        //                 duration: 3
-        //             });
-        //             return false;
-        //         }
-        //         this.sendCodeSuccess();
-        //
-        //     }).catch((error)=>{
-        //         this.$Message.error('网络错误，请稍后重试');
-        //     });
-        // },
-        // sendCodeSuccess() {         // 验证码发送成功
-        //     let timeout = this.timeout;
-        //     this.sendCodeStatus.disabled = true;
-        //     this.sendCodeStatus.text = '等待'+(timeout--)+'秒';
-        //
-        //     this.interval = setInterval(() => {
-        //         if (timeout <= 0) {
-        //             this.sendCodeStatus.text = '获取验证码';
-        //             this.sendCodeStatus.disabled = false;
-        //             clearInterval(this.interval);
-        //         } else {
-        //             this.sendCodeStatus.text = '等待'+(timeout--)+'秒';
-        //         }
-        //     }, 1000);
-        // },
-        // reffrrer() {                // 已登录用户
-        //
-        //     if (document.referrer) {
-        //         this.$router.go(-1);
-        //     } else {
-        //         this.$router.push({
-        //             name: 'index',
-        //             path: '/'
-        //         });
-        //     }
-        // },
-        // usernameCheck(rule, value, callback) { // 用户名前端验证
-        //
-        //     if (value.match(this.usernameReg)) {
-        //         callback();
-        //     } else {
-        //         callback(new Error('用户名长度4-16个字符, 仅限使用英文和数字'))
-        //     }
-        // },
-        // phoneCheck(rule, value, callback) {     // 手机号前端验证
-        //
-        //     if (value.match(this.phoneReg)) {
-        //         this.sendCodeStatus.disabled = false;
-        //         callback();
-        //     } else {
-        //         this.sendCodeStatus.disabled = true;
-        //         callback(new Error('手机号格式不符合规则'))
-        //     }
-        // },
-        // passwordCheck(rule, value, callback) {  // 密码前端验证
-        //     if (value.match(this.passwdReg)) {
-        //         callback();
-        //     } else {
-        //         callback(new Error('密码长度6-16位，支持数字、字母、字符'))
-        //     }
-        // },
-        // checkUserinfo(rule, value, callback) {  // 检测用户信息
-        //
-        //     // callback();
-        //     // return false;
-        //
-        //     let apiUrl = '/account/userInfoCheck';
-        //     let params = {};
-        //
-        //     params.field = rule.field;
-        //     params.value = value;
-        //
-        //     this.$http.post(apiUrl, params).then((res) => {
-        //
-        //         const data = res.data;
-        //         if (data.code == 10000) {
-        //             callback();
-        //         }else if(data.code == 10104){
-        //             callback(new Error(data.msg))
-        //         }
-        //
-        //         // return callback(new Error(data.msg));
-        //
-        //     }).catch((error)=>{
-        //         this.$Message.error('网络错误，请稍后重试');
-        //     });
-        // },
-        // closeWechatQrcode() {
-        //     this.reffrrer();
-        // }
-    },
+    // loadGeetest() {             // 初始化极验
+    //
+    //     let geetestInfoUri = '/error/geetestInfo?rand='+Math.round(Math.random()*100) // 加随机数防止缓存
+    //     this.$http.get(geetestInfoUri).then((res)=>{
+    //         let config = res.data
+    //
+    //         initGeetest({
+    //             gt: config.gt,
+    //             challenge: config.challenge,
+    //             offline: !config.success,
+    //             new_captcha: config.new_captcha,
+    //             product: 'bind',
+    //             // width: "300px"
+    //         }, this.handlerPopup)
+    //
+    //     }).catch((error)=>{
+    //          // console.log(error)
+    //         this.$Message.error('网络错误，请稍后重试')
+    //     })
+    // },
+    // handlerPopup(captchaObj) {  // 初始化极验回调
+    //
+    //     this.geetest = captchaObj
+    //     this.geetest.onReady(() => {
+    //         this.sendCodeStatus.loading = false
+    //         this.sendCodeStatus.text = '获取验证码'
+    //     }).onSuccess(() => {
+    //         this.sendCode()
+    //     })
+    // },
+    // handleSendCode(name) {      // 点击发送验证码
+    //
+    //     if (name) this.geetestType = name
+    //     // 极验验证
+    //     this.geetest.verify()
+    // },
+    // sendCode() {                // 发送验证码
+    //
+    //     let validate = this.geetest.getValidate()
+    //     if (!validate) return
+    //
+    //     let apiUrl = '/account/sendPhoneCodeBySignup'
+    //     let params = {}
+    //     params.validate = validate
+    //     params.phone = this[this.geetestType].phone
+    //
+    //     this.$http.post(apiUrl, params).then((res) => {
+    //
+    //         this.geetest.reset()
+    //
+    //         const data = res.data
+    //         // 登录失败
+    //         if(data.code != 10000){
+    //             this.$Message.error({
+    //                 content: data.msg,
+    //                 duration: 3
+    //             })
+    //             return false
+    //         }
+    //         this.sendCodeSuccess()
+    //
+    //     }).catch((error)=>{
+    //         this.$Message.error('网络错误，请稍后重试')
+    //     })
+    // },
+    // sendCodeSuccess() {         // 验证码发送成功
+    //     let timeout = this.timeout
+    //     this.sendCodeStatus.disabled = true
+    //     this.sendCodeStatus.text = '等待'+(timeout--)+'秒'
+    //
+    //     this.interval = setInterval(() => {
+    //         if (timeout <= 0) {
+    //             this.sendCodeStatus.text = '获取验证码'
+    //             this.sendCodeStatus.disabled = false
+    //             clearInterval(this.interval)
+    //         } else {
+    //             this.sendCodeStatus.text = '等待'+(timeout--)+'秒'
+    //         }
+    //     }, 1000)
+    // },
+    // reffrrer() {                // 已登录用户
+    //
+    //     if (document.referrer) {
+    //         this.$router.go(-1)
+    //     } else {
+    //         this.$router.push({
+    //             name: 'index',
+    //             path: '/'
+    //         })
+    //     }
+    // },
+    // usernameCheck(rule, value, callback) { // 用户名前端验证
+    //
+    //     if (value.match(this.usernameReg)) {
+    //         callback()
+    //     } else {
+    //         callback(new Error('用户名长度4-16个字符, 仅限使用英文和数字'))
+    //     }
+    // },
+    // phoneCheck(rule, value, callback) {     // 手机号前端验证
+    //
+    //     if (value.match(this.phoneReg)) {
+    //         this.sendCodeStatus.disabled = false
+    //         callback()
+    //     } else {
+    //         this.sendCodeStatus.disabled = true
+    //         callback(new Error('手机号格式不符合规则'))
+    //     }
+    // },
+    // passwordCheck(rule, value, callback) {  // 密码前端验证
+    //     if (value.match(this.passwdReg)) {
+    //         callback()
+    //     } else {
+    //         callback(new Error('密码长度6-16位，支持数字、字母、字符'))
+    //     }
+    // },
+    // checkUserinfo(rule, value, callback) {  // 检测用户信息
+    //
+    //     // callback()
+    //     // return false
+    //
+    //     let apiUrl = '/account/userInfoCheck'
+    //     let params = {}
+    //
+    //     params.field = rule.field
+    //     params.value = value
+    //
+    //     this.$http.post(apiUrl, params).then((res) => {
+    //
+    //         const data = res.data
+    //         if (data.code == 10000) {
+    //             callback()
+    //         }else if(data.code == 10104){
+    //             callback(new Error(data.msg))
+    //         }
+    //
+    //         // return callback(new Error(data.msg))
+    //
+    //     }).catch((error)=>{
+    //         this.$Message.error('网络错误，请稍后重试')
+    //     })
+    // },
+    closeWechatQrcode () {
+        // this.reffrrer()
+    }
+  }
 }
 </script>
 

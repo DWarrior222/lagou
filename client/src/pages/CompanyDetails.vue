@@ -100,10 +100,10 @@ export default {
       compSetter.save(this.compid)
     },
     handDescription () {
-      console.log(this.compDetails[0][0].introduce)
+       // console.log(this.compDetails[0][0].introduce)
       let introduce = this.compDetails[0][0].introduce
-      // console.log(introduce.split(/\s+[0-9][、.]/g))
-      console.log(introduce.split(/[：；。]\s+/g))
+      //  // console.log(introduce.split(/\s+[0-9][、.]/g))
+       // console.log(introduce.split(/[：；。]\s+/g))
       // this.introduce = introduce.split(/[：；。]?\s+[0-9][.、]/g)
       this.introduce = introduce.split(/[：；。]\s*/g)
     }
@@ -114,7 +114,7 @@ export default {
     this.compStorage(compid)
     this.$http.get('/comp/details?compid=' + this.compid)
     .then(res => {
-      console.log(res)
+       // console.log(res)
       this.compDetails = res.data.data
       this.iframeSrc = 'http://m.amap.com/navi/?dest=116.470098,39.992838&destName=' + this.compDetails[0][0].address + '&hideRouteIcon=1&key=8435189a62d4c879c5a7750394127979'
       this.jobLength = this.compDetails[0][1].length

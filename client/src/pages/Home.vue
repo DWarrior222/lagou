@@ -87,7 +87,7 @@
         this.waiting = true
         this.$http.get('/job/rec_job?page=' + this.nowPage)
         .then(res => {
-          console.log(res)
+           // console.log(res)
           this.waiting = false
           this.jobList = res.data.data
           if (!this.jobList) {

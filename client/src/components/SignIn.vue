@@ -1,7 +1,7 @@
 <template>
   <div id="signin">
     <div class="top-bar-wrap">
-      <top-bar areaflag="false"></top-bar>
+      <top-bar nickNameValue="nickname" areaflag="false"></top-bar>
     </div>
     <div class="signin-box">
       <Form class="signin" ref="formSignin" :model="formSignin" :rules="ruleSignin">
@@ -68,297 +68,120 @@
 import Public from '../Public'
 
 export default {
-    mixins: [Public],
-    data() {
-        return {
-            formSignin: {
-                username: '',
-                password: '',
-            },
-            ruleSignin: {
-                username: [
-                    { required: true, message: '邮箱/手机号不能为空', trigger: 'blur' }
-                ],
-                password: [
-                    { required: true, message: '密码不能为空', trigger: 'blur' }
-                ]
-            },
-            needCode: false,
-            timestamp: +new Date,
+  mixins: [Public],
+  data () {
+    return {
+      nickname: '',
+      formSignin: {
+        username: '',
+        password: ''
+      },
+      ruleSignin: {
+        username: [
+          { required: true, message: '邮箱/手机号不能为空', trigger: 'blur' }
+        ],
+        password: [
+          { required: true, message: '密码不能为空', trigger: 'blur' }
+        ]
+      },
+      needCode: false,
+      // timestamp: + new Date,
 
-            showActive: false,
+      showActive: false,
 
-            showWechatQrcode: false,
-            loadingQrcode: true,
-            qrcodeUri: '',
+      showWechatQrcode: false,
+      loadingQrcode: true,
+      qrcodeUri: '',
 
-            interval: null,
+      interval: null,
 
-            noBindWechat: false,     // 账号是否绑定过微信
-        }
-    },
-    // computed: {
-    //     verifyCodeUrl: function() {
-    //         return this.apiURI + '/account/getVerifyCodeImage?' + this.timestamp;
-    //     }
-    // },
-    // created() {
-    //     if (!this.$isServer) {
-    //         const apiUrl = '/account/pageCheck/type/signin';
-    //         this.$http.get(apiUrl).then((res)=>{
-    //             let data = res.data;
-    //             if(data.code != 10000) this.$Message.error(data.msg);
-    //
-    //             if (data.l) this.success();
-    //             this.needCode = data.n;
-    //
-    //         }).catch((error)=>{
-    //             // next()
-    //         })
-    //     }
-    // },
-    // mounted() {
-    //     on(document, 'keyup', this.keyup);
-    // },
-    // beforeDestroy () {
-    //     off(document, 'keyup', this.keyup);
-    // },
-    methods: {
-        // keyup(e) {
-        //     if (e.keyCode == 13) {
-        //         this.handleSubmit('formSignin');
-        //     }
-        // },
-        // handleSubmit(name) {        // 提交登录信息
-        //
-        //     // 解决QQ浏览器 获取不到自动填充密码的数据
-        //     [].forEach.call(this.$refs[name].$el.querySelectorAll('input'), (item) => {
-        //         this.formSignin[item.name] = item.value
-        //     })
-        //
-        //     this.$refs[name].validate((valid) => {
-        //         if (!valid) {
-        //             // this.$Message.error('用户数据验证失败!');
-        //             return false
-        //         }
-        //
-        //         const apiUrl = '/account/signinForm';
-        //         this.$http.post(apiUrl, this.formSignin).then((res) => {
-        //
-        //             const data = res.data;
-        //
-        //             // TODO 显示二维码
-        //
-        //             // 登录失败
-        //             if(data.code != 10000){
-        //
-        //                 if (data.code == 10106) {
-        //                     this.$router.push({
-        //                         path: '/account/signup'
-        //                     });
-        //                 } else {
-        //
-        //                     if (this.needCode) {
-        //                         // 此次提交前用户需要输入验证码
-        //                         this.refreshCode();
-        //                     } else {
-        //                         // 此次提交前用户不需要输入验证码
-        //                         // 但是这次需要了
-        //                         if (data.needcode) {
-        //                             this.needCode = data.needcode;
-        //                             return this.refreshCode();
-        //                         }
-        //                     }
-        //
-        //                     this.$Message.error({
-        //                         content: data.msg,
-        //                         duration: 3
-        //                     });
-        //                 }
-        //                 return false;
-        //             }
-        //
-        //             // 论坛登录
-        //             asynSignin();
-        //
-        //             if (data.userinfo)
-        //                 this.$store.commit('updateUserInfo', data.userinfo);
-        //
-        //             this.success(data.msg);
-        //
-        //         }).catch((error)=>{
-        //             this.$Message.error('网络错误，请稍后重试');
-        //         });
-        //
-        //     })
-        // },
-        // closeActive() {
-        //
-        //     let path = this.$route.query.r ? this.$route.query.r : '/';
-        //     //登陆注册等页面跳转首页，个人中心可以跳转
-        //     if (path.indexOf('/account/') !== -1 && path.indexOf('/account/setting/') < 0) path = '/';
-        //
-        //     // console.log(path);
-        //     this.$router.push({
-        //         path: path
-        //     });
-        // },
-        // success(msg) {              // 登录成功
-        //
-        //     if (getCookie('activityVip')) {
-        //         delCookie('activityVip');
-        //         this.showActive = true;
-        //     } else {
-        //
-        //         msg && this.$Message.success(msg);
-        //
-        //         let path = this.$route.query.r ? this.$route.query.r : '/';
-        //         //登陆注册等页面跳转首页，个人中心可以跳转
-        //         if (path.indexOf('/account/') !== -1 && path.indexOf('/account/setting/') < 0) path = '/';
-        //
-        //         // console.log(path);
-        //         if (path.indexOf('https://') !== -1){
-        //             window.location.href = path;
-        //         }else{
-        //             this.$router.push({
-        //                 path: path
-        //             });
-        //         }
-        //     }
-        // },
-        // refreshCode() {             // 点击刷新二维码
-        //     this.timestamp = +new Date;
-        // },
-        // getWechatQrcode() {         // 获取微信登录二维码
-        //     let apiUrl = '/account/getWechatLoginQrcode'
-        //
-        //     if (this.showWechatQrcode) return false;
-        //
-        //     this.showWechatQrcode = true;
-        //     this.loadingQrcode = true;
-        //
-        //     this.$http.get(apiUrl).then((res)=>{
-        //         this.loadingQrcode = false;
-        //         let data = res.data;
-        //         // 登录失败
-        //         if(data.code != 10000){
-        //             this.$Message.error({
-        //                 content: data.msg,
-        //                 duration: 3
-        //             });
-        //             return false;
-        //         }
-        //
-        //         this.qrcodeUri = data.imgsrc;
-        //
-        //         this.checkWechatLogin();
-        //
-        //     }).catch((error)=>{
-        //         this.$Message.error('网络错误，请稍后重试');
-        //     })
-        // },
-        // closeWechatQrcode() {       // 关闭二维码弹框
-        //     // console.log('close');
-        //     clearInterval(this.interval);
-        // },
-        // checkWechatLogin() {        // 检测是否扫描微信
-        //
-        //     let checkTimes = 0;
-        //     let apiUrl = '/account/checkLogingetOpenId';
-        //
-        //     this.interval = setInterval(() =>{
-        //         if (checkTimes++ >= 100) clearInterval(this.interval);
-        //
-        //         this.$http.get(apiUrl).then((res)=>{
-        //             let data = res.data;
-        //
-        //             if (data.code != 10107) {
-        //
-        //                 this.showWechatQrcode = false;
-        //                 clearInterval(this.interval);
-        //             }
-        //
-        //             // 用户扫码登录了
-        //             if(data.code == 10000){
-        //
-        //                 // 论坛登录
-        //                 asynSignin();
-        //
-        //                 if (data.userinfo)
-        //                     this.$store.commit('updateUserInfo', data.userinfo);
-        //
-        //                 this.success(data.msg);
-        //             } else if (data.code == 10130) {
-        //
-        //                 this.noBindWechatModal();
-        //             }
-        //
-        //         }).catch((error)=>{
-        //
-        //             this.$Message.error('网络错误，请稍后重试');
-        //         })
-        //
-        //     }, 1500);
-        // },
-        // noBindWechatModal() {
-        //     this.$Modal.info({
-        //         title: '',
-        //         render: (h)=> {
-        //             return h('div', {
-        //                 class: {
-        //                     'notice-popup': true
-        //                 }
-        //             }, [
-        //                 h('div', {
-        //                     class: 'notice-bind-wechat'
-        //                 }, [
-        //                     h('p', '该微信号没有绑定七麦数据账号，'),
-        //                     h('p', '您可以选择绑定一个已有账号或者创建一个新账号。'),
-        //                     h('Button', {
-        //                         props: {
-        //                             type: 'primary'
-        //                         },
-        //                         domProps: {
-        //                             innerHTML: '绑定已有账号'
-        //                         },
-        //                         on: {
-        //                             click: () => {
-        //                                 this.noBindWechatHandle('wechatBindAccount')
-        //                             }
-        //                         }
-        //                     }),
-        //                     h('Button', {
-        //                         props: {
-        //                             type: 'primary'
-        //                         },
-        //                         domProps: {
-        //                             innerHTML: '创建新账号'
-        //                         },
-        //                         on: {
-        //                             click: () => {
-        //                                 this.noBindWechatHandle('signup')
-        //                             }
-        //                         }
-        //                     })
-        //                 ])
-        //             ]);
-        //         },
-        //         okText: '关闭',
-        //     })
-        // },
-        // noBindWechatHandle(type) {
-        //
-        //     this.$Modal.remove()
-        //
-        //     this.$router.push({
-        //         // name: 'index',
-        //         path: '/account/'+type
-        //     });
-        // },
-    },
-    components:{
-
+      noBindWechat: false
     }
+  },
+  computed: {
+    verifyCodeUrl: function () {
+      return this.apiURI + '/account/getVerifyCodeImage?' + this.timestamp
+    }
+  },
+  methods: {
+    keyup (e) {
+      if (e.keyCode === 13) {
+        this.handleSubmit('formSignin')
+      }
+    },
+    handleSubmit (name) {
+      // 解决QQ浏览器 获取不到自动填充密码的数据
+      [].forEach.call(this.$refs[name].$el.querySelectorAll('input'), (item) => {
+        this.formSignin[item.name] = item.value
+      })
+
+      this.$refs[name].validate((valid) => {
+        if (!valid) {
+        // this.$Message.error('用户数据验证失败!')
+          return false
+        }
+        // console.log(this.formSignin)
+        const apiUrl = '/users/login'
+        this.$http.post(apiUrl, this.formSignin).then((res) => {
+          // console.log(res)
+          const data = res.data
+          console.log(data)
+
+          this.success(data)
+        })
+      })
+    },
+    closeActive () {
+      let path = this.$route.query.r ? this.$route.query.r : '/'
+      // 登陆注册等页面跳转首页，个人中心可以跳转
+      if (path.indexOf('/account/') !== -1 && path.indexOf('/account/setting/') < 0) path = '/'
+
+      // console.log(path)
+      this.$router.push({
+        path: path
+      })
+    },
+    // noticeSuccess (nodesc, titleTxt, contentTxt) {
+    //   this.$Notice.success({
+    //     title: titleTxt,
+    //     desc: nodesc ? '' : contentTxt
+    //   })
+    // },
+    // noticeFaild (nodesc, titleTxt, contentTxt) {
+    //   this.$Notice.error({
+    //     title: titleTxt,
+    //     desc: nodesc ? '' : contentTxt
+    //   })
+    // },
+    noticeFaild (value) {
+      this.$Message.error(value)
+    },
+    noticeSuccess (value) {
+      this.$Message.success(value)
+    },
+    success (data) {
+      // msg && this.$Message.success(msg)
+      if (data.state === '00000') {
+        // if ()
+        this.noticeSuccess('Successful landing')
+        this.$router.push('/')
+      } else {
+        this.noticeFaild('Password or account is incorrect')
+      }
+      // let path = this.$route.query.r ? this.$route.query.r : '/'
+      // // 登陆注册等页面跳转首页，个人中心可以跳转
+      // if (path.indexOf('/account/') !== -1 && path.indexOf('/account/setting/') < 0) path = '/'
+      //
+      // // console.log(path)
+      // if (path.indexOf('https://') !== -1) {
+      //   window.location.href = path
+      // } else {
+      //   this.$router.push({
+      //     path: path
+      //   })
+      // }
+    }
+  }
 }
 </script>
 

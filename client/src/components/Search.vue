@@ -68,7 +68,7 @@
       },
       searchCallback (res, searchText) {
         let jobList = res.data.data
-        console.log(jobList)
+         // console.log(jobList)
         this.$store.dispatch('getJobList', jobList)
         if (this.$route.path === '/') {
           this.$router.push({name: 'jobs', params: {searchText: searchText}})
@@ -86,13 +86,13 @@
         if (cityId === 1) {
           this.$http.post('/job/key_alljob?page=' + page, {searchText})
           .then(res => {
-            console.log(res)
+             // console.log(res)
             this.searchCallback(res, searchText)
           })
         } else {
           this.$http.post('/job/key_job?page=' + page, {searchText, cityId})
           .then(res => {
-            console.log(res)
+             // console.log(res)
             this.searchCallback(res, searchText)
           })
         }

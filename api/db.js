@@ -1,6 +1,6 @@
 let mongoose = require('mongoose');
 //连接MongoDB数据库,本地默认端口27017，数据库叫lagou
-mongoose.connect('mongodb://127.0.0.1:27017/lagou');
+mongoose.connect('mongodb://47.94.236.150:27017/lagou');
 
 mongoose.connection.on("connected", function () {//连接成功事件
   console.log("MongoDB connected success.")
