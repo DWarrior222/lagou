@@ -14,13 +14,25 @@
               <Input v-model="formSignup.password" name="password" type="password" placeholder="密码"></Input>
           </FormItem>
           <FormItem prop="email" label="邮箱">
-              <Input v-model="formSignup.email" name="email" placeholder="邮箱"></Input>
+              <Input v-model="formSignup.email" name="email" placeholder="邮箱">
+                <Button type="primary" :disabled="sendCodeStatus.disabled" :loading="sendCodeStatus.loading" class="get-phone-code" slot="append" @click="handleSendCode('formSignup')">{{sendCodeStatus.text}}</Button>
+              </Input>
           </FormItem>
 
           <FormItem class="submit">
               <Button type="primary" @click="formSignupSubmit">注册</Button>
           </FormItem>
-
+          <FormItem class="related">
+            <div>
+                已有账号？
+                <router-link
+                  to="/signin"
+                  tag="a"
+                >
+                登录
+                </router-link>
+            </div>
+        </FormItem>
       </Form>
     <!-- 用户完善信息 -->
    <!--  <Form v-show="updateUserInfo.update" class="signup" ref="formUpdate" :model="formUpdate" :rules="ruleUpdate">
@@ -59,7 +71,7 @@
 </template>
 
 <script>
-
+// import { initGeetest } from '../libs/geetest'
 import Public from '../Public'
 export default {
   mixins: [Public],
@@ -67,10 +79,8 @@ export default {
     return {
       formSignup: {
         username: '',
-        password: '',
-        email: '',
-        phone: '',
-        phoneCode: ''
+        password: ''
+        // email: ''
       },
       ruleSignup: {
         username: [
@@ -200,51 +210,72 @@ export default {
   //
   // },
   methods: {
-    formSignupSubmit () {},
-    // formSignupSubmit() {        // 提交注册信息
-    //
-    //     // 解决QQ浏览器 获取不到自动填充密码的数据
-    //     [].forEach.call(this.$refs.formSignup.$el.querySelectorAll('input'), (item) => {
-    //         this.formSignup[item.name] = item.value
-    //     })
-    //
-    //     this.$refs.formSignup.validate((valid) => {
-    //         if (!valid) {
-    //             this.$Message.error('用户数据验证失败!')
-    //             return false
-    //         }
-    //         const apiUrl = '/account/signupForm'
-    //         this.$http.post(apiUrl, this.formSignup).then((res) => {
-    //
-    //             const data = res.data
-    //
-    //             // 登录失败
-    //             if(data.code != 10000){
-    //
-    //                 this.$Message.error({
-    //                     content: data.msg,
-    //                     duration: 3
-    //                 })
-    //                 return false
-    //             }
-    //
-    //             // 第二步，完善用户信息
-    //             // this.updateUserInfo.update = true
-    //             asynSignin()
-    //             if (res.data.userinfo){
-    //                 this.$store.commit('updateUserInfo', res.data.userinfo)
-    //             }
-    //
-    //             if (data.type && data.type=='signin') {
-    //                 this.reffrrer()
-    //             } else {
-    //                 this.showWechatQrcode = true
-    //             }
-    //
-    //         }).catch((error)=>{
-    //             this.$Message.error('网络错误，请稍后重试')
-    //         })
-    //     })
+    noticeFaild (value) {
+      this.$Message.error(value)
+    },
+    noticeSuccess (value) {
+      this.$Message.success(value)
+    },
+    formSignupSubmit () {
+      // 解决QQ浏览器 获取不到自动填充密码的数据
+      [].forEach.call(this.$refs.formSignup.$el.querySelectorAll('input'), (item) => {
+        this.formSignup[item.name] = item.value
+      })
+
+      this.$refs.formSignup.validate((valid) => {
+        // if (!valid) {
+        //   this.$Message.error('用户数据验证失败!')
+        //   return false
+        // }
+        const apiUrl = '/users/register'
+        console.log(this.formSignup)
+        this.$http.post(apiUrl, this.formSignup).then((res) => {
+          const data = res.data
+          // 登录失败
+          console.log(data)
+          if (data.state === '00000') {
+            this.noticeSuccess('Successful registration')
+            // this.$http.post('/users/login', this.formSignin).then((res) => {
+            //   // console.log(res)
+            //   const data = res.data
+            //
+            //   this.success(data)
+            // })
+            this.$router.push('/signin')
+          } else {
+            this.noticeFaild(data.message)
+          }
+
+          // 第二步，完善用户信息
+          // this.updateUserInfo.update = true
+          // asynSignin()
+          // if (res.data.userinfo) {
+          //   this.$store.commit('updateUserInfo', res.data.userinfo)
+          // }
+
+          // if (data.type && data.type === 'signin') {
+          //   this.reffrrer()
+          // } else {
+          //   this.showWechatQrcode = true
+          // }
+        })
+      })
+    },
+    // 初始化极验
+    // loadGeetest () {
+    //   // 加随机数防止缓存
+    //   let geetestInfoUri = '/error/geetestInfo?rand=' + Math.round(Math.random() * 100)
+    //   this.$http.get(geetestInfoUri).then((res) => {
+    //     let config = res.data
+    //     initGeetest({
+    //       gt: config.gt,
+    //       challenge: config.challenge,
+    //       offline: !config.success,
+    //       new_captcha: config.new_captcha,
+    //       product: 'bind'
+    //       // width: "300px"
+    //     }, this.handlerPopup)
+    //   })
     // },
     // formUpdateSubmit() {        // 提交完善信息
 
@@ -283,26 +314,7 @@ export default {
     //         })
     //     })
     // },
-    // loadGeetest() {             // 初始化极验
-    //
-    //     let geetestInfoUri = '/error/geetestInfo?rand='+Math.round(Math.random()*100) // 加随机数防止缓存
-    //     this.$http.get(geetestInfoUri).then((res)=>{
-    //         let config = res.data
-    //
-    //         initGeetest({
-    //             gt: config.gt,
-    //             challenge: config.challenge,
-    //             offline: !config.success,
-    //             new_captcha: config.new_captcha,
-    //             product: 'bind',
-    //             // width: "300px"
-    //         }, this.handlerPopup)
-    //
-    //     }).catch((error)=>{
-    //          // console.log(error)
-    //         this.$Message.error('网络错误，请稍后重试')
-    //     })
-    // },
+
     // handlerPopup(captchaObj) {  // 初始化极验回调
     //
     //     this.geetest = captchaObj
@@ -313,12 +325,12 @@ export default {
     //         this.sendCode()
     //     })
     // },
-    // handleSendCode(name) {      // 点击发送验证码
-    //
-    //     if (name) this.geetestType = name
-    //     // 极验验证
-    //     this.geetest.verify()
-    // },
+    handleSendCode (name) {
+      // 点击发送验证码
+      // if (name) this.geetestType = name
+      // 极验验证
+      this.geetest.verify()
+    },
     // sendCode() {                // 发送验证码
     //
     //     let validate = this.geetest.getValidate()
@@ -374,14 +386,14 @@ export default {
     //         })
     //     }
     // },
-    // usernameCheck(rule, value, callback) { // 用户名前端验证
-    //
-    //     if (value.match(this.usernameReg)) {
-    //         callback()
-    //     } else {
-    //         callback(new Error('用户名长度4-16个字符, 仅限使用英文和数字'))
-    //     }
-    // },
+    usernameCheck (rule, value, callback) {
+      // 用户名前端验证
+      if (value.match(this.usernameReg)) {
+        callback()
+      } else {
+        callback(new Error('用户名长度4-16个字符, 仅限使用英文和数字'))
+      }
+    },
     // phoneCheck(rule, value, callback) {     // 手机号前端验证
     //
     //     if (value.match(this.phoneReg)) {
@@ -392,13 +404,14 @@ export default {
     //         callback(new Error('手机号格式不符合规则'))
     //     }
     // },
-    // passwordCheck(rule, value, callback) {  // 密码前端验证
-    //     if (value.match(this.passwdReg)) {
-    //         callback()
-    //     } else {
-    //         callback(new Error('密码长度6-16位，支持数字、字母、字符'))
-    //     }
-    // },
+    passwordCheck (rule, value, callback) {
+      // 密码前端验证
+      if (value.match(this.passwdReg)) {
+        callback()
+      } else {
+        callback(new Error('密码长度6-16位，支持数字、字母、字符'))
+      }
+    },
     // checkUserinfo(rule, value, callback) {  // 检测用户信息
     //
     //     // callback()
@@ -545,7 +558,7 @@ export default {
 }
 #signup{
   .signup {
-    margin-top: 74px;
+    margin-top: 150px;
   }
 }
 </style>
