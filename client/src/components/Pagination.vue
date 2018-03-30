@@ -29,7 +29,7 @@ export default {
       if (page > 1) {
         this.flag = false
       }
-      console.log(page)
+       // console.log(page)
       this.$store.dispatch('increasePage', page)
     },
     lastPage () {
@@ -40,7 +40,7 @@ export default {
       } else {
         this.flag = false
       }
-      console.log(page)
+       // console.log(page)
       this.$store.dispatch('decreasePage', page)
     },
     skip () {

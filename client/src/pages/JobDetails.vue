@@ -85,10 +85,10 @@ export default {
       jobSetter.save(this.jobid)
     },
     handDescription () {
-      console.log(this.jobDetails[0][0].description)
+       // console.log(this.jobDetails[0][0].description)
       let description = this.jobDetails[0][0].description
-      // console.log(description.split(/\s+[0-9][、.]/g))
-      console.log(description.split(/[：；。]\s+/g))
+      //  // console.log(description.split(/\s+[0-9][、.]/g))
+       // console.log(description.split(/[：；。]\s+/g))
       // this.description = description.split(/[：；。]?\s+[0-9][.、]/g)
       this.description = description.split(/[：；。]?\s+/g)
     },
@@ -103,7 +103,7 @@ export default {
     this.jobStorage(jobid)
     this.$http.get('/job/details?jobid=' + this.jobid)
     .then(res => {
-      console.log(res)
+       // console.log(res)
       this.jobDetails = res.data.data
       this.waiting = false
       this.handDescription()

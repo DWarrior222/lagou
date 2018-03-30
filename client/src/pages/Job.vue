@@ -124,7 +124,7 @@ export default {
     ...mapState(['jobList', 'nowCityId', 'nowCityName', 'cityList'])
     // getCity: {
     //   get () {
-    //     console.log(this.jobList)
+    //      // console.log(this.jobList)
     //     return 1
     //   }
     // }
@@ -164,7 +164,7 @@ export default {
   // },
   // directives: {
   //   inserted (el, bind, vNode){
-  //     console.log('.....')
+  //      // console.log('.....')
   //   }
   // },
   methods: {
@@ -263,7 +263,7 @@ export default {
       this.nowCity = item
     },
     selectIndustry (item) {
-      // console.log(item)
+      //  // console.log(item)
       this.selecting.forEach((value, index) => {
         if (value === this.nowIndustry) {
           this.selecting.splice(index, 1)
@@ -318,7 +318,7 @@ export default {
       this.$set(this.nowCity, 'id', id)
       this.$set(this.nowCity, 'name', name)
       this.selecting.push(this.nowCity)
-      console.log(this.nowCity)
+       // console.log(this.nowCity)
     }
   },
   mounted () {
@@ -338,7 +338,7 @@ export default {
   watch: {
     nowCityId: {
       handler (value1, value2) {
-        console.log(value1)
+         // console.log(value1)
         if (value1 === 1) {
           this.nowCity = ''
         } else {

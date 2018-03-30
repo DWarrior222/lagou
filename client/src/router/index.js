@@ -11,6 +11,8 @@ import City from '@/pages/City'
 import JobDetails from '@/pages/JobDetails'
 // 公司详情页
 import CompanyDetails from '@/pages/CompanyDetails'
+import SignIn from '@/components/SignIn'
+import SignUp from '@/components/SignUp'
 // 使用VueRouter组件
 Vue.use(Router)
 // 导出VueRouter的实例
@@ -41,6 +43,18 @@ export default new Router({
       path: '/comp_details',
       name: 'companyDetails',
       component: CompanyDetails
+    },
+    {
+      // 注册
+      path: '/signup',
+      name: 'signup',
+      component: SignUp
+    },
+    {
+      // 登录
+      path: '/signin',
+      name: 'signin',
+      component: SignIn
     }
   ]
 })

@@ -1,41 +1,41 @@
 <template id="">
-  <div class="">
+  <div id="carousel">
     <div class="carousel">
-      <swiper :options="swiperOption" :autoPlay='true' :showIndicator='true' interval="2500" duration="500" ref="mySwiper">
-        <!-- slides -->
-        <swiper-slide><a href="https://pro.lagou.com/"><img src="https://www.lgstatic.com/i/image2/M00/18/CA/CgotOVn79oOAeLIqAAN8kyryYMw710.JPG"></a></swiper-slide>
-        <swiper-slide><a href="https://activity.lagou.com/topic/travelmeaning.html"><img src="https://www.lgstatic.com/i/image2/M00/35/3D/CgoB5lpEYnaAQZTPABAJd8HftRo467.PNG"></a></swiper-slide>
-        <!-- Optional controls -->
-        <div class="swiper-pagination" slot="pagination"></div>
-        <!-- <div class="swiper-button-prev" slot="button-prev"></div>
-        <div class="swiper-button-next" slot="button-next"></div> -->
-      </swiper>
+      <Carousel v-model="carouselShow" loop>
+        <CarouselItem>
+            <div class="demo-carousel"><a href="https://activity.lagou.com/topic/xinmei0326.html"><img src="https://www.lgstatic.com/i/image3/M00/43/0E/CgpOIFq3hCCAF5lGAAOgLuMRliw558.PNG"></a></div>
+        </CarouselItem>
+        <CarouselItem>
+            <div class="demo-carousel"><a href="https://activity.lagou.com/topic/travelmeaning.html"><img src="https://www.lgstatic.com/i/image2/M00/35/3D/CgoB5lpEYnaAQZTPABAJd8HftRo467.PNG"></a></div>
+        </CarouselItem>
+        <CarouselItem>
+            <div class="demo-carousel"><a href="https://www.lagou.com/gongsi/120539.html"><img src="https://www.lgstatic.com/i/image3/M00/39/C3/CgpOIFqrbmeAL1VZAAYMqww9zfs542.JPG"></a></div>
+        </CarouselItem>
+        <CarouselItem>
+            <div class="demo-carousel"><a href="https://activity.lagou.com/topic/51xinyongka.html"><img src="https://www.lgstatic.com/i/image3/M00/3F/B1/Cgq2xlqyPOOAJ5xyAASzifAkNh8439.PNG"></a></div>
+        </CarouselItem>
+        <CarouselItem>
+            <div class="demo-carousel"><a href="https://activity.lagou.com/activity/dist/speedEntry/pc/index2.html?num=27"><img src="https://www.lgstatic.com/i/image3/M00/41/CD/CgpOIFq0pwuANoXuAAUG7z1pAMI975.PNG"></a></div>
+        </CarouselItem>
+    </Carousel>
     </div>
   </div>
 </template>
 <script type="text/javascript">
-import { swiper, swiperSlide } from 'vue-awesome-swiper'
-require('swiper/dist/css/swiper.css')
 export default {
   name: 'carrousel',
   data () {
     return {
-      swiperOption: {
-        // notNextTick: true,
-        // autoplay: 1000,
-        // pagination: '.swiper-pagination',
-        // paginationType: 'progress',
-        // autoplayDisableOnInteraction: false,
-        // prevButton: '.swiper-button-prev',
-        // nextButton: '.swiper-button-next',
-        // scrollbar: '.swiper-scrollbar'
-        loop: true
+      carouselShow: 0,
+      setting: {
+        // autoplay: false,
+        // autoplaySpeed: 2000,
+        // dots: 'inside',
+        // radiusDot: false,
+        // trigger: 'click',
+        arrow: 'never'
       }
     }
-  },
-  components: {
-    swiper,
-    swiperSlide
   },
   computed: {
   },
@@ -49,5 +49,13 @@ export default {
   .carousel {
     width: 980px;
     margin: 20px auto;
+  }
+</style>
+<style>
+  #carousel .ivu-carousel-dots {
+    bottom: 20px;
+  }
+  #carousel .ivu-carousel-dots li button {
+    background: #fff;
   }
 </style>

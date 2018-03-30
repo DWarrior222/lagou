@@ -14,6 +14,7 @@ import VueAxios from 'vue-axios'
 import VueLazyload from 'vue-lazyload'
 // 引入无限滚动插件
 import VueInfiniteScroll from 'vue-infinite-scroll'
+import IView from 'iview'
 // 引入处理金钱的库，按3位加一个逗号
 // import { currency } from '@/util/currency'
 // 引入App组件
@@ -25,11 +26,12 @@ import '@/assets/css/base.css'
 // iconfont css
 import '@/assets/iconfont/iconfont.css'
 // 使用Axios库，实际上就是给vue的实例原型上面添加一个$http和axios属性
+import 'iview/dist/styles/iview.css'
 import VueAwesomeSwiper from 'vue-awesome-swiper'
 
 Vue.use(VueAwesomeSwiper)
 Vue.use(VueAxios, axios)
-
+Vue.use(IView)
 Vue.use(VueInfiniteScroll)
 Vue.use(VueLazyload)
 axios.defaults.baseURL = apiConfig.baseUrl

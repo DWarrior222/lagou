@@ -14,7 +14,11 @@
     "express": "~4.15.5",
     "jade": "~1.11.0",
     "md5": "^2.2.1",
+<<<<<<< HEAD
     "mongoose": "^5.0.0-rc1",
+=======
+    "mongoose": "^5.0.12",
+>>>>>>> 8e61b732f444fe357dbe073d3025c89dd770a02d
     "morgan": "~1.9.0",
     "serve-favicon": "~2.4.5",
     "silly-datetime": "^0.1.2"
