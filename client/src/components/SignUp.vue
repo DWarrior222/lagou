@@ -14,9 +14,7 @@
               <Input v-model="formSignup.password" name="password" type="password" placeholder="密码"></Input>
           </FormItem>
           <FormItem prop="email" label="邮箱">
-              <Input v-model="formSignup.email" name="email" placeholder="邮箱">
-                <Button type="primary" :disabled="sendCodeStatus.disabled" :loading="sendCodeStatus.loading" class="get-phone-code" slot="append" @click="handleSendCode('formSignup')">{{sendCodeStatus.text}}</Button>
-              </Input>
+              <Input v-model="formSignup.email" name="email" placeholder="邮箱"></Input>
           </FormItem>
 
           <FormItem class="submit">
@@ -79,8 +77,8 @@ export default {
     return {
       formSignup: {
         username: '',
-        password: ''
-        // email: ''
+        password: '',
+        email: ''
       },
       ruleSignup: {
         username: [
@@ -96,13 +94,13 @@ export default {
         ],
         email: [
           { required: true, message: '邮箱不能为空', trigger: 'blur' },
-          // { type: 'email', message: '邮箱格式不正确', trigger: 'change' },
+          { type: 'email', message: '邮箱格式不正确', trigger: 'change' },
           { type: 'email', message: '邮箱格式不正确', trigger: 'blur' },
           { validator: this.checkUserinfo, trigger: 'blur' }
         ],
         phone: [
           { required: true, message: '手机号不能为空', trigger: 'blur' },
-          // { validator: this.phoneCheck, trigger: 'change' },
+          { validator: this.phoneCheck, trigger: 'change' },
           { validator: this.phoneCheck, trigger: 'blur' },
           { validator: this.checkUserinfo, trigger: 'blur' }
         ]
@@ -223,10 +221,10 @@ export default {
       })
 
       this.$refs.formSignup.validate((valid) => {
-        // if (!valid) {
-        //   this.$Message.error('用户数据验证失败!')
-        //   return false
-        // }
+        if (!valid) {
+          this.$Message.error('用户数据验证失败!')
+          return false
+        }
         const apiUrl = '/users/register'
         console.log(this.formSignup)
         this.$http.post(apiUrl, this.formSignup).then((res) => {
