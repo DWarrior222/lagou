@@ -20,7 +20,7 @@
           </div>
         </div>
         <div class="details-head-r">
-          <div :class="{'collect': true, 'collected': isCollect, 'un-collect': !isCollect}" @click="collect">
+          <div :class="{'collect': true, 'collected': isCollect, 'un-collect': !isCollect}" @click="collect(item)">
             <i :class="{'iconfont': true, 'icon-collection': !isCollect, 'icon-collection_fill': isCollect}"></i><span>{{ collectMessage }}</span>
           </div>
           <div class="send">
@@ -92,7 +92,29 @@ export default {
       // this.description = description.split(/[：；。]?\s+[0-9][.、]/g)
       this.description = description.split(/[：；。]?\s+/g)
     },
-    collect () {
+    collect (item) {
+      console.log(item)
+      let jobId = item[0].id
+      let jobName = item[0].title
+      let jobSalary = item[0].salary
+      let compName = item[1].fullname
+      let compCity = item[1].address
+      let jobWelfare = item[0].advantage
+      let collectJob = {
+        'job_id': jobId,
+        'job_name': jobName,
+        'job_salary': jobSalary,
+        'comp_name': compName,
+        'comp_city': compCity,
+        'job_welfare': jobWelfare
+      }
+      console.log(jobId)
+      // let userId = 1515098992797
+      let userId = 1522462861029
+      this.$http.post('/userInfo/updateCollect', {userId, collectJob})
+      .then(res => {
+        console.log(res)
+      })
       this.isCollect = !this.isCollect
       this.collectMessage = this.isCollect ? '已收藏' : '收藏'
     }

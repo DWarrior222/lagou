@@ -10,6 +10,7 @@ let company = require('./routes/company');
 let job = require('./routes/job');
 let companyIndustry = require('./routes/company-industry')
 let jobKeyword = require('./routes/job-keyword')
+let userInfo = require('./routes/userinfo')
 
 let app = express();
 
@@ -34,4 +35,5 @@ app.use('/comp', company);
 app.use('/job', job);
 app.use('/compInd', companyIndustry)
 app.use('/jobKey', jobKeyword)
+app.use('/userInfo', userInfo)
 module.exports = app;

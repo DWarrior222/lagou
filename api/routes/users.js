@@ -77,7 +77,8 @@ router.post('/login', (req, res, next) => {
       state: '00000',
       message: '',
       data: {
-        username: docs.username
+        username: docs.username,
+        user_id: docs.user_id
       }
     });
   });
