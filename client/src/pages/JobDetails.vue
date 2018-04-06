@@ -23,7 +23,7 @@
           <div :class="{'collect': true, 'collected': isCollect, 'un-collect': !isCollect}" @click="collect(item)">
             <i :class="{'iconfont': true, 'icon-collection': !isCollect, 'icon-collection_fill': isCollect}"></i><span>{{ collectMessage }}</span>
           </div>
-          <div class="send">
+          <div class="send" @click="cancelCollect(item)">
             投个简历
           </div>
         </div>
@@ -49,6 +49,8 @@
 </template>
 <script type="text/javascript">
 import Public from '../Public'
+import { mapState } from 'vuex'
+
 export default {
   mixins: [Public],
   data () {
@@ -61,7 +63,19 @@ export default {
       waiting: true
     }
   },
+  computed: {
+    ...mapState(['userId'])
+  },
   methods: {
+    cancelCollect (item) {
+      let jobId = item[0].id
+
+      let userId = this.userId
+      this.$http.post('/userInfo/updateUnCollect', {userId, jobId})
+      .then(res => {
+        console.log(res)
+      })
+    },
     jobStorage (jobid) {
       let STORAGE_KEY = 'jobid'
       const jobSetter = {
@@ -110,7 +124,7 @@ export default {
       }
       console.log(jobId)
       // let userId = 1515098992797
-      let userId = 1522462861029
+      let userId = this.userId
       this.$http.post('/userInfo/updateCollect', {userId, collectJob})
       .then(res => {
         console.log(res)

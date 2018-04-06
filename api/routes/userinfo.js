@@ -27,7 +27,7 @@ router.post('/updateCollect', (req, res) => {
 				console.log('test')
         if (error) {
           return res.json({
-            state: '00001',
+            state: '00011',
             message: error.message
           })
         }
@@ -68,7 +68,7 @@ router.post('/updateCollect', (req, res) => {
 			// console.log('3333333')
 			if (saveErr) {
 				return res.json({
-					state: '00001',
+					state: '00111',
 					message: saveErr.message
 				})
 			}
@@ -76,6 +76,50 @@ router.post('/updateCollect', (req, res) => {
 			return res.json({
 				state: '00000',
 				message: '收藏成功',
+				data: saveDoc
+			})
+		})
+	})
+})
+
+
+router.post('/updateUnCollect', (req, res) => {
+	// let jobId       = parseInt(req.param("jobId"));
+	let jobId  = req.param("jobId");
+	let userId      = parseInt(req.param("userId"));
+	UserInfo.findOne({user_id: userId}, (err, userInfoDoc) => {
+		if (err) {
+      return res.json({
+        state: '00001',
+        message: err.message
+      })
+    }
+		// 判断一下数组里面有没有job_id
+		let lock = false
+		userInfoDoc.collect_job.forEach((item, index) => {
+			if (item.job_id == jobId) {
+				lock = true
+				userInfoDoc.collect_job.splice(index, 1)
+			}
+		})
+		if (!lock) {
+			return res.json({
+				state: '00000',
+				message: '未收藏该工作'
+			})
+		}
+		userInfoDoc.save((saveErr, saveDoc) => {
+			// console.log('3333333')
+			if (saveErr) {
+				return res.json({
+					state: '00001',
+					message: saveErr.message
+				})
+			}
+			console.log('push')
+			return res.json({
+				state: '00000',
+				message: '取消收藏成功',
 				data: saveDoc
 			})
 		})

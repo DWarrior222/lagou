@@ -125,6 +125,8 @@ export default {
         this.$http.post(apiUrl, this.formSignin).then((res) => {
           // console.log(res)
           const data = res.data
+          let userId = data.data.user_id
+          this.$store.dispatch('getUserId', userId)
           console.log(data)
 
           this.success(data)
