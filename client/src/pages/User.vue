@@ -26,11 +26,16 @@
     computed: {
       ...mapState(['userId'])
     },
+    mouted () {
+      // 加载一个可以下载的链接
+      this.download()
+    },
     methods: {
       download () {
-        this.$http.get('/upload/download')
+        let userId = this.userId
+        this.$http.get('/upload/download', {userId})
         .then(res => {
-          // console.log(res)
+          console.log(res)
           // // 从服务器端传回来资源的路径，在前端进行下载
           // let src = res.data.src
           // var $a = document.createElement('a')
