@@ -11,9 +11,14 @@ let job = require('./routes/job');
 let companyIndustry = require('./routes/company-industry')
 let jobKeyword = require('./routes/job-keyword')
 let userInfo = require('./routes/userinfo')
+let userBaseInfo = require('./routes/user-baseinfo')
+let upload = require('./routes/upload')
+
+let mutipart= require('connect-multiparty');
+let mutipartMiddeware = mutipart()
 
 let app = express();
-
+app.use(mutipart({uploadDir:'./public/resume'}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -36,4 +41,6 @@ app.use('/job', job);
 app.use('/compInd', companyIndustry)
 app.use('/jobKey', jobKeyword)
 app.use('/userInfo', userInfo)
+app.use('/userBaseInfo', userBaseInfo)
+app.use('/upload', upload)
 module.exports = app;

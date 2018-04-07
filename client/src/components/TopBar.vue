@@ -270,7 +270,7 @@
             }
           })
         } else {
-           // console.log('accountSetting')
+          this.$router.push('user')
         }
       },
       switchCity () {
