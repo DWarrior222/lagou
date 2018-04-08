@@ -17,8 +17,6 @@
       <!-- <a class="regis tbar-a" @click="regisModalFlag=true">注册</a> -->
     </div>
     <div v-show="nickname" class="tbar-user tbar-right">
-      <a class="news tbar-a">消息</a>
-      <i></i>
       <a class="resume tbar-a">我的简历</a>
       <i></i>
       <a class="delivery-box tbar-a">投递箱</a>
@@ -319,7 +317,9 @@
         this.$http.get('/users/checkLogin')
         .then(res => {
           if (res.data.state === '00000') {
-            this.nickname = res.data.data
+            this.nickname = res.data.data.username
+            let userId = res.data.data.user_id
+            this.$store.dispatch('getUserId', userId)
           }
         })
       },

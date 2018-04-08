@@ -128,7 +128,6 @@ export default {
           let userId = data.data.user_id
           this.$store.dispatch('getUserId', userId)
           console.log(data)
-
           this.success(data)
         })
       })

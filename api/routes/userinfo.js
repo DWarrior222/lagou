@@ -27,7 +27,7 @@ router.post('/updateCollect', (req, res) => {
 				console.log('test')
         if (error) {
           return res.json({
-            state: '00011',
+            state: '00001',
             message: error.message
           })
         }
@@ -68,7 +68,7 @@ router.post('/updateCollect', (req, res) => {
 			// console.log('3333333')
 			if (saveErr) {
 				return res.json({
-					state: '00111',
+					state: '00001',
 					message: saveErr.message
 				})
 			}
@@ -120,6 +120,93 @@ router.post('/updateUnCollect', (req, res) => {
 			return res.json({
 				state: '00000',
 				message: '取消收藏成功',
+				data: saveDoc
+			})
+		})
+	})
+})
+
+router.post('/updateSend', (req, res) => {
+	// let jobId       = parseInt(req.param("jobId"));
+	let sendJob  = req.param("sendJob")
+	// job_id
+	// job_name
+	// job_salary
+	// comp_name
+	// comp_city
+	// resume_status
+	let userId      = parseInt(req.param("userId"));
+	console.log(userId)
+	let params = {
+		user_id: userId,
+		collect_job: [],
+		send_job: []
+	}
+
+	UserInfo.findOne({user_id: userId}, (err, userInfoDoc) => {
+		if (err) {
+      return res.json({
+        state: '00001',
+        message: err.message
+      })
+    }
+		if (!userInfoDoc) {
+
+			// 没有用户，先新增用户的信息表
+
+			return UserInfo.create(params, (error, createDoc) => {
+				console.log('test')
+        if (error) {
+          return res.json({
+            state: '00001',
+            message: error.message
+          })
+        }
+				if (!createDoc) return
+
+				createDoc.send_job.push(sendJob)
+				createDoc.save((saveCreateErr, saveCreateDoc) => {
+					if (saveCreateErr) {
+						return res.json({
+							state: '00001',
+							message: saveCreateErr.message
+						})
+					}
+					return res.json({
+						state: '00000',
+						message: '简历发送成功',
+						data: saveCreateDoc
+					})
+				})
+			})
+
+		}
+		// 判断一下数组里面有没有当前要添加的job_id
+		let lock = false
+		userInfoDoc.send_job.forEach(item => {
+			let jobId = sendJob.job_id
+			if (item.job_id == jobId) {
+				lock = true
+				for(var key in sendJob) {
+					item[key] = sendJob[key]
+				}
+			}
+		})
+		if (!lock) {
+			userInfoDoc.send_job.push(sendJob)
+		}
+		userInfoDoc.save((saveErr, saveDoc) => {
+			// console.log('3333333')
+			if (saveErr) {
+				return res.json({
+					state: '00001',
+					message: saveErr.message
+				})
+			}
+			console.log('push')
+			return res.json({
+				state: '00000',
+				message: '简历发送成功',
 				data: saveDoc
 			})
 		})

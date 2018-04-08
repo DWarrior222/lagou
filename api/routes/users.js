@@ -99,10 +99,14 @@ router.post('/logout', (req, res, next) => {
 // 检查登陆
 router.get('/checkLogin', (req, res) => {
   if (req.cookies.user_id) {
+    let userdata = {
+      user_id: req.cookies.user_id,
+      username: req.cookies.username
+    }
     return res.json({
       state: '00000',
       message: '已登陆',
-      data: req.cookies.username || ''
+      data: userdata
     })
   }
   res.json({

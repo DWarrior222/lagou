@@ -18,7 +18,7 @@ let mutipart= require('connect-multiparty');
 let mutipartMiddeware = mutipart()
 
 let app = express();
-app.use(mutipart({uploadDir:'./public/resume'}));
+app.use(mutipart({uploadDir:'../client/src/assets/resume'}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());

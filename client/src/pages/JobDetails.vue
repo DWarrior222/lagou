@@ -23,7 +23,7 @@
           <div :class="{'collect': true, 'collected': isCollect, 'un-collect': !isCollect}" @click="collect(item)">
             <i :class="{'iconfont': true, 'icon-collection': !isCollect, 'icon-collection_fill': isCollect}"></i><span>{{ collectMessage }}</span>
           </div>
-          <div class="send" @click="cancelCollect(item)">
+          <div class="send" @click="sendResume(item)">
             投个简历
           </div>
         </div>
@@ -67,15 +67,35 @@ export default {
     ...mapState(['userId'])
   },
   methods: {
-    cancelCollect (item) {
+    sendResume (item) {
       let jobId = item[0].id
-
+      let jobName = item[0].title
+      let jobSalary = item[0].salary
+      let compName = item[1].fullname
+      let compCity = item[1].address
+      let resumeStatus = '待沟通'
+      let sendJob = {
+        'job_id': jobId,
+        'job_name': jobName,
+        'job_salary': jobSalary,
+        'comp_name': compName,
+        'comp_city': compCity,
+        'resume_status': resumeStatus
+      }
       let userId = this.userId
-      this.$http.post('/userInfo/updateUnCollect', {userId, jobId})
+      this.$http.post('/userInfo/updateSend', {userId, sendJob})
       .then(res => {
         console.log(res)
       })
     },
+    // cancelCollect () {
+    //   let jobId = item[0].id
+    //   let userId = this.userId
+    //   this.$http.post('/userInfo/updateUnCollect', {userId, jobId})
+    //   .then(res => {
+    //     console.log(res)
+    //   })
+    // },
     jobStorage (jobid) {
       let STORAGE_KEY = 'jobid'
       const jobSetter = {

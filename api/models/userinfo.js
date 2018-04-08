@@ -22,6 +22,7 @@ let userInfoSchema = new mongoose.Schema({
         "job_salary":String,
         "comp_name":String,
         "comp_city":String,
+        "resume_status":String,
         "news": [
           {
             "job_id": String,

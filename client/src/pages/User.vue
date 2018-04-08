@@ -1,11 +1,12 @@
 <template id="">
   <div class="">
     <button type="button" @click="updateBaseInfo" name="button">基本信息</button>
-    <form enctype="multipart/form-data" action="/api/file-upload" method="post">
+    <form enctype="multipart/form-data" action="/api/upload/file-upload" method="post">
       <input type="file" name="thumbnail" value="">
+      <input type="text" name="userId" v-model="userId">
       <input type="submit" name="" value="上传文件">
     </form>
-    <button type="button" @click="download" name="button">下载</button>
+    <a href="../assets/images/加载资源.png" download="加载资源.png">a</a>
   </div>
 </template>
 <script type="text/javascript">
@@ -26,26 +27,9 @@
     computed: {
       ...mapState(['userId'])
     },
-    mouted () {
-      // 加载一个可以下载的链接
-      this.download()
+    mounted () {
     },
     methods: {
-      download () {
-        let userId = this.userId
-        this.$http.get('/upload/download', {userId})
-        .then(res => {
-          console.log(res)
-          // // 从服务器端传回来资源的路径，在前端进行下载
-          // let src = res.data.src
-          // var $a = document.createElement('a')
-          // $a.setAttribute("href", src)
-          // $a.setAttribute("download", "")
-          // var evObj = document.createEvent('MouseEvents')
-          // evObj.initMouseEvent( 'click', true, true, window, 0, 0, 0, 0, 0, false, false, true, false, 0, null);
-          // $a.dispatchEvent(evObj)
-        })
-      },
       updateBaseInfo () {
         let baseInfo = {
           person_name: this.person_name,
