@@ -14,6 +14,7 @@ import CompanyDetails from '@/pages/CompanyDetails'
 import SignIn from '@/components/SignIn'
 import SignUp from '@/components/SignUp'
 import User from '@/pages/User'
+import Upload from '@/components/Upload'
 // 使用VueRouter组件
 Vue.use(Router)
 // 导出VueRouter的实例
@@ -60,7 +61,17 @@ export default new Router({
     {
       path: '/user',
       name: 'user',
-      component: User
+      component: User,
+      children: [
+        {
+          path: '/upload',
+          component: Upload
+        },
+        {
+          path: '/baseinfo',
+          component: Upload
+        }
+      ]
     }
   ]
 })

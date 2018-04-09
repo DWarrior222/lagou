@@ -59,12 +59,21 @@ export default {
       description: [],
       isCollect: false,
       collectMessage: '收藏',
-      jobid: '',
-      waiting: true
+      jobId: '',
+      waiting: true,
+      userId: ''
     }
   },
   computed: {
-    ...mapState(['userId'])
+    ...mapState(['nickname'])
+  },
+  watch: {
+    nickname: {
+      handler (value1, value2) {
+        console.log(value1, value2)
+        // this.userId = ''
+      }
+    }
   },
   methods: {
     sendResume (item) {
@@ -127,7 +136,7 @@ export default {
       this.description = description.split(/[：；。]?\s+/g)
     },
     collect (item) {
-      console.log(item)
+      // console.log(item)
       let jobId = item[0].id
       let jobName = item[0].title
       let jobSalary = item[0].salary
@@ -142,15 +151,51 @@ export default {
         'comp_city': compCity,
         'job_welfare': jobWelfare
       }
-      console.log(jobId)
+      // console.log(jobId)
       // let userId = 1515098992797
       let userId = this.userId
-      this.$http.post('/userInfo/updateCollect', {userId, collectJob})
+      if (this.isCollect) {
+        this.$http.post('/userInfo/updateUnCollect', {userId, jobId})
+        .then(res => {
+          console.log(res)
+          if (res.data.state === '00000') {
+            this.isCollect = false
+            this.noticeSuccess('已取消收藏')
+          } else {
+            this.noticeFaild('取消收藏失败')
+          }
+        })
+      } else {
+        this.$http.post('/userInfo/updateCollect', {userId, collectJob})
+        .then(res => {
+          console.log(res)
+          if (res.data.state === '00000') {
+            this.isCollect = true
+            this.noticeSuccess('已收藏')
+          } else {
+            this.noticeFaild('收藏失败')
+          }
+        })
+      }
+      // this.isCollect = !this.isCollect
+      this.collectMessage = this.isCollect ? '已收藏' : '收藏'
+    },
+    checkCollect () {
+      let jobId = this.jobId
+      let userId = this.userId
+      console.log(userId, jobId)
+      this.$http.post('/userInfo/checkCollect', {userId, jobId})
       .then(res => {
         console.log(res)
+        if (res.data.state === '00000') this.isCollect = true
+        else this.isCollect = false
       })
-      this.isCollect = !this.isCollect
-      this.collectMessage = this.isCollect ? '已收藏' : '收藏'
+    },
+    noticeFaild (value) {
+      this.$Message.error(value)
+    },
+    noticeSuccess (value) {
+      this.$Message.success(value)
     }
   },
   mounted () {
@@ -164,6 +209,9 @@ export default {
       this.waiting = false
       this.handDescription()
     })
+    this.jobId = localStorage.getItem('jobid')
+    this.userId = localStorage.getItem('userid')
+    this.checkCollect()
   }
 }
 </script>

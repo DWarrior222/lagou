@@ -264,6 +264,10 @@
             // console.log(res)
             if (res.data.state === '00000') {
               this.nickname = ''
+              localStorage.setItem('userid', '')
+              // console.log(this.$route)
+              // this.$router.push(this.$route.fullPath)
+              location.reload()
               // this.noticeSuccess(false, '退出提醒', '已成功退出')
             }
           })
@@ -320,6 +324,7 @@
             this.nickname = res.data.data.username
             let userId = res.data.data.user_id
             this.$store.dispatch('getUserId', userId)
+            localStorage.setItem('userid', res.data.data.user_id)
           }
         })
       },

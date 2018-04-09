@@ -82,6 +82,108 @@ router.post('/updateCollect', (req, res) => {
 	})
 })
 
+router.post('/checkCollect', (req, res) => {
+	let jobId       = parseInt(req.param("jobId"));
+	let userId      = parseInt(req.param("userId"));
+	console.log(jobId, req.param("userId"), 88)
+	UserInfo.findOne({user_id: userId}, (err, userInfoDoc) => {
+		if (err) {
+      return res.json({
+        state: '00001',
+        message: err.message
+      })
+    }
+		if (!userInfoDoc) {
+
+			// 没有用户，先新增用户的信息表
+			return res.json({
+				state: '00002',
+				message: '该工作未收藏'
+			})
+		}
+		// 判断一下数组里面有没有当前要添加的job_id
+		let lock = false
+		userInfoDoc.collect_job.forEach(item => {
+			if (item.job_id == jobId) {
+				lock = true
+			}
+		})
+		if (!lock) {
+			return res.json({
+				state: '00002',
+				message: '该工作未收藏'
+			})
+		}
+		return res.json({
+			state: '00000',
+			message: '该工作已收藏'
+		})
+	})
+})
+
+router.post('/getUserInfo', (req, res) => {
+	let userId      = parseInt(req.param("userId"));
+	UserInfo.findOne({user_id: userId}, (err, userInfoDoc) => {
+		if (err) {
+      return res.json({
+        state: '00001',
+        message: err.message
+      })
+    }
+		if (!userInfoDoc) {
+
+			// 没有用户，先新增用户的信息表
+			return res.json({
+				state: '00002',
+				message: '该用户没有用户信息'
+			})
+		}
+		return res.json({
+			state: '00000',
+			message: '成功获取用户信息',
+			data: userInfoDoc
+		})
+	})
+})
+
+router.post('/checkSend', (req, res) => {
+	let jobId       = parseInt(req.param("jobId"));
+	let userId      = parseInt(req.param("userId"));
+	UserInfo.findOne({user_id: userId}, (err, userInfoDoc) => {
+		if (err) {
+      return res.json({
+        state: '00001',
+        message: err.message
+      })
+    }
+		if (!userInfoDoc) {
+
+			// 没有用户，先新增用户的信息表
+			return res.json({
+				state: '00002',
+				message: '该工作未发送简历'
+			})
+		}
+		// 判断一下数组里面有没有当前要添加的job_id
+		let lock = false
+		userInfoDoc.send_job.forEach(item => {
+			if (item.job_id == jobId) {
+				lock = true
+			}
+		})
+		if (!lock) {
+			return res.json({
+				state: '00002',
+				message: '该工作未发送简历'
+			})
+		}
+		return res.json({
+			state: '00000',
+			message: '该工作已发送简历'
+		})
+	})
+})
+
 
 router.post('/updateUnCollect', (req, res) => {
 	// let jobId       = parseInt(req.param("jobId"));
