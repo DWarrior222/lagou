@@ -66,6 +66,9 @@ export default {
     }
   },
   mounted () {
+    // document.querySelector('#resume form').addEventListener("submit", (e) => {
+    //   e.preventDefault()
+    // });
     console.log(this.userId)
     this.$http.post('/userInfo/getUserInfo', {userId: this.userId})
     .then(res => {
