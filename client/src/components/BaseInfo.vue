@@ -1,6 +1,6 @@
 <template lang="html">
   <div id="baseinfo">
-    <!-- <button type="button" @click="updateBaseInfo" name="button">基本信息</button> -->
+    <button type="button" @click="updateBaseInfo" name="button">基本信息</button>
   </div>
 </template>
 

@@ -10,11 +10,11 @@
               <Icon type="document-text"></Icon>
               我的信息
           </MenuItem>
-          <MenuItem name="changePassword">
+          <MenuItem name="change-password">
               <Icon type="chatbubbles"></Icon>
               修改密码
           </MenuItem>
-          <MenuItem name="myResume">
+          <MenuItem name="my-resume">
               <Icon type="heart"></Icon>
               我的简历
           </MenuItem>
@@ -26,7 +26,9 @@
 
       </Menu>
       <div class="content">
-        <button type="button" @click="updateBaseInfo" name="button">基本信息</button>
+        <baseInfo v-if="selectName === 'baseinfo' || selectName === ''"></baseInfo>
+        <resume :userId="userId" v-if="selectName === 'my-resume'"></resume>
+        <changePassword v-if="selectName === 'change-password'"></changePassword>
       </div>
       <!-- <br>
       <p>Change theme</p>
@@ -36,11 +38,11 @@
       </RadioGroup> -->
     </div>
 
-    <form enctype="multipart/form-data" action="/api/upload/file-upload" method="post">
+    <!-- <form enctype="multipart/form-data" action="/api/upload/file-upload" method="post">
       <input type="file" name="thumbnail" value="">
       <input type="text" name="userId" v-model="userId">
       <input type="submit" name="" value="上传文件">
-    </form>
+    </form> -->
     <!-- <a href="../assets/images/加载资源.png" download="加载资源.png">a</a> -->
 
     <div class="footer-wrap">
@@ -49,14 +51,19 @@
   </div>
 </template>
 <script type="text/javascript">
-  import { mapState } from 'vuex'
+  import baseInfo from '../components/BaseInfo'
+  import resume from '../components/Resume'
+  import changePassword from '../components/ChangePassword'
+  // import { mapState } from 'vuex'
   import Public from '../Public'
 
   export default {
     mixins: [Public],
     data () {
       return {
+        userId: '',
         initselect: true,
+        selectName: '',
         person_name: '关帅杰',
         sex: 1,
         age: 22,
@@ -67,15 +74,22 @@
         intention_salary: '8k'
       }
     },
+    components: {
+      baseInfo,
+      resume,
+      changePassword
+    },
     computed: {
-      ...mapState(['userId'])
+      // ...mapState(['userId'])
     },
     mounted () {
+      this.userId = parseInt(localStorage.getItem('userid'))
     },
     methods: {
       select (name) {
         console.log(name)
         this.initselect = false
+        this.selectName = name
         if (name === 'baseinfo') {
 
         }
