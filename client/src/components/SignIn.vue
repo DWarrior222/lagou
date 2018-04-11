@@ -95,7 +95,13 @@ export default {
 
       interval: null,
 
-      noBindWechat: false
+      noBindWechat: false,
+      fromPath: ''
+    }
+  },
+  watch: {
+    '$route' (to, from) {
+      console.log(to, from)
     }
   },
   computed: {

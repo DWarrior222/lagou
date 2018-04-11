@@ -59,4 +59,29 @@ router.post('/updateBaseInfo', (req, res) => {
     })
   })
 })
+
+router.post('/getUserBaseInfo', (req, res) => {
+	let userId      = parseInt(req.param("userId"));
+	UserBaseInfo.findOne({user_id: userId}, (err, userInfoDoc) => {
+		if (err) {
+      return res.json({
+        state: '00001',
+        message: err.message
+      })
+    }
+		if (!userInfoDoc) {
+
+			// 没有用户，先新增用户的信息表
+			return res.json({
+				state: '00002',
+				message: '该用户没有用户信息'
+			})
+		}
+		return res.json({
+			state: '00000',
+			message: '成功获取用户信息',
+			data: userInfoDoc
+		})
+	})
+})
 module.exports = router;

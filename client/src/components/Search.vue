@@ -3,7 +3,7 @@
     <div class="search-container">
       <form class="form" method="post" @submit.prevent="submit">
         <div class="search-box">
-          <input type="text" @click="getKeys" v-model="search_text" @keyup="getKeys" @blur="hideSearchPrompt" name="keyword" value="" autocomplete="off" placeholder="输入职位关键词">
+          <input type="text" @click="throttle(getKeys, null, '')" v-model="search_text" @keyup="throttle(getKeys, null, '')" @blur="hideSearchPrompt" name="keyword" value="" autocomplete="off" placeholder="输入职位关键词">
           <input type="submit" name="submit" value="搜索">
           <input type="hidden" name="" value="" v-model="search_text">
         </div>
@@ -106,6 +106,14 @@
         .then(res => {
           this.keyList = res.data.data.slice(0, 10)
         })
+      },
+      throttle (method, context, value) {
+        if (method.tId) {
+          clearTimeout(method.tId)
+        }
+        method.tId = setTimeout(() => {
+          method(value)
+        }, 1000)
       },
       submit () {
         let searchText = this.search_text

@@ -8,9 +8,9 @@
       </a>
     </div>
     <form enctype="multipart/form-data" action="/api/upload/file-upload" method="post">
-      <input id="file" type="file" name="thumbnail" @change="handleUpload($event)" value="">
+      <input id="file" ref="File" type="file" name="thumbnail" @change="handleUpload($event)" value="">
       <input type="text" name="userId" v-model="userId">
-      <input id="submit" type="submit" name="" value="上传文件">
+      <input id="submit" type="button" @click="submitForm" name="" value="上传文件">
     </form>
     <label v-if="!resumeName" class="file-label" for="file">
       <div class="file-model" style="padding: 20px 0">
@@ -20,21 +20,22 @@
       <label class="submit-label" v-if="file !== null" for="submit">上传文件</label>
     </label>
 
-    <div v-if="file !== null">Upload file: {{ file.name }}</div>
+    <div v-if="file !== null && !resumeName">Upload file: {{ file.name }}</div>
   </div>
 </template>
 
 <script>
 export default {
-  props: [
-    'userId'
-  ],
+  // props: [
+  //   'userId'
+  // ],
   data () {
     return {
       file: null,
       loadingStatus: false,
       resumeName: '',
-      href: ''
+      href: '',
+      userId: ''
     }
   },
   updated () {
@@ -45,15 +46,21 @@ export default {
       this.file = e.target.files[0]
       console.log(this.file)
     },
-    // submitForm () {
-    //   this.$http.post('/upload/file-upload', {userId: this.userId, thumbnail: this.file})
-    //   .then(res => {
-    //     console.log(res)
-    //     if (res.data.state === '00000') {
-    //       this.resumeName = ''
-    //     }
-    //   })
-    // },
+    submitForm () {
+      let file = document.querySelector('#file')
+      let formData = new FormData()
+      // console.log(file.files[0])
+      formData.append('test-upload', file.files[0])
+      // console.log(formData)
+      this.$http.post('/upload?userId=' + this.userId, formData)
+      .then(res => {
+        console.log(res)
+        if (res.data.state === '00000') {
+          this.resumeName = res.data.data.resume
+          this.$Message.success('简历上传成功')
+        }
+      })
+    },
     clearResume () {
       console.log('test')
       this.$http.post('/userInfo/updateResume', {userId: this.userId})
@@ -69,6 +76,7 @@ export default {
     // document.querySelector('#resume form').addEventListener("submit", (e) => {
     //   e.preventDefault()
     // });
+    this.userId = localStorage.getItem('userid')
     console.log(this.userId)
     this.$http.post('/userInfo/getUserInfo', {userId: this.userId})
     .then(res => {

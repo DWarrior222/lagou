@@ -83,7 +83,9 @@
       // ...mapState(['userId'])
     },
     mounted () {
-      this.userId = parseInt(localStorage.getItem('userid'))
+      this.userId = localStorage.getItem('userid')
+      if (!this.userId) this.$router.push('/')
+      // console.log(this.userId)
     },
     methods: {
       select (name) {
@@ -125,6 +127,7 @@
    }
    .nav-col {
      width: 980px;
+     height: 651px;
      margin: 100px auto;
      display: flex;
    }
