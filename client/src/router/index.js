@@ -15,6 +15,8 @@ import SignIn from '@/components/SignIn'
 import SignUp from '@/components/SignUp'
 import User from '@/pages/User'
 import Upload from '@/components/Upload'
+import CollectFolder from '@/components/CollectFolder'
+import Delivery from '@/components/Delivery'
 // 使用VueRouter组件
 Vue.use(Router)
 // 导出VueRouter的实例
@@ -72,6 +74,14 @@ export default new Router({
           component: Upload
         }
       ]
+    },
+    {
+      path: '/collect',
+      component: CollectFolder
+    },
+    {
+      path: '/delivery',
+      component: Delivery
     }
   ]
 })

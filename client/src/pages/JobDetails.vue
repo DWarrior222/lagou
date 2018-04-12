@@ -23,8 +23,8 @@
           <div :class="{'collect': true, 'collected': isCollect, 'un-collect': !isCollect}" @click="collect(item)">
             <i :class="{'iconfont': true, 'icon-collection': !isCollect, 'icon-collection_fill': isCollect}"></i><span>{{ collectMessage }}</span>
           </div>
-          <div class="send" @click="sendResume(item)">
-            投个简历
+          <div :class="{'send': !isSend, 'send-ed': isSend}" @click="sendResume(item)">
+            {{sendStatus}}
           </div>
         </div>
       </div>
@@ -61,7 +61,9 @@ export default {
       collectMessage: '收藏',
       jobId: '',
       waiting: true,
-      userId: ''
+      userId: '',
+      isSend: false,
+      sendStatus: '投个简历'
     }
   },
   computed: {
@@ -95,6 +97,10 @@ export default {
       this.$http.post('/userInfo/updateSend', {userId, sendJob})
       .then(res => {
         console.log(res)
+        if (res.data.state === '00000') {
+          this.isSend = true
+          this.sendStatus = '已投递'
+        }
       })
     },
     // cancelCollect () {
@@ -196,6 +202,22 @@ export default {
     },
     noticeSuccess (value) {
       this.$Message.success(value)
+    },
+    checkSend () {
+      let jobId = this.jobId
+      let userId = this.userId
+      console.log(userId, jobId)
+      this.$http.post('/userInfo/checkSend', {userId, jobId})
+      .then(res => {
+        console.log(res)
+        if (res.data.state === '00000') {
+          this.isSend = true
+          this.sendStatus = '已投递'
+        } else {
+          this.isSend = false
+          this.sendStatus = '投个简历'
+        }
+      })
     }
   },
   mounted () {
@@ -212,6 +234,7 @@ export default {
     this.jobId = localStorage.getItem('jobid')
     this.userId = localStorage.getItem('userid')
     this.checkCollect()
+    this.checkSend()
   }
 }
 </script>
@@ -295,7 +318,7 @@ export default {
     padding-left: 20px;
   }
   .details-head-r .un-collect {
-    padding-left: 27px;
+    padding-left: 15px;
   }
   .details-head-r .send {
     /* width: 80px; */
@@ -310,6 +333,20 @@ export default {
     background-color: #00b38a;
     color: #fff;
     cursor: pointer;
+  }
+  .details-head-r .send-ed {
+    /* width: 80px; */
+    text-align: center;
+    margin-left: 25px;
+    padding: 0 30px;
+    border-radius: 3px;
+    height: 44px;
+    line-height: 44px;
+    font-size: 18px;
+    border-color: #bfbfbf;
+    background-color: #bfbfbf;
+    color: #fff;
+    cursor: default;
   }
   .details-head-r .send:hover {
     background-color: #00a57f;

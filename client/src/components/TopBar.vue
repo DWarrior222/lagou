@@ -17,11 +17,11 @@
       <!-- <a class="regis tbar-a" @click="regisModalFlag=true">注册</a> -->
     </div>
     <div v-show="nickname" class="tbar-user tbar-right">
-      <a class="resume tbar-a">我的简历</a>
+      <a class="resume tbar-a" v-show="resumeShow" @click="toResume">我的简历</a>
+      <i v-show="resumeShow"></i>
+      <a class="delivery-box tbar-a" @click="toDelivery">投递箱</a>
       <i></i>
-      <a class="delivery-box tbar-a">投递箱</a>
-      <i></i>
-      <a class="news tbar-a">收藏夹</a>
+      <a class="news tbar-a"  @click="toCollection">收藏夹</a>
       <i></i>
       <Dropdown @on-click="select($event)" @on-visible-change="dropdownChange($event)">
         <a class="tbar-a" href="javascript:void(0)">
@@ -141,10 +141,12 @@
         // Err2IsShow: false,
         err1Mes: 'e1',
         err2Mes: 'e2',
-        areaShow: true
+        areaShow: true,
+        resumeShow: true
       }
     },
     props: [
+      'resumeflag',
       'areaflag',
       'nickNameValue'
     ],
@@ -152,6 +154,15 @@
       ...mapState(['nowCityName', 'nowCityId'])
     },
     methods: {
+      toDelivery () {
+        this.$router.push('delivery')
+      },
+      toCollection () {
+        this.$router.push('collect')
+      },
+      toResume () {
+        this.$router.push({ path: 'user', query: { name: 'my-resume' } })
+      },
       dropdownChange (param) {
         // console.log(param)
         // this.dropDownIcon = param ? 'arrow-up-b' : 'arrow-down-b'
@@ -272,7 +283,7 @@
             }
           })
         } else {
-          this.$router.push('user')
+          this.$router.push({ path: 'user', query: { name: 'baseinfo' } })
         }
       },
       switchCity () {
@@ -341,11 +352,20 @@
       if (this.areaflag === 'false') {
         this.areaShow = false
       }
+      if (this.resumeflag === 'false') {
+        this.resumeShow = false
+      }
     },
     watch: {
       nowCityId: {
         handler (value1, value2) {
           this.cityInit()
+        }
+      },
+      nickname: {
+        handler (v1, v2) {
+          // console.log(v1, v2)
+          if (!v1) localStorage.setItem('userid', '')
         }
       }
     }

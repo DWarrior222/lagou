@@ -1,7 +1,7 @@
 <template id="">
   <div id="user">
     <div class="top-bar-wrap">
-      <top-bar areaflag="false"></top-bar>
+      <top-bar resumeflag="false" areaflag="false"></top-bar>
     </div>
     <div class="nav-col">
       <Menu @on-select="select" active-name="1">
@@ -10,11 +10,11 @@
               <Icon type="document-text"></Icon>
               我的信息
           </MenuItem>
-          <MenuItem name="change-password">
+          <!-- <MenuItem name="change-password">
               <Icon type="chatbubbles"></Icon>
               修改密码
-          </MenuItem>
-          <MenuItem name="my-resume">
+          </MenuItem> -->
+          <MenuItem name="my-resume" :class="{'ivu-menu-item-active ivu-menu-item-selected': selectName === 'my-resume'}">
               <Icon type="heart"></Icon>
               我的简历
           </MenuItem>
@@ -84,16 +84,22 @@
     },
     mounted () {
       this.userId = localStorage.getItem('userid')
-      if (!this.userId) this.$router.push('/')
+      if (!this.userId) {
+        this.$router.push('/')
+      } else {
+        this.select(this.$route.query.name)
+      }
       // console.log(this.userId)
+      // console.log(this.$route)
     },
     methods: {
       select (name) {
         console.log(name)
-        this.initselect = false
+        this.$router.push({ path: 'user', query: { name: name } })
         this.selectName = name
+        this.initselect = false
         if (name === 'baseinfo') {
-
+          this.initselect = true
         }
       },
       updateBaseInfo () {

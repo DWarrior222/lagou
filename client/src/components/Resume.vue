@@ -10,77 +10,83 @@
     <form enctype="multipart/form-data" action="/api/upload/file-upload" method="post">
       <input id="file" ref="File" type="file" name="thumbnail" @change="handleUpload($event)" value="">
       <input type="text" name="userId" v-model="userId">
-      <input id="submit" type="button" @click="submitForm" name="" value="上传文件">
+      <input id="submit" type="button" name="" value="上传文件">
     </form>
     <label v-if="!resumeName" class="file-label" for="file">
       <div class="file-model" style="padding: 20px 0">
           <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
           <p>点击上传简历</p>
       </div>
-      <label class="submit-label" v-if="file !== null" for="submit">上传文件</label>
+      <div style="text-align: center;" v-if="file !== null && !resumeName">Upload file: {{ file.name }}</div>
+
+      <label class="submit-label" v-if="file !== null" for="submit">
+        <Button style="margin: 20px 150px; width: 240px;" type="primary" :loading="loading" v-if="file !== null" icon="checkmark-round" @click="submitForm">
+          <span v-if="!loading">上传简历</span>
+          <span v-else>Loading...</span>
+        </Button>
+      </label>
     </label>
 
-    <div v-if="file !== null && !resumeName">Upload file: {{ file.name }}</div>
   </div>
 </template>
 
 <script>
 export default {
-  // props: [
-  //   'userId'
-  // ],
   data () {
     return {
       file: null,
       loadingStatus: false,
       resumeName: '',
       href: '',
-      userId: ''
+      userId: '',
+      loading: false
     }
   },
   updated () {
-    // document.querySelector('.ivu-upload-drag .ivu-upload-input').setAttribute('name', 'thumbnail')
+
   },
   methods: {
     handleUpload (e) {
       this.file = e.target.files[0]
-      console.log(this.file)
+      if (this.file.name.search(/(.docx)|(.doc)|(.pdf)/g) !== -1) {
+        this.$Message.success('简历可上传')
+      } else {
+        this.$Message.error('类型不正确')
+        this.file = null
+      }
     },
     submitForm () {
+      this.loading = true
       let file = document.querySelector('#file')
       let formData = new FormData()
-      // console.log(file.files[0])
       formData.append('test-upload', file.files[0])
-      // console.log(formData)
       this.$http.post('/upload?userId=' + this.userId, formData)
       .then(res => {
-        console.log(res)
+        // console.log(res)
         if (res.data.state === '00000') {
           this.resumeName = res.data.data.resume
           this.$Message.success('简历上传成功')
+          this.loading = false
         }
       })
     },
     clearResume () {
-      console.log('test')
       this.$http.post('/userInfo/updateResume', {userId: this.userId})
       .then(res => {
-        console.log(res)
+        // console.log(res)
         if (res.data.state === '00000') {
           this.resumeName = ''
+          this.file = null
         }
       })
     }
   },
   mounted () {
-    // document.querySelector('#resume form').addEventListener("submit", (e) => {
-    //   e.preventDefault()
-    // });
     this.userId = localStorage.getItem('userid')
     console.log(this.userId)
     this.$http.post('/userInfo/getUserInfo', {userId: this.userId})
     .then(res => {
-      console.log(res)
+      // console.log(res)
       if (res.data.state === '00000') {
         this.resumeName = res.data.data.resume
         this.href = '../assets/resume/' + this.resumeName
@@ -95,6 +101,7 @@ export default {
 
   } */
   #resume {
+    margin: 20px 50px;
     .my-resume {
       font-size: 16px;
       line-height: 25px;

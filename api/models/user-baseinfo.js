@@ -5,7 +5,7 @@ let userBaseInfoSchema = new mongoose.Schema({
   "user_id": {type: Number},
   "user_pic": {type: String, default: ''},
   "person_name": {type: String},
-  "sex": {type: Number},
+  "sex": {type: String},
   "age": {type: String},
   "contact_infor": {type: String},    // 联系方式
   "autograph": {type: String},         // 签名

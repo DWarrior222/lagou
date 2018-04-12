@@ -1,6 +1,6 @@
 <template lang="html">
   <div id="change-password">
-    修改密码
+    <Alert type="warning">等待上线</Alert>
   </div>
 </template>
 
