@@ -12,7 +12,8 @@ export default new Vuex.Store({
     jobList: [],
     search_text: '',
     nowPage: 1,
-    cityList: []
+    cityList: [],
+    userId: ''
   },
   // 更改
   mutations: {
@@ -36,6 +37,9 @@ export default new Vuex.Store({
     },
     clearJobList (state, jobList) {
       state.jobList = jobList
+    },
+    getUserId (state, userId) {
+      state.userId = userId
     }
   },
   // 行为
@@ -47,6 +51,7 @@ export default new Vuex.Store({
     decreasePage: ({commit}, page) => commit('skip', page),
     increasePage: ({commit}, page) => commit('skip', page),
     skip: ({commit}, page) => commit('skip', page),
-    getCity: ({commit}, cityList) => commit('getCity', cityList)
+    getCity: ({commit}, cityList) => commit('getCity', cityList),
+    getUserId: ({commit}, userId) => commit('getUserId', userId)
   }
 })

@@ -23,8 +23,8 @@
           <div :class="{'collect': true, 'collected': isCollect, 'un-collect': !isCollect}" @click="collect(item)">
             <i :class="{'iconfont': true, 'icon-collection': !isCollect, 'icon-collection_fill': isCollect}"></i><span>{{ collectMessage }}</span>
           </div>
-          <div class="send">
-            投个简历
+          <div :class="{'send': !isSend, 'send-ed': isSend}" @click="sendResume(item)">
+            {{sendStatus}}
           </div>
         </div>
       </div>
@@ -49,6 +49,8 @@
 </template>
 <script type="text/javascript">
 import Public from '../Public'
+import { mapState } from 'vuex'
+
 export default {
   mixins: [Public],
   data () {
@@ -57,11 +59,58 @@ export default {
       description: [],
       isCollect: false,
       collectMessage: '收藏',
-      jobid: '',
-      waiting: true
+      jobId: '',
+      waiting: true,
+      userId: '',
+      isSend: false,
+      sendStatus: '投个简历'
+    }
+  },
+  computed: {
+    ...mapState(['nickname'])
+  },
+  watch: {
+    nickname: {
+      handler (value1, value2) {
+        console.log(value1, value2)
+        // this.userId = ''
+      }
     }
   },
   methods: {
+    sendResume (item) {
+      let jobId = item[0].id
+      let jobName = item[0].title
+      let jobSalary = item[0].salary
+      let compName = item[1].fullname
+      let compCity = item[1].address
+      let resumeStatus = '待沟通'
+      let sendJob = {
+        'job_id': jobId,
+        'job_name': jobName,
+        'job_salary': jobSalary,
+        'comp_name': compName,
+        'comp_city': compCity,
+        'resume_status': resumeStatus
+      }
+      let userId = this.userId
+      this.$http.post('/userInfo/updateSend', {userId, sendJob})
+      .then(res => {
+        console.log(res)
+        if (res.data.state === '00000') {
+          this.isSend = true
+          this.sendStatus = '已投递'
+        }
+      })
+    },
+    // cancelCollect () {
+    //   let jobId = item[0].id
+    //   let userId = this.userId
+    //   this.$http.post('/userInfo/updateUnCollect', {userId, jobId})
+    //   .then(res => {
+    //     console.log(res)
+    //   })
+    // },
     jobStorage (jobid) {
       let STORAGE_KEY = 'jobid'
       const jobSetter = {
@@ -93,7 +142,7 @@ export default {
       this.description = description.split(/[：；。]?\s+/g)
     },
     collect (item) {
-      console.log(item)
+      // console.log(item)
       let jobId = item[0].id
       let jobName = item[0].title
       let jobSalary = item[0].salary
@@ -108,15 +157,67 @@ export default {
         'comp_city': compCity,
         'job_welfare': jobWelfare
       }
-      console.log(jobId)
+      // console.log(jobId)
       // let userId = 1515098992797
-      let userId = 1522462861029
-      this.$http.post('/userInfo/updateCollect', {userId, collectJob})
+      let userId = this.userId
+      if (this.isCollect) {
+        this.$http.post('/userInfo/updateUnCollect', {userId, jobId})
+        .then(res => {
+          console.log(res)
+          if (res.data.state === '00000') {
+            this.isCollect = false
+            this.noticeSuccess('已取消收藏')
+          } else {
+            this.noticeFaild('取消收藏失败')
+          }
+        })
+      } else {
+        this.$http.post('/userInfo/updateCollect', {userId, collectJob})
+        .then(res => {
+          console.log(res)
+          if (res.data.state === '00000') {
+            this.isCollect = true
+            this.noticeSuccess('已收藏')
+          } else {
+            this.noticeFaild('收藏失败')
+          }
+        })
+      }
+      // this.isCollect = !this.isCollect
+      this.collectMessage = this.isCollect ? '已收藏' : '收藏'
+    },
+    checkCollect () {
+      let jobId = this.jobId
+      let userId = this.userId
+      console.log(userId, jobId)
+      this.$http.post('/userInfo/checkCollect', {userId, jobId})
       .then(res => {
         console.log(res)
+        if (res.data.state === '00000') this.isCollect = true
+        else this.isCollect = false
       })
-      this.isCollect = !this.isCollect
-      this.collectMessage = this.isCollect ? '已收藏' : '收藏'
+    },
+    noticeFaild (value) {
+      this.$Message.error(value)
+    },
+    noticeSuccess (value) {
+      this.$Message.success(value)
+    },
+    checkSend () {
+      let jobId = this.jobId
+      let userId = this.userId
+      console.log(userId, jobId)
+      this.$http.post('/userInfo/checkSend', {userId, jobId})
+      .then(res => {
+        console.log(res)
+        if (res.data.state === '00000') {
+          this.isSend = true
+          this.sendStatus = '已投递'
+        } else {
+          this.isSend = false
+          this.sendStatus = '投个简历'
+        }
+      })
     }
   },
   mounted () {
@@ -130,6 +231,10 @@ export default {
       this.waiting = false
       this.handDescription()
     })
+    this.jobId = localStorage.getItem('jobid')
+    this.userId = localStorage.getItem('userid')
+    this.checkCollect()
+    this.checkSend()
   }
 }
 </script>
@@ -213,7 +318,7 @@ export default {
     padding-left: 20px;
   }
   .details-head-r .un-collect {
-    padding-left: 27px;
+    padding-left: 15px;
   }
   .details-head-r .send {
     /* width: 80px; */
@@ -228,6 +333,20 @@ export default {
     background-color: #00b38a;
     color: #fff;
     cursor: pointer;
+  }
+  .details-head-r .send-ed {
+    /* width: 80px; */
+    text-align: center;
+    margin-left: 25px;
+    padding: 0 30px;
+    border-radius: 3px;
+    height: 44px;
+    line-height: 44px;
+    font-size: 18px;
+    border-color: #bfbfbf;
+    background-color: #bfbfbf;
+    color: #fff;
+    cursor: default;
   }
   .details-head-r .send:hover {
     background-color: #00a57f;

@@ -17,13 +17,11 @@
       <!-- <a class="regis tbar-a" @click="regisModalFlag=true">注册</a> -->
     </div>
     <div v-show="nickname" class="tbar-user tbar-right">
-      <a class="news tbar-a">消息</a>
+      <a class="resume tbar-a" v-show="resumeShow" @click="toResume">我的简历</a>
+      <i v-show="resumeShow"></i>
+      <a class="delivery-box tbar-a" @click="toDelivery">投递箱</a>
       <i></i>
-      <a class="resume tbar-a">我的简历</a>
-      <i></i>
-      <a class="delivery-box tbar-a">投递箱</a>
-      <i></i>
-      <a class="news tbar-a">收藏夹</a>
+      <a class="news tbar-a"  @click="toCollection">收藏夹</a>
       <i></i>
       <Dropdown @on-click="select($event)" @on-visible-change="dropdownChange($event)">
         <a class="tbar-a" href="javascript:void(0)">
@@ -143,10 +141,12 @@
         // Err2IsShow: false,
         err1Mes: 'e1',
         err2Mes: 'e2',
-        areaShow: true
+        areaShow: true,
+        resumeShow: true
       }
     },
     props: [
+      'resumeflag',
       'areaflag',
       'nickNameValue'
     ],
@@ -154,6 +154,15 @@
       ...mapState(['nowCityName', 'nowCityId'])
     },
     methods: {
+      toDelivery () {
+        this.$router.push('delivery')
+      },
+      toCollection () {
+        this.$router.push('collect')
+      },
+      toResume () {
+        this.$router.push({ path: 'user', query: { name: 'my-resume' } })
+      },
       dropdownChange (param) {
         // console.log(param)
         // this.dropDownIcon = param ? 'arrow-up-b' : 'arrow-down-b'
@@ -266,11 +275,15 @@
             // console.log(res)
             if (res.data.state === '00000') {
               this.nickname = ''
+              localStorage.setItem('userid', '')
+              // console.log(this.$route)
+              // this.$router.push(this.$route.fullPath)
+              location.reload()
               // this.noticeSuccess(false, '退出提醒', '已成功退出')
             }
           })
         } else {
-           // console.log('accountSetting')
+          this.$router.push({ path: 'user', query: { name: 'baseinfo' } })
         }
       },
       switchCity () {
@@ -319,7 +332,10 @@
         this.$http.get('/users/checkLogin')
         .then(res => {
           if (res.data.state === '00000') {
-            this.nickname = res.data.data
+            this.nickname = res.data.data.username
+            let userId = res.data.data.user_id
+            this.$store.dispatch('getUserId', userId)
+            localStorage.setItem('userid', res.data.data.user_id)
           }
         })
       },
@@ -336,11 +352,20 @@
       if (this.areaflag === 'false') {
         this.areaShow = false
       }
+      if (this.resumeflag === 'false') {
+        this.resumeShow = false
+      }
     },
     watch: {
       nowCityId: {
         handler (value1, value2) {
           this.cityInit()
+        }
+      },
+      nickname: {
+        handler (v1, v2) {
+          // console.log(v1, v2)
+          if (!v1) localStorage.setItem('userid', '')
         }
       }
     }

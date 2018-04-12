@@ -1726,7 +1726,7 @@ depd@1.1.1, depd@~1.1.1:
   resolved "http://registry.npm.taobao.org/depd/download/depd-1.1.1.tgz#5783b4e1c459f06fa5ca27f991f3d06e7a310359"
 
 des.js@^1.0.0:
-  version "1.0.0"
+ient/yarn.lock version "1.0.0"
   resolved "http://registry.npm.taobao.org/des.js/download/des.js-1.0.0.tgz#c074d2e2aa6a8a9a07dbd61f9a15c2cd83ec8ecc"
   dependencies:
     inherits "^2.0.1"
@@ -1801,9 +1801,11 @@ dom-serializer@0:
     domelementtype "~1.1.1"
     entities "~1.1.1"
 
-dom7@^2.0.1:
-  version "2.0.1"
-  resolved "http://registry.npm.taobao.org/dom7/download/dom7-2.0.1.tgz#a8a2c802cf17c20b051d9414143061472201a233"
+dom7@^2.0.3:
+  version "2.0.3"
+  resolved "http://registry.npm.taobao.org/dom7/download/dom7-2.0.3.tgz#610c530d32ebd9690d3959b19a0f379584f24fc4"
+  dependencies:
+    ssr-window "^1.0.0"
 
 domain-browser@^1.1.1:
   version "1.1.7"
@@ -3275,15 +3277,24 @@ isstream@~0.1.2:
   resolved "http://registry.npm.taobao.org/isstream/download/isstream-0.1.2.tgz#47e63f7af55afa6f92e1500e690eb8b8529c099a"
 
 iview@^2.11.0:
+<<<<<<< HEAD
   version "2.11.0"
   resolved "http://registry.npm.taobao.org/iview/download/iview-2.11.0.tgz#76fc8f050802544675b6fcf02dbe1dbf89b95867"
+=======
+  version "2.12.0"
+  resolved "http://registry.npm.taobao.org/iview/download/iview-2.12.0.tgz#9ed70629298c673d576fa8a9a5e6d45b4ff0ad81"
+>>>>>>> 8bbef1c3e8798d7fab8947e8f675891fdfc1bb0d
   dependencies:
     async-validator "^1.8.2"
     deepmerge "^2.1.0"
     element-resize-detector "^1.1.14"
     js-calendar "^1.2.3"
     lodash.throttle "^4.1.1"
+<<<<<<< HEAD
     popper.js "^0.6.4"
+=======
+    popper.js "^1.14.1"
+>>>>>>> 8bbef1c3e8798d7fab8947e8f675891fdfc1bb0d
     tinycolor2 "^1.4.1"
 
 js-base64@^2.1.8:
@@ -4261,9 +4272,15 @@ pluralize@^1.2.1:
   version "1.2.1"
   resolved "http://registry.npm.taobao.org/pluralize/download/pluralize-1.2.1.tgz#d1a21483fd22bb41e58a12fa3421823140897c45"
 
+<<<<<<< HEAD
 popper.js@^0.6.4:
   version "0.6.4"
   resolved "http://registry.npm.taobao.org/popper.js/download/popper.js-0.6.4.tgz#1837c4760af54d2bb20b66f9c09b92993d84c629"
+=======
+popper.js@^1.14.1:
+  version "1.14.3"
+  resolved "http://registry.npm.taobao.org/popper.js/download/popper.js-1.14.3.tgz#1438f98d046acf7b4d78cd502bf418ac64d4f095"
+>>>>>>> 8bbef1c3e8798d7fab8947e8f675891fdfc1bb0d
 
 portfinder@^1.0.13, portfinder@^1.0.9:
   version "1.0.13"
@@ -5365,6 +5382,10 @@ sshpk@^1.7.0:
     jsbn "~0.1.0"
     tweetnacl "~0.14.0"
 
+ssr-window@^1.0.0:
+  version "1.0.0"
+  resolved "http://registry.npm.taobao.org/ssr-window/download/ssr-window-1.0.0.tgz#8ed1b6beaa0a371ba7e74d6515d584c3f1cf973c"
+
 ssri@^5.0.0:
   version "5.0.0"
   resolved "http://registry.npm.taobao.org/ssri/download/ssri-5.0.0.tgz#13c19390b606c821f2a10d02b351c1729b94d8cf"
@@ -5521,10 +5542,18 @@ svgo@^0.7.0:
     whet.extend "~0.9.9"
 
 swiper@^4.0.7:
+<<<<<<< HEAD
   version "4.0.7"
   resolved "http://registry.npm.taobao.org/swiper/download/swiper-4.0.7.tgz#89175c2a23d86622eda8344740c24a3701a6b270"
   dependencies:
     dom7 "^2.0.1"
+=======
+  version "4.2.2"
+  resolved "http://registry.npm.taobao.org/swiper/download/swiper-4.2.2.tgz#56ccdfe7b4fdd4e282f4dcadafa2a001d050595e"
+  dependencies:
+    dom7 "^2.0.3"
+    ssr-window "^1.0.0"
+>>>>>>> 8bbef1c3e8798d7fab8947e8f675891fdfc1bb0d
 
 table@^3.7.8:
   version "3.8.3"
