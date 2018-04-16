@@ -346,7 +346,8 @@ router.post('/updateSend', (req, res) => {
 
 
 router.get('/downloadSingle',(req, res, next) => {
-    let currDir = '/home/wwwroot/lagou/client/src/assets/resume/',
+		let currDir = '/home/wwwroot/lagou/client/src/assets/resume/',
+		// let currDir = '/Users/guanshuaijie/lagou/client/src/assets/resume/',
         fileName = req.query.name,
         currFile = path.join(currDir,fileName),
         fReadStream;

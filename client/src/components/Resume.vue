@@ -2,7 +2,8 @@
   <div id="resume">
     <div style="margin-left: 20px;" class="my-resume">
       <!-- 我的简历：<a :href="href" :download="resumeName">{{ resumeName }}</a> -->
-      我的简历：<a href="javascript:;" @click="download">{{ resumeName }}</a>
+      <!-- 我的简历：<a target="_blank" :href="'http://localhost:8081/api/userInfo/downloadSingle?name=' + resumeName">{{ resumeName }}</a> -->
+      我的简历：<a target="_blank" :href="'http://lagou.itnote.cn/api/userInfo/downloadSingle?name=' + resumeName">{{ resumeName }}</a>
       <i v-if="!resumeName">没有简历请上传</i>
       <a href="javascript:;" @click="clearResume">
          <Icon v-if="!!resumeName" type="close" size="18" style="color: #3399ff; cursor: pointer;"></Icon>
@@ -81,17 +82,16 @@ export default {
         }
       })
     },
-    download () {
-      let URL = '../../client/src/assets/resume/'
-      this.$http.get('/userInfo/downloadSingle?dir=' + URL + '&name=' + this.resumeName)
-      .then(res => {
-        console.log(res)
-        // if (res.data.state === '00000') {
-        //   this.resumeName = ''
-        //   this.file = null
-        // }
-      })
-    }
+    // download () {
+    //   this.$http.get('/userInfo/downloadSingle?name=' + this.resumeName)
+    //   .then(res => {
+    //     console.log(res)
+    //     // if (res.data.state === '00000') {
+    //     //   this.resumeName = ''
+    //     //   this.file = null
+    //     // }
+    //   })
+    // }
   },
   mounted () {
     this.userId = localStorage.getItem('userid')
