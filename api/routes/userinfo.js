@@ -2,7 +2,8 @@ let express = require('express');
 let router = express.Router();
 let User = require('./../models/user');
 let UserInfo = require('./../models/userinfo');
-
+let path = require('path')
+let fs = require('fs')
 router.post('/updateCollect', (req, res) => {
 	// let jobId       = parseInt(req.param("jobId"));
 	let collectJob  = req.param("collectJob")
@@ -343,4 +344,30 @@ router.post('/updateSend', (req, res) => {
 	})
 })
 
+
+router.get('/downloadSingle',(req, res, next) => {
+    let currDir = path.normalize(req.query.dir),
+        fileName = req.query.name,
+        currFile = path.join(currDir,fileName),
+        fReadStream;
+				console.log(__dirname)
+		console.log(currDir, fileName, currFile)
+    fs.exists(currFile,(exist) => {
+        if(exist){
+            res.set({
+                "Content-type":"application/octet-stream",
+                "Content-Disposition":"attachment;filename="+encodeURI(fileName)
+            });
+            fReadStream = fs.createReadStream(currFile);
+            fReadStream.on("data",(chunk) => res.write(chunk,"binary"));
+            fReadStream.on("end",function () {
+                res.end();
+            });
+        } else {
+            res.set("Content-type","text/html");
+            res.send("file not exist!");
+            res.end();
+        }
+    });
+});
 module.exports = router;
