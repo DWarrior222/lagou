@@ -81,7 +81,7 @@ export default {
           this.file = null
         }
       })
-    },
+    }
     // download () {
     //   this.$http.get('/userInfo/downloadSingle?name=' + this.resumeName)
     //   .then(res => {
