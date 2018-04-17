@@ -20,7 +20,7 @@
               <div>
                   沒有账号？
                   <router-link
-                    to="/account/signup"
+                    to="/signup"
                     tag="a">
                   注册
                   </router-link>

@@ -89,6 +89,9 @@ export default {
           this.prompt = true
         }
       }
+      if (res.data.state === '00002') {
+        this.prompt = true
+      }
     })
   }
 }

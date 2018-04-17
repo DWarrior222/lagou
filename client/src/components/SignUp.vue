@@ -13,9 +13,9 @@
           <FormItem prop="password" label="密码">
               <Input v-model="formSignup.password" name="password" type="password" placeholder="密码"></Input>
           </FormItem>
-          <FormItem prop="email" label="邮箱">
+          <!-- <FormItem prop="email" label="邮箱">
               <Input v-model="formSignup.email" name="email" placeholder="邮箱"></Input>
-          </FormItem>
+          </FormItem> -->
 
           <FormItem class="submit">
               <Button type="primary" @click="formSignupSubmit">注册</Button>
