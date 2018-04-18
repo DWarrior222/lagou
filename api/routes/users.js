@@ -3,6 +3,7 @@ let router = express.Router();
 let User = require('./../models/user');
 let sd = require('silly-datetime');
 let md5 =require('md5')
+let UserInfo = require('./../models/userinfo');
 
 
 // 注册
@@ -13,6 +14,11 @@ router.post('/register', (req, res) => {
     password: md5(req.body.password),
     regtime: (new Date()).toLocaleString()
   }
+  let paramsUserInfo = {
+		user_id: params.user_id,
+		collect_job: [],
+		send_job: []
+	}
   User.findOne({username: params.username}, (err, docs) => {
     if (err) {
       return res.json({
@@ -29,11 +35,44 @@ router.post('/register', (req, res) => {
             message: err.message
           })
         }
-        return res.json({
-          state: '00000',
-          message: '注册成功',
-          data: doc
+        UserInfo.findOne({user_id: params.user_id}, (err, userInfoDoc) => {
+      		if (err) {
+            return res.json({
+              state: '00001',
+              message: err.message
+            })
+          }
+          UserInfo.create(paramsUserInfo, (createError, createDoc) => {
+    				console.log('test')
+            if (createError) {
+              return res.json({
+                state: '00001',
+                message: createError.message
+              })
+            }
+    				if (!createDoc) return
+
+    				// createDoc.collect_job.push(collectJob)
+    				createDoc.save((saveCreateErr, saveCreateDoc) => {
+    					if (saveCreateErr) {
+    						return res.json({
+    							state: '00001',
+    							message: saveCreateErr.message
+    						})
+    					}
+    					return res.json({
+    						state: '00000',
+    						message: '注册成功',
+    						data: doc
+    					})
+    				})
+    			})
         })
+        // return res.json({
+        //   state: '00000',
+        //   message: '注册成功',
+        //   data: doc
+        // })
       })
     } else {
       return res.json({
@@ -43,6 +82,43 @@ router.post('/register', (req, res) => {
     }
   })
 })
+// router.post('/register', (req, res) => {
+//   let params = {
+//     user_id: (new Date()).getTime() + parseInt(Math.random() * 100000000),
+//     username: req.body.username,
+//     password: md5(req.body.password),
+//     regtime: (new Date()).toLocaleString()
+//   }
+//   User.findOne({username: params.username}, (err, docs) => {
+//     if (err) {
+//       return res.json({
+//         state: '00001',
+//         message: err.message
+//       })
+//     }
+//     console.log(docs)
+//     if (!docs) {
+//       return User.create(params, (error, doc) => {
+//         if (error) {
+//           return res.json({
+//             state: '00001',
+//             message: err.message
+//           })
+//         }
+//         return res.json({
+//           state: '00000',
+//           message: '注册成功',
+//           data: doc
+//         })
+//       })
+//     } else {
+//       return res.json({
+//         state: '00002',
+//         message: '该用户名已被注册'
+//       })
+//     }
+//   })
+// })
 
 router.post('/login', (req, res, next) => {
   let param = {

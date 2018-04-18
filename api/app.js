@@ -49,6 +49,7 @@ app.post('/upload', upload.single('test-upload'), (req, res) => {
         message: err.message
       })
     }
+    console.log(userInfoDoc)
     userInfoDoc.resume = req.file.originalname
     userInfoDoc.save((saveErr, saveDoc) => {
       // console.log('3333333')
